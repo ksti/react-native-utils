@@ -14,7 +14,7 @@ Router for React Native based on new React Native Navigation API.
 
 `react-native-utils` is a util package that allows you to:
 
-- use httpRequest to send a http request, Get Post
+- use httpRequest to send a Get or Post http request
 - use FormView to set up a Form views page
 
 ## Usage
