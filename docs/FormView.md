@@ -37,19 +37,19 @@
         - rightAttributeStrs （支持类型：'text'） 右边自定义文本，须嵌套在Text中
         
         ```
-        示例：rightAttributeStrs = (
-                <Text >
-                    <Text style={{color:'red'}}>
-                        ****
-                    </Text>
-                    <Text style={{color:'green'}}>
-                        ----
-                    </Text>
-                    <Text style={{color:'blue'}}>
-                        ====
-                    </Text>
-                </Text>
-            )
+          示例：rightAttributeStrs = (
+                  <Text >
+                      <Text style={{color:'red'}}>
+                          ****
+                      </Text>
+                      <Text style={{color:'green'}}>
+                          ----
+                      </Text>
+                      <Text style={{color:'blue'}}>
+                          ====
+                      </Text>
+                  </Text>
+              )
         ```
     	- leftTextStyle 左边文本样式
     	- rightText（支持类型：'text'、'input'） 右边文本内容
