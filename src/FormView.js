@@ -9,6 +9,10 @@
         7.leftText 左边文字
         8.rightText 右边文字
         9.defaultInputVale 默认输入值
+        10.rightAttributeStrs 自定义右边文本
+        11.enableRightTouch 是否启用右侧文本点击
+        12.enableAccessory 是否启用右侧文本显示附加视图（比如右箭头>）
+        13.accessoryView 自定义右侧文本附加视图
 */
 
 import React,{Component} from 'react'
@@ -40,11 +44,13 @@ export default class FormView extends Component{
     constructor(props){
         super(props);
         this.state = {
-            inputValue: this.props.defaultInputVale,
+            inputValue: this.props.defaultInputValue,
+            showValue: this.props.showValue,
             inputHeight: 35,
             leftText: this.props.leftText,
             rightText: this.props.rightText,
             redText: this.props.redText,
+            rightAttributeStrs: this.props.rightAttributeStrs,
         }
         this.values = {};
     }
@@ -120,6 +126,15 @@ export default class FormView extends Component{
             };
         };
 
+        var accessoryView = this.props.accessoryView?this.props.accessoryView:(
+            <View style={{width: 20, alignItems: 'center'}}>
+                <View style={{width:20,alignItems:'flex-end'}}>
+                    <Image
+                        source={require('../../images/App/ic_right_line.png')}
+                        style={{height:15,width:15,marginRight:5}} />
+                </View>
+            </View>);
+
         return(
             <View style={styles.columnContainer}>
                 <View style={styles.rowContainer}>
@@ -132,12 +147,20 @@ export default class FormView extends Component{
                             {this.props.attributeStrs}
                         </Text>
                     </View>
-                    <View style={[styles.columnContainer, {flex:flexInput+1}, rightWidthStyle]}>
-                        <Text style={[styles.rightText, {textAlign:'left', alignSelf: 'flex-start'}, mergeStyleRightText]}>
-                            {this.state.inputValue?this.state.inputValue:this.state.rightText}
-                        </Text>
-                        {this.props.children}
-                    </View>
+                    <TouchableOpacity
+                       onPress={()=>this._onPressButton()}
+                       style={[styles.rowContainer, {flex:flexInput+1}, rightWidthStyle]}
+                       disabled={this.props.enableRightTouch?!this.props.enableRightTouch:true}
+                    >
+                        <View style={[styles.columnContainer, {flex:flexInput+1}]}>
+                            <Text style={[styles.rightText, {textAlign:'left', alignSelf: 'flex-start'}, mergeStyleRightText]}>
+                                {this.state.rightText}
+                                {this.state.rightAttributeStrs}
+                            </Text>
+                            {this.props.children}
+                        </View>
+                        {this.props.enableAccessory?accessoryView:null}
+                    </TouchableOpacity>
                 </View>
                 {this._renderSeparator()}
             </View>
@@ -177,7 +200,7 @@ export default class FormView extends Component{
                 <TextInput
                     {...this.props.inputProps}
                     style={[styles.input, flexStyle, {height: 35}, mergeStyleInput]}
-                    value={this.state.inputValue}
+                    value={this.state.showValue?this.state.showValue:this.state.inputValue}
                     editable={false}
                 />
             </TouchableOpacity>
@@ -200,12 +223,13 @@ export default class FormView extends Component{
                     };
                     this.setState({
                         inputValue: event.nativeEvent.text,
+                        showValue: event.nativeEvent.text,
                         inputHeight: textHeight,
                     });
                     this._onInputValueChanged(this.state.inputValue);
                 }}
                 style={[styles.input, flexStyle, {height: Math.max(mutilineHeight, this.state.inputHeight)}, mergeStyleInput]}
-                value={this.state.inputValue}
+                value={this.state.showValue?this.state.showValue:this.state.inputValue}
             />
         )
     }
@@ -354,7 +378,7 @@ export default class FormView extends Component{
                     <View style={[styles.columnContainer, {flex:flexInput+1}, rightWidthStyle]}>
                         <ButtonWithAccessory
                             accessoryImg={require('../../images/App/ic_down_fill.png')}
-                            title={this.state.inputValue}
+                            title={this.state.showValue?this.state.showValue:this.state.inputValue}
                             onPress={() => this._onPressButton()}
                             style={{marginTop: 4, marginLeft:4}}
                             titleWidth={titleWidth}
