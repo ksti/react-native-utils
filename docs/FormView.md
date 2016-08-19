@@ -54,6 +54,9 @@
     	- leftTextStyle 左边文本样式
     	- rightText（支持类型：'text'、'input'） 右边文本内容
     	- rightTextStyle 右边文本样式
+	- enableRightTouch（支持类型：'text'） 是否启用右侧文本点击
+	- enableAccessory（支持类型：'text'） 是否启用右侧文本显示附加视图（比如右箭头>）
+	- accessoryView（支持类型：'text'） 自定义右侧文本附加视图
     	- inputProps（支持类型：'input'） 输入框初始化属性设置
     	- inputStyle 输入框样式
     	- defaultInputVale  默认输入值
