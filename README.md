@@ -2,8 +2,6 @@
 
 some utils for react-native
 
-Router for React Native based on new React Native Navigation API.
-
 ## Documentation
 
 - [httpRequest](docs/httpRequest.md)
