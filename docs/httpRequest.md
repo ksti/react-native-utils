@@ -56,3 +56,26 @@
     	HTTPRequest.download('http://www.gutenberg.org/cache/epub/100/pg100.txt');
 
 ```
+
+```
+	// 测试上传
+	var uploadParamters = Object.assign({}, this.state.textParams, {'image': {...this.state.randomPhoto, name: 'image.jpg'}});
+	httpRequest.upload('http://posttestserver.com/post.php', uploadParamters);
+	httpRequest.updateProgress = (progress) => {
+		console.log(progress);
+	}
+	httpRequest.transferComplete = (responseText, response) => {
+		var tempXhr = response;
+		var index = tempXhr.responseText.indexOf('http://www.posttestserver.com/');
+		if (index === -1) {
+			AlertIOS.alert(
+				'Upload failed',
+				'Invalid response payload.'
+			);
+			return;
+		}
+		var url = tempXhr.responseText.slice(index).split('\n')[0];
+		Linking.openURL(url);
+	}
+
+```
