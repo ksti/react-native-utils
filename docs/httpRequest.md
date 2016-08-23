@@ -52,8 +52,8 @@
 	HTTPRequest.downloadProgress = (progress) => {
 		console.log(progress);
 	}
-    	HTTPRequest.responseType = 'arraybuffer';
-    	HTTPRequest.download('http://www.gutenberg.org/cache/epub/100/pg100.txt');
+	HTTPRequest.responseType = 'arraybuffer';
+	HTTPRequest.download('http://www.gutenberg.org/cache/epub/100/pg100.txt');
 
 ```
 
