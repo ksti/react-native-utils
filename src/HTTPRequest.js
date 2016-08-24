@@ -485,7 +485,7 @@ var httpRequest = {
     // xhr.responseType = "arraybuffer"; // arraybuffer
     // xhr.responseType = "blob"; // blob
     // xhr.responseType = "text"; // text
-    xhr.responseType = this.responseType;
+    xhr.responseType = this.responseType?this.responseType:'';
         
     xhr.send();
     this.xhr = xhr;
