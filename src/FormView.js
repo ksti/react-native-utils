@@ -225,14 +225,26 @@ export default class FormView extends Component{
 
     _renderDateInput = (flexStyle) => {
         var mergeStyleInput = this.props.inputStyle;
+
+        // <TouchableOpacity onPress={()=>this._onPressButton()} style={{flexDirection: 'row'}}>
+        //     <TextInput
+        //         {...this.props.inputProps}
+        //         style={[styles.input, flexStyle, {height: 35}, mergeStyleInput]}
+        //         value={this.state.showValue?this.state.showValue:this.state.inputValue}
+        //         editable={false}
+        //     />
+        // </TouchableOpacity>
+
         return(
-            <TouchableOpacity onPress={()=>this._onPressButton()} style={{flexDirection: 'row'}}>
+            <TouchableOpacity style={{flexDirection: 'row'}}>
                 <TextInput
                     {...this.props.inputProps}
                     style={[styles.input, flexStyle, {height: 35}, mergeStyleInput]}
                     value={this.state.showValue?this.state.showValue:this.state.inputValue}
                     editable={false}
                 />
+                <TouchableOpacity onPress={()=>this._onPressButton()} style={{position: 'absolute', top: 2, left: 2, bottom: 2, right: 2/*, backgroundColor: 'red'*/}}>
+                </TouchableOpacity>
             </TouchableOpacity>
         )
     }
