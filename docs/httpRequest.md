@@ -6,7 +6,8 @@
         
 
 ```
-	import HTTPRequest from '../../common/HTTPRequest'
+	import httpRequest from '../../common/HTTPRequest'
+	HTTPRequest = new httpRequest();
 	
 	...
 	
