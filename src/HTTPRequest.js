@@ -64,7 +64,7 @@ var _this = null
  * @param 
  * @return 
  */
-function httpRequest() {
+function httpRequest(normal: Boolean) {
 
   /**
    * 保存服务器返回的原始数据
@@ -85,6 +85,11 @@ function httpRequest() {
    * 请求内容类型，对应设置不同的请求头和body
    */
   this.contentType = 'json';
+
+  /**
+   * 保存服务器返回的原始数据
+   */
+  this.normal = normal ? normal : false;
 
   /**
    * @private
@@ -225,13 +230,15 @@ httpRequest.prototype.requestGetWithUrl = function(apiUrl: string, parameter: Ob
     console.log('---requestUrl: ' + requestUrl);
     console.log('---JSON.stringify(parameter): ' + JSON.stringify(parameter));
 
-    if (global.accessToken && global.accessToken.length > 0) {
-      this._setDefualtHeader({
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + global.accessToken,
-      });
-    }
+    if (!this.normal) {
+      if (global.accessToken && global.accessToken.length > 0) {
+        this._setDefualtHeader({
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + global.accessToken,
+        });
+      }
+    };    
 
     if (this.headers) {
       this.setRequestHeader(this.headers); // 合并 this.defualtHeaders
@@ -290,9 +297,11 @@ httpRequest.prototype.requestPostWithUrl = function(apiUrl: string, parameter: O
   }
 
   let accessToken = global.accessToken;
-  if (accessToken && accessToken.length > 0) {
-      headerParams.Authorization = 'Bearer '+ accessToken;
-  }
+  if (!this.normal) {
+    if (accessToken && accessToken.length > 0) {
+        headerParams.Authorization = 'Bearer '+ accessToken;
+    }
+  };  
 
   this._setDefualtHeader(headerParams);
   if (this.headers) {
@@ -368,13 +377,15 @@ httpRequest.prototype.download = function(apiUrl: string, parameter: Object, cal
     'Accept-Charset': 'utf-8',
   });
 
-  if (global.accessToken && global.accessToken.length > 0) {
-    this._setDefualtHeader({
-      'Accept': 'text/plain, application/json, application/octet-stream',
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + global.accessToken,
-    });
-  }
+  if (!this.normal) {
+    if (global.accessToken && global.accessToken.length > 0) {
+      this._setDefualtHeader({
+        'Accept': 'text/plain, application/json, application/octet-stream',
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + global.accessToken,
+      });
+    }
+  };  
 
   if (this.headers) {
     this.setRequestHeader(this.headers); // 合并 this.defualtHeaders
@@ -541,9 +552,11 @@ httpRequest.prototype.upload = function(apiUrl: string, parameter: Object, callb
   }
 
   let accessToken = global.accessToken;
-  if (accessToken && accessToken.length > 0) {
-      headerParams.Authorization = 'Bearer '+ accessToken;
-  }
+  if (!this.normal) {
+    if (accessToken && accessToken.length > 0) {
+        headerParams.Authorization = 'Bearer '+ accessToken;
+    }
+  };  
 
   this._setDefualtHeader(headerParams);
   if (this.headers) {
