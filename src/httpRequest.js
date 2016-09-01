@@ -72,7 +72,7 @@ function httpRequest(normal: Boolean) {
   this._response = null;
 
   /**
-   * 保存服务器返回的原始数据
+   * 是否自行处理服务器返回的原始数据
    */
   this.handleResponse = false;
 
