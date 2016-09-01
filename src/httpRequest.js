@@ -72,6 +72,11 @@ function httpRequest(normal: Boolean) {
   this._response = null;
 
   /**
+   * 保存服务器返回的原始数据
+   */
+  this.handleResponse = false;
+
+  /**
    * 内置 XMLHttpRequest
    */
   this.xhr = new XMLHttpRequest();
@@ -167,10 +172,12 @@ httpRequest.prototype.requestWithUrl = function(apiUrl: string, parameter: Objec
       //encodeURIComponent(query)
     }
     */
-    requestUrl += '?';
-    for(var key in parameter){
-      requestUrl += (key + '=' + parameter[key] + '&');
-    }
+    if (Object.keys(parameter).length > 0) {
+      requestUrl += '?';
+      for(var key in parameter){
+        requestUrl += (key + '=' + parameter[key] + '&');
+      }
+    };
     //encodeURIComponent(query)
   } else {
     // With no query,
@@ -180,13 +187,21 @@ httpRequest.prototype.requestWithUrl = function(apiUrl: string, parameter: Objec
   //
   fetch(requestUrl).then((response) => {
     this._response = response;
-    return response.json()
+    if (this.handleResponse) {
+      return Promise.resolve();
+    };
+    return response.json();
   })
-  .then((responseData) => {
+  .then((responseData) => { 
     if (callback) {
       console.log('***responseData: ' + responseData);
       callback(null, responseData, this._response); // (error, responseData, response)
-    };
+    }
+  }, 
+  err => {
+    if (callback) {
+      callback(err, null, this._response); // (error, responseData, response)
+    }
   })
   .catch((error) => {
     if (callback) {
@@ -219,10 +234,14 @@ httpRequest.prototype.requestGetWithUrl = function(apiUrl: string, parameter: Ob
           }
           */
 
-          requestUrl += '?';
-          for(var key in parameter){
-            requestUrl += (key + '=' + parameter[key] + '&');
-          }
+          if (Object.keys(parameter).length > 0) {
+            requestUrl += '?';
+            for(var key in parameter){
+              requestUrl += (key + '=' + parameter[key] + '&');
+            }
+          };
+          
+          
       //encodeURIComponent(query)
     } else {
       // With no query,
@@ -246,6 +265,7 @@ httpRequest.prototype.requestGetWithUrl = function(apiUrl: string, parameter: Ob
 
     //
     console.log('post-header',this.headers?this.headers:this._defualtHeaders);
+
     //
     fetch(requestUrl, {
       method: 'GET',
@@ -253,12 +273,20 @@ httpRequest.prototype.requestGetWithUrl = function(apiUrl: string, parameter: Ob
     })
     .then((response) => {
       this._response = response;
-      return response.json()
+      if (this.handleResponse) {
+        return Promise.resolve();
+      };
+      return response.json();
     })
-    .then((responseData) => {
+    .then((responseData) => { 
       if (callback) {
         console.log('***responseData: ' + responseData);
         callback(null, responseData, this._response); // (error, responseData, response)
+      }
+    }, 
+    err => {
+      if (callback) {
+        callback(err, null, this._response); // (error, responseData, response)
       }
     })
     .catch((error) => {
@@ -317,13 +345,21 @@ httpRequest.prototype.requestPostWithUrl = function(apiUrl: string, parameter: O
   })
   .then((response) => {
     this._response = response;
-    return response.json()
-  })
-  .then((responseData) => {
-    if (callback) {
-        console.log('***responseData: ' + responseData);
-        callback(null, responseData, this._response); // (error, responseData, response)
+    if (this.handleResponse) {
+      return Promise.resolve();
     };
+    return response.json();
+  })
+  .then((responseData) => { 
+    if (callback) {
+      console.log('***responseData: ' + responseData);
+      callback(null, responseData, this._response); // (error, responseData, response)
+    }
+  }, 
+  err => {
+    if (callback) {
+      callback(err, null, this._response); // (error, responseData, response)
+    }
   })
   .catch((error) => {
     if (callback) {
@@ -361,10 +397,12 @@ httpRequest.prototype.download = function(apiUrl: string, parameter: Object, cal
         }
         */
 
-        requestUrl += '?';
-        for(var key in parameter){
-          requestUrl += (key + '=' + parameter[key] + '&');
-        }
+        if (Object.keys(parameter).length > 0) {
+          requestUrl += '?';
+          for(var key in parameter){
+            requestUrl += (key + '=' + parameter[key] + '&');
+          }
+        };
     //encodeURIComponent(query)
   } else {
     // With no query,
