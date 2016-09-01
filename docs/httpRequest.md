@@ -80,3 +80,31 @@
 	}
 
 ```
+
+```
+	// 自行处理返回数据
+	HTTPRequest.handleResponse = true;
+	HTTPRequest.requestGetWithUrl(strURL,parameter,
+		function(error,responseData,response){
+		  if (error) {
+		      console.log('error: --> ' + error.message + 'response: --> ' + response);
+		      response.text().then((text) => {
+		        console.log('response text: -- > ' + text);
+		      }).catch( err => {
+		        console.log('catch error: --> ' + err.message);
+		      });
+		  }else {
+		      if (responseData) {
+		          console.log('responseData: --> ' + responseData);
+		      }else {
+		          console.log('response: --> ' + response);
+		          response.text().then((text) => {
+		            console.log('response text: --> ' + text);
+		          }).catch( err => {
+		            console.log('catch error: --> ' + err.message);
+		          });
+		      }
+		  }
+		});
+
+```
