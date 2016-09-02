@@ -191,6 +191,12 @@ httpRequest.prototype.requestWithUrl = function(apiUrl: string, parameter: Objec
       return Promise.resolve();
     };
     return response.json();
+  },
+  err => {
+    if (callback) {
+      callback(err, null, this._response);
+      console.log('***error: ' + error.TypeError);
+    };
   })
   .then((responseData) => { 
     if (callback) {
@@ -202,12 +208,6 @@ httpRequest.prototype.requestWithUrl = function(apiUrl: string, parameter: Objec
     if (callback) {
       callback(err, null, this._response); // (error, responseData, response)
     }
-  })
-  .catch((error) => {
-    if (callback) {
-      callback(error, null, this._response);
-      console.log('***error: ' + error.TypeError);
-    };
   })
   .done();
 },
@@ -277,6 +277,12 @@ httpRequest.prototype.requestGetWithUrl = function(apiUrl: string, parameter: Ob
         return Promise.resolve();
       };
       return response.json();
+    },
+    err => {
+      if (callback) {
+        callback(err, null, this._response);
+        console.log('***error: ' + error.TypeError);
+      };
     })
     .then((responseData) => { 
       if (callback) {
@@ -287,12 +293,6 @@ httpRequest.prototype.requestGetWithUrl = function(apiUrl: string, parameter: Ob
     err => {
       if (callback) {
         callback(err, null, this._response); // (error, responseData, response)
-      }
-    })
-    .catch((error) => {
-      if (callback) {
-        callback(error, null, this._response);
-        console.log('***error: ' + error);
       }
     })
     .done();
@@ -349,6 +349,12 @@ httpRequest.prototype.requestPostWithUrl = function(apiUrl: string, parameter: O
       return Promise.resolve();
     };
     return response.json();
+  },
+  err => {
+    if (callback) {
+      callback(err, null, this._response);
+      console.log('***error: ' + error.TypeError);
+    };
   })
   .then((responseData) => { 
     if (callback) {
@@ -360,12 +366,6 @@ httpRequest.prototype.requestPostWithUrl = function(apiUrl: string, parameter: O
     if (callback) {
       callback(err, null, this._response); // (error, responseData, response)
     }
-  })
-  .catch((error) => {
-    if (callback) {
-      callback(error, null, this._response); //
-      console.log('***error: ' + error);
-    };
   })
   .done();
 
