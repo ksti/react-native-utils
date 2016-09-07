@@ -53,16 +53,55 @@ function toQueryString(obj) {
 //     })
 // })
 
+function _fetch(fetch_promise, timeout) {
+    if (!timeout) {
+      return fetch_promise;
+    };
+    var abort_fn = null;
+
+    //这是一个可以被reject的promise
+    var abort_promise = new Promise(function(resolve, reject) {
+           abort_fn = function() {
+              // reject('abort promise');
+              reject({
+                TypeError: 'HTTP Error 408 - Request Timeout',
+                code: 408,
+                message: 'time out',
+              });
+           };
+    });
+
+    //这里使用Promise.race，以最快 resolve 或 reject 的结果来传入后续绑定的回调
+     var abortable_promise = Promise.race([
+           fetch_promise,
+           abort_promise
+     ]);
+
+     setTimeout(function() {
+           abort_fn();
+      }, timeout);
+
+     return abortable_promise;
+}
+
+//usage:
+// _fetch(fetch('//a.com/b/c'), 2000)
+//     .then(function(res) {
+//         console.log(res)
+//     }, function(err) {
+//         console.log(err);
+//     });
+
 /**
  * 保留引用
  */
 var _this = null
 
 /**
- * @param 
- * @param 
- * @param 
- * @return 
+ * @param
+ * @param
+ * @param
+ * @return
  */
 function httpRequest(normal: Boolean) {
 
@@ -85,6 +124,11 @@ function httpRequest(normal: Boolean) {
    * 取消状态
    */
   this.cancelled = false;
+
+  /**
+   * 取消状态
+   */
+  this.timeout = null;
 
   /**
    * 请求内容类型，对应设置不同的请求头和body
@@ -185,6 +229,7 @@ httpRequest.prototype.requestWithUrl = function(apiUrl: string, parameter: Objec
 
   console.log('---requestUrl: ' + requestUrl);
   //
+  /* 保存代码，加入 timeout
   fetch(requestUrl).then((response) => {
     this._response = response;
     if (this.handleResponse) {
@@ -198,18 +243,42 @@ httpRequest.prototype.requestWithUrl = function(apiUrl: string, parameter: Objec
       console.log('***error: ' + error.TypeError);
     };
   })
-  .then((responseData) => { 
+  .then((responseData) => {
     if (callback) {
       console.log('***responseData: ' + responseData);
       callback(null, responseData, this._response); // (error, responseData, response)
     }
-  }, 
+  },
   err => {
     if (callback) {
       callback(err, null, this._response); // (error, responseData, response)
     }
   })
   .done();
+  */
+    _fetch(fetch(requestUrl), this.timeout)
+    .then((response) => {
+      this._response = response;
+      if (this.handleResponse) {
+        return Promise.resolve();
+      };
+      return response.json();
+    },
+    err => {
+      return Promise.reject(err);
+    })
+    .then((responseData) => {
+      if (callback) {
+        console.log('***responseData: ' + responseData);
+        callback(null, responseData, this._response); // (error, responseData, response)
+      }
+    },
+    err => {
+      if (callback) {
+        callback(err, null, this._response); // (error, responseData, response)
+      }
+    })
+    .done();
 },
 
 /**
@@ -240,8 +309,6 @@ httpRequest.prototype.requestGetWithUrl = function(apiUrl: string, parameter: Ob
               requestUrl += (key + '=' + parameter[key] + '&');
             }
           };
-          
-          
       //encodeURIComponent(query)
     } else {
       // With no query,
@@ -257,7 +324,7 @@ httpRequest.prototype.requestGetWithUrl = function(apiUrl: string, parameter: Ob
           'Authorization': 'Bearer ' + global.accessToken,
         });
       }
-    };    
+    };
 
     if (this.headers) {
       this.setRequestHeader(this.headers); // 合并 this.defualtHeaders
@@ -267,10 +334,7 @@ httpRequest.prototype.requestGetWithUrl = function(apiUrl: string, parameter: Ob
     console.log('post-header',this.headers?this.headers:this._defualtHeaders);
 
     //
-    fetch(requestUrl, {
-      method: 'GET',
-      headers: this.headers?this.headers:this._defualtHeaders,
-    })
+    /* 保留代码，加入 timeout
     .then((response) => {
       this._response = response;
       if (this.handleResponse) {
@@ -284,18 +348,46 @@ httpRequest.prototype.requestGetWithUrl = function(apiUrl: string, parameter: Ob
         console.log('***error: ' + error.TypeError);
       };
     })
-    .then((responseData) => { 
+    .then((responseData) => {
       if (callback) {
         console.log('***responseData: ' + responseData);
         callback(null, responseData, this._response); // (error, responseData, response)
       }
-    }, 
+    },
     err => {
       if (callback) {
         callback(err, null, this._response); // (error, responseData, response)
       }
     })
     .done();
+    */
+    _fetch(fetch(requestUrl, {
+      method: 'GET',
+      headers: this.headers?this.headers:this._defualtHeaders,
+    }), this.timeout)
+    .then((response) => {
+      this._response = response;
+      if (this.handleResponse) {
+        return Promise.resolve();
+      };
+      return response.json();
+    },
+    err => {
+      return Promise.reject(err);
+    })
+    .then((responseData) => {
+      if (callback) {
+        console.log('***responseData: ' + responseData);
+        callback(null, responseData, this._response); // (error, responseData, response)
+      }
+    },
+    err => {
+      if (callback) {
+        callback(err, null, this._response); // (error, responseData, response)
+      }
+    })
+    .done();
+    
 
 },
 
@@ -329,7 +421,7 @@ httpRequest.prototype.requestPostWithUrl = function(apiUrl: string, parameter: O
     if (accessToken && accessToken.length > 0) {
         headerParams.Authorization = 'Bearer '+ accessToken;
     }
-  };  
+  };
 
   this._setDefualtHeader(headerParams);
   if (this.headers) {
@@ -338,6 +430,8 @@ httpRequest.prototype.requestPostWithUrl = function(apiUrl: string, parameter: O
 
   console.log('post-header', this.headers?this.headers:this._defualtHeaders);
 
+  //
+  /* 保留代码，加入 timeout
   fetch(requestUrl, {
     method: 'POST',
     headers: this.headers?this.headers:this._defualtHeaders,
@@ -356,19 +450,47 @@ httpRequest.prototype.requestPostWithUrl = function(apiUrl: string, parameter: O
       console.log('***error: ' + error.TypeError);
     };
   })
-  .then((responseData) => { 
+  .then((responseData) => {
     if (callback) {
       console.log('***responseData: ' + responseData);
       callback(null, responseData, this._response); // (error, responseData, response)
     }
-  }, 
+  },
   err => {
     if (callback) {
       callback(err, null, this._response); // (error, responseData, response)
     }
   })
   .done();
+  */
 
+  _fetch(fetch(requestUrl, {
+    method: 'POST',
+    headers: this.headers?this.headers:this._defualtHeaders,
+    body: bodyParams,
+  }), this.timeout)
+  .then((response) => {
+    this._response = response;
+    if (this.handleResponse) {
+      return Promise.resolve();
+    };
+    return response.json();
+  },
+  err => {
+    return Promise.reject(err);
+  })
+  .then((responseData) => {
+    if (callback) {
+      console.log('***responseData: ' + responseData);
+      callback(null, responseData, this._response); // (error, responseData, response)
+    }
+  },
+  err => {
+    if (callback) {
+      callback(err, null, this._response); // (error, responseData, response)
+    }
+  })
+  .done();
 
 
 
@@ -423,7 +545,7 @@ httpRequest.prototype.download = function(apiUrl: string, parameter: Object, cal
         'Authorization': 'Bearer ' + global.accessToken,
       });
     }
-  };  
+  };
 
   if (this.headers) {
     this.setRequestHeader(this.headers); // 合并 this.defualtHeaders
@@ -594,7 +716,7 @@ httpRequest.prototype.upload = function(apiUrl: string, parameter: Object, callb
     if (accessToken && accessToken.length > 0) {
         headerParams.Authorization = 'Bearer '+ accessToken;
     }
-  };  
+  };
 
   this._setDefualtHeader(headerParams);
   if (this.headers) {
