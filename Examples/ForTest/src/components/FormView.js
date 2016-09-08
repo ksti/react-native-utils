@@ -56,7 +56,7 @@ import {
     StyleSheet,
 } from 'react-native'
 
-import Form from 'react-native-form'
+import {Form} from 'react-native-utils-gjs'
 
 const limitWidth = 60;
 const limitHeight = 40;

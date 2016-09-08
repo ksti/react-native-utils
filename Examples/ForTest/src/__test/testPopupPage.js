@@ -23,11 +23,7 @@ let strURL = 'https://moa.sinooceanland.com:10086/AnChangReportService/Interface
  parameter = {OrgCode: '', CityCode: '', ProjectCode: '', TimeCategory: 'Year', DateStar: '', DateEnd: ''};
 
 
-import BasePopupPage from '../components/customPopupPage/BasePopupPage'
-import CustomPopupPage from '../components/customPopupPage/CustomPopupPage'
-import CustomDropDownPage from '../components/customPopupPage/CustomDropDownPage'
-import CustomOpenUpPage from '../components/customPopupPage/CustomOpenUpPage'
-import PopupPage from '../components/customPopupPage/PopupPage'
+import PopupPage from 'react-native-utils-gjs'
 import PopupListViewPage from '../components/customPopupPage/PopupListViewPage'
 
 

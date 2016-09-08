@@ -56,7 +56,7 @@ import {
   Platform
 } from 'react-native'
 
-import PopupPage from '../customPopupPage/PopupPage'
+import {PopupPage} from 'react-native-utils-gjs'
 
 export default class PopupSelecter extends Component{
     constructor(props){

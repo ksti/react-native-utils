@@ -57,11 +57,11 @@ import {
   Platform
 } from 'react-native'
 
-import Form from 'react-native-form'
+import {Form} from 'react-native-utils-gjs'
 
-import PopupPage from '../customPopupPage/PopupPage'
-import ScrollContainer from '../../containers/ScrollContainer'
-import FormView from '../FormView'
+import {PopupPage} from 'react-native-utils-gjs'
+import {ScrollContainer} from 'react-native-utils-gjs'
+import {FormView} from 'react-native-utils-gjs'
 var Lightbox = require('react-native-lightbox');
 import GlobalSize from "../../common/GlobalSize";
 import PublicToast from "../../components/PublicToast";

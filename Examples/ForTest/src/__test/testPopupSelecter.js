@@ -25,7 +25,7 @@ let strURL = 'https://moa.sinooceanland.com:10086/AnChangReportService/Interface
  parameter = {OrgCode: '', CityCode: '', ProjectCode: '', TimeCategory: 'Year', DateStar: '', DateEnd: ''};
 
 
-import PopupSelecter from '../components/PopupView/PopupSelecter'
+import {PopupSelecter} from 'react-native-utils-gjs'
 import PopupFormPageDetail1 from '../components/PopupView/PopupFormPageDetail1'
 
 
@@ -140,7 +140,7 @@ export default class testPopupSelecter extends BaseContainer{
             <Image source={require('../../resource/images/App/ic_delete.png')} style={[{width: 20, height: 20}]} />
           )}
           onClose={(savedData) => this._onClose(savedData, 'PopupSelecter2')}
-          _onSelect={(rowData, sectionID, rowID) => this._onSelect(rowData, sectionID, rowID, 'PopupSelecter2')}
+          onSelect={(rowData, sectionID, rowID) => this._onSelect(rowData, sectionID, rowID, 'PopupSelecter2')}
           dataSource={this.state.dataSource}
         />
         <PopupFormPageDetail1
