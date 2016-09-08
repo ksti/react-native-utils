@@ -64,6 +64,8 @@ export default class PopupSelecter extends Component{
         var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
         this.state = {
           ds: props.dataSource ? ds.cloneWithRows(props.dataSource) : ds.cloneWithRows([]),
+          width: props.width || Dimensions.get('window').width * 2 / 3,
+          height: props.height || 128,
         }
     }
 
@@ -77,6 +79,10 @@ export default class PopupSelecter extends Component{
     }
 
     show = (animateConfigs, width, height) => {
+        this.setState({
+          width: width || this.state.width,
+          height: height || this.state.height,
+        });
         this.PopupPage.show(animateConfigs, width, height);
     }
 
@@ -87,14 +93,14 @@ export default class PopupSelecter extends Component{
     }
 
     _onSelect = (rowData, sectionID, rowID) => {
-      if (this.props._onSelect) {
-        this.props._onSelect(rowData);
+      if (this.props.onSelect) {
+        this.props.onSelect(rowData, sectionID, rowID);
       };
     }
 
     _renderViewHeader = () => {
       var closeButton = this.props.closeButton || (
-        <Text style={[styles.text, {textAlign:'right'}]}>
+        <Text style={[styles.text, {textAlign:'right', marginRight: 4}]}>
           {this.props.headerRightText}
         </Text>
       );
@@ -105,7 +111,9 @@ export default class PopupSelecter extends Component{
           <View
             style={{flexDirection: 'row'/*, justifyContent: 'flex-start'*/, alignItems: 'center', top: 0, left: 0, right: 0, height: 44/*, backgroundColor: 'orange'*/}}
           >
-            <Text style={[styles.text, {textAlign:'left'/*, backgroundColor: 'purple'*/}]}>
+
+            <Text style={[styles.text, {textAlign:'left'/*, backgroundColor: 'purple'*/,marginLeft: 4},this.props.lefttvStyle]}>
+
                 {this.props.headerLeftText}
             </Text>
             <TouchableOpacity

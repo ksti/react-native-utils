@@ -181,6 +181,15 @@ export default class BasePopupPage extends Component{
         }
     }
 
+    componentDidMount() {
+      //
+      // console.log('this.state.widthAnimated.__getValue(): --> ' + this.state.widthAnimated.__getValue());
+      // console.log('this.state.heightAnimated.__getValue(): --> ' + this.state.heightAnimated.__getValue());
+      // console.log('this.state.translateAnimated: --> (' + this.state.translateAnimated.__getValue().x + ', ' + this.state.translateAnimated.__getValue().y + ')');
+    }
+
+
+
     dismissAnimate = (animateConfigs) => {
       if (animateConfigs && typeof animateConfigs.animate === 'function') {
         animateConfigs.animate();
@@ -273,11 +282,12 @@ export default class BasePopupPage extends Component{
       });
     }
 
-    componentDidMount() {
-      //
-      // console.log('this.state.widthAnimated.__getValue(): --> ' + this.state.widthAnimated.__getValue());
-      // console.log('this.state.heightAnimated.__getValue(): --> ' + this.state.heightAnimated.__getValue());
-      // console.log('this.state.translateAnimated: --> (' + this.state.translateAnimated.__getValue().x + ', ' + this.state.translateAnimated.__getValue().y + ')');
+    _onClikBackground = () => {
+      if (this.props.onClikBackground) {
+        this.props.onClikBackground();
+      } else {
+        this.dismiss();
+      }
     }
 
     renderBaseContainer = (popupBody) => {
@@ -298,7 +308,7 @@ export default class BasePopupPage extends Component{
               style={[styles.baseContainer, baseStyle]}
             >
               <TouchableOpacity 
-                onPress={this.dismiss} 
+                onPress={this._onClikBackground} 
                 pointerEvents={this.state.disablePointerEvents?'none':'auto'} 
                 style={[styles.overlay, {backgroundColor: 'transparent'}]} 
               >
