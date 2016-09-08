@@ -1,9 +1,9 @@
 
-import httpRequest from './src/httpRequest';
-import FormView from './src/FormView';
-import {storageUtil} from './src/storage'
-import PopupPage from './src/customPopupPage/PopupPage';
-import PopupSelecter from './src/PopupView/PopupSelecter';
+import httpRequest from './src/utils/httpRequest';
+import FormView from './src/components/FormView/FormView';
+import {storageUtil} from './src/utils/storage'
+import PopupPage from './src/components/customPopupPage/PopupPage';
+import PopupSelecter from './src/components/PopupView/PopupSelecter';
 
 export {
   httpRequest,
