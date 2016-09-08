@@ -182,6 +182,14 @@ function httpRequest(normal: Boolean) {
     this._defualtHeaders = Object.assign({}, this._defualtHeaders, headers);
   }
 
+  /**
+   * @param {Number} timeout
+   * 设置请求超时
+   */
+  this.setTimeout = function(timeout: Number) {
+    this.timeout = timeout;
+  }
+
 };
 
 
