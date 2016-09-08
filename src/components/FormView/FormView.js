@@ -160,7 +160,7 @@ export default class FormView extends Component{
             <View style={{width: 20, alignItems: 'center'}}>
                 <View style={{width:20,alignItems:'flex-end'}}>
                     <Image
-                        source={require('../../images/App/ic_right_line.png')}
+                        source={require('../../resource/images/ic_right_line.png')}
                         style={{height:15,width:15,marginRight:5}} />
                 </View>
             </View>);
