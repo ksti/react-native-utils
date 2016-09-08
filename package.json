@@ -1,5 +1,5 @@
 {
-  "name": "react-native-utilsgjs",
+  "name": "react-native-utils-gjs",
   "version": "0.0.4",
   "description": "Some utils for react-native, like httpRequest",
   "main": "index.js",
