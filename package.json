@@ -1,9 +1,7 @@
-
 {
-  "name": "react-native-utils",
+  "name": "react-native-utilsgjs",
   "version": "0.0.1",
   "private": false,
-  "version": "0.8.2",
   "description": "Some utils for react-native, like httpRequest",
   "main": "index.js",
   "scripts": {
@@ -44,5 +42,8 @@
     "react-redux": "^4.4.5",
     "redux": "^3.5.2",
     "redux-thunk": "^2.1.0"
+  },
+  "directories": {
+    "doc": "docs"
   }
 }
