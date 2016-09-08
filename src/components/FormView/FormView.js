@@ -160,7 +160,7 @@ export default class FormView extends Component{
             <View style={{width: 20, alignItems: 'center'}}>
                 <View style={{width:20,alignItems:'flex-end'}}>
                     <Image
-                        source={require('../../resource/images/ic_right_line.png')}
+                        source={this.props.accessoryImage || require('../../resource/images/ic_right_line.png')}
                         style={{height:15,width:15,marginRight:5}} />
                 </View>
             </View>);
@@ -419,7 +419,7 @@ export default class FormView extends Component{
                     </View>
                     <View style={[styles.columnContainer, {flex:flexInput+1}, rightWidthStyle]}>
                         <ButtonWithAccessory
-                            accessoryImg={require('../../images/App/ic_down_fill.png')}
+                            accessoryImg={this.props.accessoryImg || require('../../resource/images/ic_down_fill.png')}
                             title={this.state.showValue?this.state.showValue:this.state.inputValue}
                             onPress={() => this._onPressButton()}
                             style={{marginTop: 4, marginLeft:4}}
