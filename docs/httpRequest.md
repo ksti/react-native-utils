@@ -11,11 +11,12 @@
 	
 	...
 	
+	// post 请求 表单形式：会按表单形式上传参数
 	HTTPRequest.contentType = 'form';
-    	HTTPRequest.setRequestHeader({
-        	'Content-Type': 'application/x-www-form-urlencoded',
-    	});
-    	HTTPRequest.requestPostWithUrl(urlStr,parameter,function(error,responseData, response){
+	HTTPRequest.setRequestHeader({
+    	'Content-Type': 'application/x-www-form-urlencoded',
+	});
+	HTTPRequest.requestPostWithUrl(urlStr,parameter,function(error,responseData, response){
 		if (error) {
 			// error
 		}else {
@@ -31,6 +32,7 @@
 ```
 
 ```
+	// get 请求 
 	HTTPRequest.requestGetWithUrl(strURL,parameter,
         function(error,responseData,response){
 		if (error) {
@@ -49,7 +51,7 @@
 ```
 
 ```
-
+	// 测试下载
 	HTTPRequest.downloadProgress = (progress) => {
 		console.log(progress);
 	}
@@ -106,5 +108,12 @@
 		      }
 		  }
 		});
+
+```
+
+```
+	// 设置请求超时
+	// HTTPRequest.timeout = 1000; // 1s
+	HTTPRequest.setTimeout(1000); // 1s
 
 ```
