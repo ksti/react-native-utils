@@ -19,7 +19,7 @@ some utils for react-native
 ### Installation
 
 ```sh
-$ npm install --save react-native-utilsgjs
+$ npm install --save react-native-utils-gjs
 ```
 
 ## Usage
