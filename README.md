@@ -14,6 +14,13 @@ some utils for react-native
 
 - use httpRequest to send a Get or Post http request
 - use FormView to set up a Form views page
+ 
+
+### Installation
+
+```sh
+$ npm install --save react-native-utilsgjs
+```
 
 ## Usage
 Check out the [Examples](Examples) for details.
