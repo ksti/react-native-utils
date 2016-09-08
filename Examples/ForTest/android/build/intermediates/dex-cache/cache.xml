@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        jar="/Users/yandezhi/.gradle/caches/modules-2/files-2.1/com.parse.bolts/bolts-tasks/1.4.0/d85884acf6810a3bbbecb587f239005cbc846dc4/bolts-tasks-1.4.0.jar"
+        jumboMode="true"
+        revision="23.0.1"
+        sha1="d85884acf6810a3bbbecb587f239005cbc846dc4">
+        <dex dex="/Users/yandezhi/sinooceanland/ForTest/android/app/build/intermediates/pre-dexed/debug/bolts-tasks-1.4.0_52e15335beb14619b939addebfe2f3111e31268e.jar" />
+    </item>
+    <item
+        jar="/Users/yandezhi/sinooceanland/ForTest/android/app/build/intermediates/exploded-aar/com.facebook.fresco/drawee/0.11.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.1"
+        sha1="1137942adeb03984c1311b662363dd38fc238fd3">
+        <dex dex="/Users/yandezhi/sinooceanland/ForTest/android/app/build/intermediates/pre-dexed/debug/com.facebook.fresco-drawee-0.11.0_11c56e9edd16c891ea6901b3672684c8c1b7b93a.jar" />
+    </item>
+    <item
+        jar="/Users/yandezhi/.gradle/caches/modules-2/files-2.1/com.squareup.okio/okio/1.8.0/5ea7af56cc7c567ed9856d99efb30740e9b17ff/okio-1.8.0.jar"
+        jumboMode="true"
+        revision="23.0.1"
+        sha1="05ea7af56cc7c567ed9856d99efb30740e9b17ff">
+        <dex dex="/Users/yandezhi/sinooceanland/ForTest/android/app/build/intermediates/pre-dexed/debug/okio-1.8.0_ef18accc2c479ae868c07c2b116c8e1171095fb6.jar" />
+    </item>
+    <item
+        jar="/Users/yandezhi/sinooceanland/ForTest/android/app/build/intermediates/exploded-aar/com.facebook.fresco/imagepipeline/0.11.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.1"
+        sha1="3341b66c54367e777a0647e2db96c045329bfeab">
+        <dex dex="/Users/yandezhi/sinooceanland/ForTest/android/app/build/intermediates/pre-dexed/debug/com.facebook.fresco-imagepipeline-0.11.0_a02257287a69eedfc8c80292f376bd4961e58192.jar" />
+    </item>
+    <item
+        jar="/Users/yandezhi/sinooceanland/ForTest/android/app/build/intermediates/exploded-aar/com.facebook.fresco/imagepipeline-okhttp3/0.11.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.1"
+        sha1="2b8a01ad9da5d26d0067894c22e87597bca2c500">
+        <dex dex="/Users/yandezhi/sinooceanland/ForTest/android/app/build/intermediates/pre-dexed/debug/com.facebook.fresco-imagepipeline-okhttp3-0.11.0_2512f8051bf4e806bfbcdb2d5333244dd6b3bbde.jar" />
+    </item>
+    <item
+        jar="/Users/yandezhi/sinooceanland/ForTest/android/app/build/intermediates/exploded-aar/com.android.support/recyclerview-v7/23.0.1/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.1"
+        sha1="4356e230a981d1bbf047d848b91bc0d9b7c5bacc">
+        <dex dex="/Users/yandezhi/sinooceanland/ForTest/android/app/build/intermediates/pre-dexed/debug/com.android.support-recyclerview-v7-23.0.1_3abaa8432afec017c0351dda2553748dce429296.jar" />
+    </item>
+    <item
+        jar="/Users/yandezhi/.gradle/caches/modules-2/files-2.1/com.nineoldandroids/library/2.4.0/e9b63380f3a242dbdbf103a2355ad7e43bad17cb/library-2.4.0.jar"
+        jumboMode="true"
+        revision="23.0.1"
+        sha1="e9b63380f3a242dbdbf103a2355ad7e43bad17cb">
+        <dex dex="/Users/yandezhi/sinooceanland/ForTest/android/app/build/intermediates/pre-dexed/debug/library-2.4.0_404f406df195c67ddf6afcb5e6a8b93388316f66.jar" />
+    </item>
+    <item
+        jar="/Users/yandezhi/sinooceanland/ForTest/android/app/build/intermediates/exploded-aar/com.facebook.fresco/imagepipeline-base/0.11.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.1"
+        sha1="ca63c521b5745ae9a09629d7ca67ff6bc2a967fe">
+        <dex dex="/Users/yandezhi/sinooceanland/ForTest/android/app/build/intermediates/pre-dexed/debug/com.facebook.fresco-imagepipeline-base-0.11.0_9508d14078d1de504bb918d503d4f4584d31178c.jar" />
+    </item>
+    <item
+        jar="/Users/yandezhi/AndroidSdk/extras/android/m2repository/com/android/support/support-annotations/23.2.1/support-annotations-23.2.1.jar"
+        jumboMode="true"
+        revision="23.0.1"
+        sha1="ccb693bc0774fcb637246f7360de25b4af7df318">
+        <dex dex="/Users/yandezhi/sinooceanland/ForTest/android/app/build/intermediates/pre-dexed/debug/support-annotations-23.2.1_0ed8500ba36f31453b326ee162c63b324cafa61f.jar" />
+    </item>
+    <item
+        jar="/Users/yandezhi/.gradle/caches/modules-2/files-2.1/com.squareup.okhttp3/okhttp-urlconnection/3.2.0/6f8a4b1435c9e0a6f9c5fe4a1be46627b848fd0c/okhttp-urlconnection-3.2.0.jar"
+        jumboMode="true"
+        revision="23.0.1"
+        sha1="6f8a4b1435c9e0a6f9c5fe4a1be46627b848fd0c">
+        <dex dex="/Users/yandezhi/sinooceanland/ForTest/android/app/build/intermediates/pre-dexed/debug/okhttp-urlconnection-3.2.0_57fe9d5fee210653747d1093bde6f6eb16beaeeb.jar" />
+    </item>
+    <item
+        jar="/Users/yandezhi/sinooceanland/ForTest/android/app/build/intermediates/exploded-aar/com.facebook.fresco/fresco/0.11.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.1"
+        sha1="d31aadf33187c37a7cd63dc1b769f8c6e33f78c3">
+        <dex dex="/Users/yandezhi/sinooceanland/ForTest/android/app/build/intermediates/pre-dexed/debug/com.facebook.fresco-fresco-0.11.0_733922d3dd737a20fd6130a265f19399287b4b01.jar" />
+    </item>
+    <item
+        jar="/Users/yandezhi/sinooceanland/ForTest/android/app/build/intermediates/exploded-aar/com.android.support/support-v4/23.2.1/jars/libs/internal_impl-23.2.1.jar"
+        jumboMode="true"
+        revision="23.0.1"
+        sha1="607a3d0b8013b4ccbfeb0b7cb293351994e021fb">
+        <dex dex="/Users/yandezhi/sinooceanland/ForTest/android/app/build/intermediates/pre-dexed/debug/internal_impl-23.2.1_23019f6c11aa3cf5282022b7f87044ad123c2d65.jar" />
+    </item>
+    <item
+        jar="/Users/yandezhi/sinooceanland/ForTest/android/app/build/intermediates/exploded-aar/com.facebook.react/react-native/0.29.0/jars/libs/infer-annotations-1.5.jar"
+        jumboMode="true"
+        revision="23.0.1"
+        sha1="df2d16b25be8683063ce05d15192b62dce3f4890">
+        <dex dex="/Users/yandezhi/sinooceanland/ForTest/android/app/build/intermediates/pre-dexed/debug/infer-annotations-1.5_12d5cd26c5d2602a20b91211c1afbb659ba903e0.jar" />
+    </item>
+    <item
+        jar="/Users/yandezhi/.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.core/jackson-core/2.2.3/1a0113da2cab5f4c216b4e5e7c1dbfaa67087e14/jackson-core-2.2.3.jar"
+        jumboMode="true"
+        revision="23.0.1"
+        sha1="1a0113da2cab5f4c216b4e5e7c1dbfaa67087e14">
+        <dex dex="/Users/yandezhi/sinooceanland/ForTest/android/app/build/intermediates/pre-dexed/debug/jackson-core-2.2.3_d5f5725d32c3aafa5c70d6838a83282023e23eee.jar" />
+    </item>
+    <item
+        jar="/Users/yandezhi/.gradle/caches/modules-2/files-2.1/com.google.code.findbugs/jsr305/3.0.0/5871fb60dc68d67da54a663c3fd636a10a532948/jsr305-3.0.0.jar"
+        jumboMode="true"
+        revision="23.0.1"
+        sha1="5871fb60dc68d67da54a663c3fd636a10a532948">
+        <dex dex="/Users/yandezhi/sinooceanland/ForTest/android/app/build/intermediates/pre-dexed/debug/jsr305-3.0.0_35e6a000b9ba8874db0354d5cb698accd40c7248.jar" />
+    </item>
+    <item
+        jar="/Users/yandezhi/.gradle/caches/modules-2/files-2.1/com.squareup.okhttp3/okhttp/3.2.0/f7873a2ebde246a45c2a8d6f3247108b4c88a879/okhttp-3.2.0.jar"
+        jumboMode="true"
+        revision="23.0.1"
+        sha1="f7873a2ebde246a45c2a8d6f3247108b4c88a879">
+        <dex dex="/Users/yandezhi/sinooceanland/ForTest/android/app/build/intermediates/pre-dexed/debug/okhttp-3.2.0_2af119e2fdbb2b039852ee7388220fd8a53a4a75.jar" />
+    </item>
+    <item
+        jar="/Users/yandezhi/sinooceanland/ForTest/android/app/build/intermediates/incremental-runtime-classes/debug/instant-run.jar"
+        jumboMode="true"
+        revision="23.0.1"
+        sha1="cc71fe0179e77e729dac7dce10d5f6cd28be8e67">
+        <dex dex="/Users/yandezhi/sinooceanland/ForTest/android/app/build/intermediates/pre-dexed/debug/instant-run_41aef356c87039d7f071de8d2a7cf7df033b7842.jar" />
+    </item>
+    <item
+        jar="/Users/yandezhi/sinooceanland/ForTest/android/app/build/intermediates/exploded-aar/com.facebook.fresco/fbcore/0.11.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.1"
+        sha1="98786c1770b531b9194fb6448b2a2692c64074b6">
+        <dex dex="/Users/yandezhi/sinooceanland/ForTest/android/app/build/intermediates/pre-dexed/debug/com.facebook.fresco-fbcore-0.11.0_6dd2c0fe317a297116ff098f64a68cdbbf6c81f9.jar" />
+    </item>
+    <item
+        jar="/Users/yandezhi/.gradle/caches/modules-2/files-2.1/com.squareup.okhttp3/okhttp-ws/3.2.0/1ea229d6984444c8c58b8e97ba4c8429d9d135b3/okhttp-ws-3.2.0.jar"
+        jumboMode="true"
+        revision="23.0.1"
+        sha1="1ea229d6984444c8c58b8e97ba4c8429d9d135b3">
+        <dex dex="/Users/yandezhi/sinooceanland/ForTest/android/app/build/intermediates/pre-dexed/debug/okhttp-ws-3.2.0_343a8cc1c806bd4d3c8e588ede13f63795b0a92c.jar" />
+    </item>
+    <item
+        jar="/Users/yandezhi/sinooceanland/ForTest/android/app/build/intermediates/incremental-classes/debug/instant-run-bootstrap.jar"
+        jumboMode="true"
+        revision="23.0.1"
+        sha1="e361d4404323e7eb4d64beb819bc957ac66f7105">
+        <dex dex="/Users/yandezhi/sinooceanland/ForTest/android/app/build/intermediates/pre-dexed/debug/instant-run-bootstrap_3d9196022907476aa6d5b4a82fe1e2ff1ff37510.jar" />
+    </item>
+    <item
+        jar="/Users/yandezhi/sinooceanland/ForTest/android/app/build/intermediates/exploded-aar/com.facebook.react/react-native/0.29.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.1"
+        sha1="3d3b981aa5d57d8b9104a719b8879abcbbd7a91e">
+        <dex dex="/Users/yandezhi/sinooceanland/ForTest/android/app/build/intermediates/pre-dexed/debug/com.facebook.react-react-native-0.29.0_658b95c361f01dc2fc6c3e9e6964223b0f31cd56.jar" />
+    </item>
+    <item
+        jar="/Users/yandezhi/sinooceanland/ForTest/android/app/build/intermediates/exploded-aar/com.android.support/support-v4/23.2.1/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.1"
+        sha1="3be474b1b21b31cf2fa93fe6bd641ae108d96452">
+        <dex dex="/Users/yandezhi/sinooceanland/ForTest/android/app/build/intermediates/pre-dexed/debug/com.android.support-support-v4-23.2.1_6a4c31bb218d10e95a42305ae3a2c4bdcd6318f4.jar" />
+    </item>
+    <item
+        jar="/Users/yandezhi/sinooceanland/ForTest/android/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.0.1/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.1"
+        sha1="d86429b0f0b3f3cafbeb78dda1b9d89119ccb05d">
+        <dex dex="/Users/yandezhi/sinooceanland/ForTest/android/app/build/intermediates/pre-dexed/debug/com.android.support-appcompat-v7-23.0.1_7662e1f07f5e555ebb0edbf89fd3b4a71da57384.jar" />
+    </item>
+
+</items>
