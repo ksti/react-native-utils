@@ -81,6 +81,18 @@ var cardMenu = [
             title:'测试11',
             image:require('../../../resource/images/App/fangwuyuyanshou.png'),
             key:'saleControl'
+        },{
+            title:'测试9',
+            image:require('../../../resource/images/App/fangwuyuyanshou.png'),
+            key:'saleStatistic'
+        },{
+            title:'测试10',
+            image:require('../../../resource/images/App/fangwuyuyanshou.png'),
+            key:'hotSale'
+        },{
+            title:'测试11',
+            image:require('../../../resource/images/App/fangwuyuyanshou.png'),
+            key:'saleControl'
         },
     ],
     [
@@ -216,11 +228,10 @@ class WorkHome extends BaseContainer {
             );
         }else {
             var itemViewes = new Array();
-            var rowViewes = new Array();
             var rowMax = 4;
             var rows = Math.ceil(items.length / rowMax);
             for (var i = 0; i < rows; i++) {
-                var tempItemViewes = new Array();
+                var rowViewes = new Array();
                 var rowStart = i * rowMax;
                 for (var j = rowStart; j < (rowStart + rowMax); j++) {
                     var itemView;
@@ -244,14 +255,13 @@ class WorkHome extends BaseContainer {
                     }
                     
                     
-                    tempItemViewes.push(itemView);
+                    rowViewes.push(itemView);
                 };
-                rowViewes.push(
+                itemViewes.push(
                     <View style={styles.lineBoxContainer}>
-                        {tempItemViewes}
+                        {rowViewes}
                     </View>
                 );
-                itemViewes.push(rowViewes);
             };
             
             // return(
