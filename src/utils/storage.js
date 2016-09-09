@@ -222,6 +222,13 @@ var storageUtil = Object.assign({}, Storage.prototype, {
     
   },
 
+  /*
+  getBatchData 和 getBatchDataWithIds 这两个方法除了参数形式不同，还有个值得注意的差异。
+  getBatchData会在数据缺失时挨个调用不同的sync方法(因为key不同)。
+  但是getBatchDataWithIds却会把缺失的数据统计起来，将它们的id收集到一个数组中，然后一次传递给对应的sync方法(避免挨个查询导致同时发起大量请求)，
+  所以你需要在服务端实现通过数组来查询返回，还要注意对应的sync方法的参数处理（因为id参数可能是一个字符串，也可能是一个数组的字符串）。
+  */
+
   getBatchData : function(arr) {
 
     var _this = this;
@@ -354,7 +361,7 @@ var storageUtil = Object.assign({}, Storage.prototype, {
   },
   
   getAllDataForKey : function(strKey) {
-    // 获取某个key下的所有id
+    // 获取某个key下的所有数据
     var _this = this;
 
     var promise = new Promise(function(resolve, reject) {
