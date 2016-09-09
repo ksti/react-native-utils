@@ -132,7 +132,51 @@ var storageUtil = Object.assign({}, Storage.prototype, {
     
   },
 
-  getValue : function(strKey) {
+  setKeyIdValue : function(strKey, strId, objectValue) {
+    // 使用key来保存数据。这些数据一般是全局独有的，常常需要调用的。
+    // 除非你手动移除，这些数据会被永久保存，而且默认不会过期。
+
+    var _this = this;
+
+    return new Promise(function(resolve, reject) {
+      // 做一些异步操作的事情，然后……
+      // 存储
+      _this.storage.save({
+        key: strKey,  // 注意:请不要在key中使用_下划线符号!
+        id: strId,   // 注意:请不要在id中使用_下划线符号!
+        rawData: objectValue,
+
+        // 如果不指定过期时间，则会使用defaultExpires参数
+        // 如果设为null，则永不过期
+        // expires: 1000 * 3600
+        expires: null,
+      }).then(ret => {
+        //如果找到数据，则在then方法中返回
+        // console.log(ret.userid);
+        // return ret.value;
+        // return ret;
+        // if (/* 一切正常 */ret) { 
+        //   resolve(ret);
+        // }
+
+        resolve(ret);
+
+      }).catch(err => {
+        //如果没有找到数据且没有同步方法，
+        //或者有其他异常，则在catch中返回
+        // console.warn(err);
+        // return err;
+        reject(err);
+        
+      });
+
+      
+    });
+
+    
+  },
+
+  getValue : function(strKey, strId) {
 
     var _this = this;
 
@@ -141,6 +185,7 @@ var storageUtil = Object.assign({}, Storage.prototype, {
       // 读取
       _this.storage.load({
         key: strKey,
+        id: strId,
 
         // autoSync(默认为true)意味着在没有找到数据或数据过期时自动调用相应的同步方法
         autoSync: true,
@@ -177,15 +222,24 @@ var storageUtil = Object.assign({}, Storage.prototype, {
     
   },
 
-  removeKey : function(strKey) {
-    // 删除单个数据
+  getValue : function(strKey, strId) {
+
     var _this = this;
 
-    return new Promise(function(resolve, reject) {
+    var promise = new Promise(function(resolve, reject) {
       // 做一些异步操作的事情，然后……
-      // 删除
-      _this.storage.remove({
-          key: strKey
+      // 读取
+      _this.storage.load({
+        key: strKey,
+        id: strId,
+
+        // autoSync(默认为true)意味着在没有找到数据或数据过期时自动调用相应的同步方法
+        autoSync: true,
+
+        // syncInBackground(默认为true)意味着如果数据过期，
+        // 在调用同步方法的同时先返回已经过期的数据。
+        // 设置为false的话，则始终强制返回同步方法提供的最新数据(当然会需要更多等待时间)。
+        syncInBackground: true
       }).then(ret => {
         //如果找到数据，则在then方法中返回
         // console.log(ret.userid);
@@ -208,8 +262,144 @@ var storageUtil = Object.assign({}, Storage.prototype, {
 
       
     });
+
+    return promise;
+
     
-  }
+  },
+  
+  getIdsForKey : function(strKey) {
+    // 获取某个key下的所有id
+    var _this = this;
+
+    var promise = new Promise(function(resolve, reject) {
+      // 做一些异步操作的事情，然后……
+      // 获取某个key下的所有id
+      _this.storage.getIdsForKey(strKey).then(ret => {
+        //如果找到数据，则在then方法中返回
+        // console.log(ret.userid);
+        // return ret.value;
+        // return ret;
+        // if (/* 一切正常 */ret) { 
+        //   resolve(ret);
+        // }
+
+        resolve(ret);
+
+      }).catch(err => {
+        //如果没有找到数据且没有同步方法，
+        //或者有其他异常，则在catch中返回
+        // console.warn(err);
+        // return err;
+        reject(err);
+        
+      });
+
+      
+    });
+
+    return promise;
+
+    
+  },
+  
+  getAllDataForKey : function(strKey) {
+    // 获取某个key下的所有id
+    var _this = this;
+
+    var promise = new Promise(function(resolve, reject) {
+      // 做一些异步操作的事情，然后……
+      // 获取某个key下的所有数据
+      _this.storage.getAllDataForKey(strKey).then(ret => {
+        //如果找到数据，则在then方法中返回
+        // console.log(ret.userid);
+        // return ret.value;
+        // return ret;
+        // if (/* 一切正常 */ret) { 
+        //   resolve(ret);
+        // }
+
+        resolve(ret);
+
+      }).catch(err => {
+        //如果没有找到数据且没有同步方法，
+        //或者有其他异常，则在catch中返回
+        // console.warn(err);
+        // return err;
+        reject(err);
+        
+      });
+
+      
+    });
+
+    return promise;
+
+    
+  },
+
+  // --------------------------------------------------  
+
+  removeKey : function(strKey, strId) {
+    // 删除单个数据
+    var _this = this;
+
+    return new Promise(function(resolve, reject) {
+      // 做一些异步操作的事情，然后……
+      // 删除
+      _this.storage.remove({
+          key: strKey,
+          id: strId
+      }).then(ret => {
+
+        resolve(ret);
+
+      }).catch(err => {
+
+        reject(err);
+        
+      });
+
+      
+    });
+    
+  },
+
+  clearMap : function(strKey) {
+    // !! 清除某个key下的所有数据
+    var _this = this;
+
+    return new Promise(function(resolve, reject) {
+      // 做一些异步操作的事情，然后……
+      if (strKey) {
+        // !! 清除某个key下的所有数据
+        _this.storage.clearMapForKey(strKey).then(ret => {
+
+          resolve(ret);
+
+        }).catch(err => {
+
+          reject(err);
+          
+        });
+      } else {
+        // !! 清空map，移除所有"key-id"数据（但会保留只有key的数据）
+        _this.storage.clearMap().then(ret => {
+
+          resolve(ret);
+
+        }).catch(err => {
+
+          reject(err);
+          
+        });
+      }
+      
+
+      
+    });
+    
+  },
 
 });
 
