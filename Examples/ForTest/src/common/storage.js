@@ -222,24 +222,74 @@ var storageUtil = Object.assign({}, Storage.prototype, {
     
   },
 
-  getValue : function(strKey, strId) {
+  getBatchData : function(arr) {
 
     var _this = this;
 
     var promise = new Promise(function(resolve, reject) {
       // 做一些异步操作的事情，然后……
-      // 读取
-      _this.storage.load({
-        key: strKey,
-        id: strId,
+      // 读取批量数据
 
-        // autoSync(默认为true)意味着在没有找到数据或数据过期时自动调用相应的同步方法
-        autoSync: true,
+      // 使用和load方法一样的参数读取批量数据，但是参数是以数组的方式提供。
+      // 会在需要时分别调用相应的同步方法，最后统一返回一个有序数组。
+      // storage.getBatchData([
+      //     { key: 'loginState' },
+      //     { key: 'checkPoint', syncInBackground: false },
+      //     { key: 'balance' },
+      //     { key: 'user', id: '1009' }
+      // ])
+      // .then(results => {
+      //   results.forEach( result => {
+      //     console.log(result);    
+      //   })
+      // })
 
-        // syncInBackground(默认为true)意味着如果数据过期，
-        // 在调用同步方法的同时先返回已经过期的数据。
-        // 设置为false的话，则始终强制返回同步方法提供的最新数据(当然会需要更多等待时间)。
-        syncInBackground: true
+      _this.storage.getBatchData(arr).then(ret => {
+        //如果找到数据，则在then方法中返回
+        // console.log(ret.userid);
+        // return ret.value;
+        // return ret;
+        // if (/* 一切正常 */ret) { 
+        //   resolve(ret);
+        // }
+
+        resolve(ret);
+
+      }).catch(err => {
+        //如果没有找到数据且没有同步方法，
+        //或者有其他异常，则在catch中返回
+        // console.warn(err);
+        // return err;
+        reject(err);
+        
+      });
+
+      
+    });
+
+    return promise;
+
+    
+  },
+
+  getBatchDataWithIds : function(strKey, arr) {
+
+    var _this = this;
+
+    var promise = new Promise(function(resolve, reject) {
+      // 做一些异步操作的事情，然后……
+      // 读取批量数据
+
+      //根据key和一个id数组来读取批量数据
+      // storage.getBatchDataWithIds({
+      //   key: 'user', 
+      //   ids: ['1001', '1002', '1003']
+      // })
+      // .then( ... )
+
+      _this.storage.getBatchDataWithIds({
+        key: strKey, 
+        ids: arr
       }).then(ret => {
         //如果找到数据，则在then方法中返回
         // console.log(ret.userid);
