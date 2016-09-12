@@ -25,8 +25,7 @@
  * AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * @providesModule PopupFormPageDetail1
- * @flow
+ * 
  */
 
 /*
@@ -49,6 +48,7 @@ import {
     Easing,
     TouchableWithoutFeedback,
     TouchableOpacity,
+    TouchableHighlight,
     Image,
     ScrollView,
 } from 'react-native'
@@ -57,20 +57,56 @@ import {
   Platform
 } from 'react-native'
 
-import {Form} from 'react-native-utils-gjs'
+import Form from 'react-native-form'
 
-import {PopupPage} from 'react-native-utils-gjs'
-import {ScrollContainer} from 'react-native-utils-gjs'
-import {FormView} from 'react-native-utils-gjs'
-var Lightbox = require('react-native-lightbox');
+import PopupPage from '../customPopupPage/PopupPage'
+import ScrollContainer from '../../containers/ScrollContainer'
+import FormView from '../FormView'
 import GlobalSize from "../../common/GlobalSize";
 import PublicToast from "../../components/PublicToast";
+
+var listdata = [
+  {
+    name: '图片1',
+    uri: 'http://p1.qhimg.com/t01080c5ee1710adea2.png',
+    local: '',
+  },
+  {
+    name: '图片2',
+    uri: 'http://p1.qhimg.com/t01080c5ee1710adea2.png',
+    local: '',
+  },
+  {
+    name: '图片3',
+    uri: 'http://p1.qhimg.com/t01080c5ee1710adea2.png',
+    local: '',
+  },
+  {
+    name: '图片4',
+    uri: 'http://p1.qhimg.com/t01080c5ee1710adea2.png',
+    local: '',
+  },
+  {
+    name: '图片5',
+    uri: 'http://p1.qhimg.com/t01080c5ee1710adea2.png',
+    local: '',
+  },
+  {
+    name: '加号',
+    // uri: require('../../../images/App/jiahao.png'),
+    uri: '../../../images/App/jiahao.png',
+    local: require('../../../images/App/jiahao.png'),
+  }
+];
+
 export default class PopupFormPageDetail1 extends Component{
     constructor(props){
         super(props);
         var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+        var imgDs = new ListView.DataSource({rowHasChanged: (r1, r2) => true});
         this.state = {
           ds: props.dataSource ? ds.cloneWithRows(props.dataSource) : ds.cloneWithRows([]),
+          imageDataSource: imgDs.cloneWithRows(listdata),
           width: props.width || Dimensions.get('window').width ,
           height: props.height || 128,
           leftWidth: props.leftWidth || 85,
@@ -91,7 +127,7 @@ export default class PopupFormPageDetail1 extends Component{
           width: width || this.state.width,
           height: height || this.state.height,
         });
-        this.PopupPage.show(animateConfigs, width, height);
+        this.PopupPage.show(animateConfigs, this.state.width, this.state.height);
     }
 
     _onPressButton = () => {
@@ -165,8 +201,9 @@ export default class PopupFormPageDetail1 extends Component{
                   flexDirection: 'row', alignSelf: 'center', alignItems: 'center'/*, backgroundColor: 'green'*/
                 },
                 {
-                  width: (this.state.width - this.state.leftWidth - 54) / 3,
+                  width: (this.state.width - this.state.leftWidth - 8) / 3,
                   height: 24,
+                  marginRight: 8,
                 }
               ]}
             >
@@ -182,8 +219,9 @@ export default class PopupFormPageDetail1 extends Component{
                   flexDirection: 'row', alignSelf: 'center', alignItems: 'center'/*, backgroundColor: 'green'*/
                 },
                 {
-                  width: (this.state.width - this.state.leftWidth - 54) / 3,
+                  width: (this.state.width - this.state.leftWidth - 8) / 3,
                   height: 24,
+                  marginRight: 8,
                 }
               ]}
             >
@@ -199,8 +237,9 @@ export default class PopupFormPageDetail1 extends Component{
                   flexDirection: 'row', alignSelf: 'center', alignItems: 'center'/*, backgroundColor: 'green'*/
                 },
                 {
-                  width: (this.state.width - this.state.leftWidth - 54) / 3,
+                  width: (this.state.width - this.state.leftWidth - 8) / 3,
                   height: 24,
+                  marginRight: 8,
                 }
               ]}
             >
@@ -215,7 +254,6 @@ export default class PopupFormPageDetail1 extends Component{
     }
 
     _renderCustomView2 = () => {
-       let   imagedata = ["1","2"];
       return (
           <View style={[styles.viewbg,{borderBottomColor:'#dedede',borderBottomWidth:0.5,paddingTop:2,paddingBottom:2}]}>
               <Text style={styles.tvhint}>验收照片
@@ -224,21 +262,147 @@ export default class PopupFormPageDetail1 extends Component{
                   </Text> 
               
               </Text>
-              <ScrollView
-                  style={[{overflow: 'hidden'}]}
-                  contentContainerStyle={[{
-                         justifyContent: 'center',
-                         backgroundColor: '#ffffff',
-                         alignItems: 'center',
-                        }]}
-                  horizontal={true} showsHorizontalScrollIndicator={false}>
-                  <View style={{flexDirection: 'row', overflow: 'hidden'}}>
-                      {this.rederImageView([],0)}
-                  </View>
-              </ScrollView>
+              <ListView
+                  enableEmptySections={true}
+                  contentContainerStyle={styles.list}
+                  dataSource={this.state.imageDataSource}
+                  renderRow={this._renderRow}
+              />
           </View>
         
       );
+    }
+
+    _renderRow = (rowData, sectionID, rowID) => {
+        var showMax = 5;
+        var imageCount = this.state.imageDataSource.getRowCount();
+        if (Number(rowID) > showMax - 1 && Number(rowID) < imageCount - 1) {
+            return null;
+        }
+        // overlay
+        var overlay = null;
+        if (imageCount > showMax && rowID === String(showMax - 1)) {
+            //
+            var moreImage = require('../../../images/App/ic_gray_rightArrow.png');
+            overlay = (
+                <View
+                    style={{
+                        position: 'absolute',
+                        justifyContent :'center',
+                        alignItems: 'center',
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        opacity: 0.4,
+                        backgroundColor: 'black',
+                    }}
+                >
+                        <Text
+                            style={{
+                              width: imageWidth,
+                              height: imageHeight,
+                              alignSelf:'center',
+                              justifyContent: 'center',
+                              backgroundColor:'transparent',
+                              color: 'white',
+                            }}
+                        >
+                            更多...
+                        </Text>
+                </View>
+            );
+        }
+        // layout
+        var rowMax = 4;
+        var margin = 4;
+        var imageWidth = (this.state.width - this.state.leftWidth - rowMax * margin * 2 - 8 * 2) / rowMax;
+        var imageHeight = imageWidth + 10;
+        var itemView;
+        if (rowID === String(imageCount - 1)) {
+          itemView = (
+            <TouchableOpacity onPress={()=>{this.addImage(rowID)}} underlayColor='transparent' 
+                style={{
+                    alignSelf: 'center',
+                    justifyContent: 'center',
+                    backgroundColor: 'transparent',
+                }}
+            >
+              <Image
+                  style={{
+                    width: imageWidth,
+                    height: imageHeight,
+                    resizeMode: 'contain', 
+                    alignSelf: 'center',
+                    justifyContent: 'center',
+                    backgroundColor: 'transparent',
+                  }}
+                  // source={require('../../../images/App/jiahao.png')}
+                  source={rowData.local}
+              />
+            </TouchableOpacity>
+          )
+        } else {
+            itemView = (
+                <TouchableHighlight
+                    style={{
+                        alignSelf: 'center',
+                        justifyContent: 'center',
+                        backgroundColor: 'transparent',
+                    }}
+                    underlayColor="#ffffff"
+                    onPress={ ()=>{
+                        this.ImageOnClick(rowData)
+                      }
+                    }
+                >
+                    <View
+                        style={{
+                            justifyContent :'center',
+                            alignItems: 'center',
+                        }}
+                    >
+                            <Image
+                                style={{
+                                  width: imageWidth,
+                                  height: imageHeight,
+                                  resizeMode:'contain', 
+                                  alignSelf:'center',
+                                  justifyContent: 'center',
+                                  backgroundColor:'transparent',
+                                }}
+                                source={{ uri: rowData.uri }}
+                            />
+                            {overlay}
+                    </View>
+
+                </TouchableHighlight>
+            )
+        }
+
+        return (
+            <View 
+                style={{
+                    width: imageWidth,
+                    height: imageHeight,
+                    // marginTop: 4,
+                    margin: 4,
+                }}
+            >
+                {itemView}
+            </View>
+        );
+    }
+
+    ImageOnClick = (dta)=> {
+        PublicToast.showMessage(dta + "");
+    }
+    addImage = (rowID)=> {
+        PublicToast.showMessage(rowID+"添加照片");
+        listdata.splice(rowID,0,{name: '新加图片'+rowID, uri: 'http://p1.qhimg.com/t01080c5ee1710adea2.png'});
+        this.setState({
+          imageDataSource: this.state.imageDataSource.cloneWithRows(listdata),
+        })
     }
 
     _renderBody = () => {
@@ -263,7 +427,7 @@ export default class PopupFormPageDetail1 extends Component{
                   name="inspectionResult"
                 >
                   <View
-                      style={{flex: 1, backgroundColor: 'green', flexDirection: 'column', alignItems: 'center', marginTop: 4}}
+                      style={{flex: 1, backgroundColor: 'transparent', flexDirection: 'column', alignItems: 'center', marginTop: 4}}
                   >
                       {this._renderCustomView1()}
                   </View>
@@ -315,48 +479,6 @@ export default class PopupFormPageDetail1 extends Component{
         );
     }
 
-
-    rederImageView = (imageList,rowID)=> {
-        var lineArr = [];
-        for (var i = 0; i < imageList.length + 1; i++) {
-            let dta = imageList[i];
-            if (imageList.length == 0 || i == imageList.length) {
-                lineArr.push(<TouchableOpacity onPress={()=>{this.addImage(rowID)}} underlayColor='transparent' key={i}
-                                               style={{width:80,height:80,margin:5,alignSelf:'center',justifyContent: 'center',backgroundColor:'transparent',}}>
-                    <Image
-                        style={{width:80,height:80,margin:5, resizeMode:'contain' , alignSelf:'center',justifyContent: 'center',backgroundColor:'transparent',}}
-                        source={require('../../../resource/images/App/jiahao.png')}//source={require('../../../resource/images/App/Setting.png')}//
-                    />
-
-                </TouchableOpacity>);
-            } else {
-                lineArr.push(<TouchableOpacity onPress={()=>{this.ImageOnclick(dta)}} underlayColor='transparent'
-                                               key={i}
-                                               style={{width:80,height:80,margin:5,alignSelf:'center',justifyContent: 'center',backgroundColor:'transparent',}}>
-                    <Lightbox underlayColor="#ffffff" navigator={this.props.navigator}>
-                        <Image
-
-                            style={{width:GlobalSize.DeviceWidth,height:GlobalSize.DeviceHeight, resizeMode:'contain' , alignSelf:'center',justifyContent: 'center',backgroundColor:'transparent',}}
-                            source={{ uri: 'http://p1.qhimg.com/t01080c5ee1710adea2.png' }}//source={require('../../../resource/images/App/Setting.png')}//
-                        />
-                    </Lightbox>
-
-                </TouchableOpacity>);
-            }
-        }
-        return (
-            lineArr
-        );
-    }
-
-    ImageOnclick = (dta)=> {
-        PublicToast.showMessage(dta + "");
-    }
-    addImage = (rowID)=> {
-        PublicToast.showMessage(rowID+"添加照片");
-    }
-
-
 }
 
 
@@ -368,10 +490,15 @@ const styles = StyleSheet.create({
   },
   text: {
     textAlign: 'center',
-    marginLeft: 6,
     flex: 1,
     // fontSize: 15,
     color: '#3b3b3b',
+  },
+  list: {
+    // justifyContent: 'space-around',
+    justifyContent: 'flex-start',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
   },
   row: {
     flex: 1,
@@ -384,19 +511,19 @@ const styles = StyleSheet.create({
       borderColor: 'orange',
       borderRadius: 5,
   },
-    viewbg: {
-        minHeight: 45,
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center',
-        paddingRight: 10,
-        borderTopColor: '#dedede',
-        borderTopWidth: 0.5,
-        overflow: 'hidden'
-    },
-    tvhint: {
-        fontSize: 14, color: '#666666', justifyContent: 'center', alignItems: 'flex-start', minWidth: 85
-    },
+  viewbg: {
+      minHeight: 45,
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',
+      paddingRight: 10,
+      borderTopColor: '#dedede',
+      borderTopWidth: 0.5,
+      overflow: 'hidden'
+  },
+  tvhint: {
+      fontSize: 14, color: '#666666', alignSelf: 'flex-start', alignItems: 'flex-start', minWidth: 85, marginLeft: 4,
+  },
 });
 
 

@@ -83,7 +83,7 @@ export default class PopupSelecter extends Component{
           width: width || this.state.width,
           height: height || this.state.height,
         });
-        this.PopupPage.show(animateConfigs, width, height);
+        this.PopupPage.show(animateConfigs, this.state.width, this.state.height);
     }
 
     _onPressButton = () => {
