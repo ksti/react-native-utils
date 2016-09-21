@@ -21,6 +21,7 @@
 		071E877F1D81373B000CBF1D /* RSKImageCropper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 071E877A1D81372C000CBF1D /* RSKImageCropper.framework */; };
 		071E87801D81373B000CBF1D /* RSKImageCropper.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 071E877A1D81372C000CBF1D /* RSKImageCropper.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		079B736C1D6EE29000552F2A /* libRNFS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 079B736A1D6EE26D00552F2A /* libRNFS.a */; };
+		07B5F7BC1D92959B00E92277 /* libART.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 07B5F7AC1D92957F00E92277 /* libART.a */; };
 		0A0F063ACA4748918B4975F8 /* libimageCropPicker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CAC407409B3E4807B6BFCAE2 /* libimageCropPicker.a */; };
 		133E29F31AD74F7200F7D852 /* libRCTLinking.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 78C398B91ACF4ADC00677621 /* libRCTLinking.a */; };
 		139105C61AF99C1200B5F7CC /* libRCTSettings.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 139105C11AF99BAD00B5F7CC /* libRCTSettings.a */; };
@@ -112,6 +113,13 @@
 			remoteGlobalIDString = F12AFB9B1ADAF8F800E0535D;
 			remoteInfo = RNFS;
 		};
+		07B5F7AB1D92957F00E92277 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 07B5F7A71D92957E00E92277 /* ART.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 0CF68AC11AF0540F00FF9E5C;
+			remoteInfo = ART;
+		};
 		07DCA6E51D742E4200B18E31 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 88406B792F5247F7853F48AF /* RNImagePicker.xcodeproj */;
@@ -198,6 +206,7 @@
 		071E87791D81372C000CBF1D /* QBImagePicker.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QBImagePicker.framework; path = "../../../../../../../../../Library/Developer/Xcode/DerivedData/ForTest-adegqfgmlcmwlofpnsiposjrmkjz/Build/Products/Debug-iphonesimulator/QBImagePicker.framework"; sourceTree = "<group>"; };
 		071E877A1D81372C000CBF1D /* RSKImageCropper.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RSKImageCropper.framework; path = "../../../../../../../../../Library/Developer/Xcode/DerivedData/ForTest-adegqfgmlcmwlofpnsiposjrmkjz/Build/Products/Debug-iphonesimulator/RSKImageCropper.framework"; sourceTree = "<group>"; };
 		079B73591D6EE26D00552F2A /* RNFS.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNFS.xcodeproj; path = "../node_modules/react-native-fs/RNFS.xcodeproj"; sourceTree = "<group>"; };
+		07B5F7A71D92957E00E92277 /* ART.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ART.xcodeproj; path = "../node_modules/react-native/Libraries/ART/ART.xcodeproj"; sourceTree = "<group>"; };
 		0C7942A347F9434796C4F454 /* libSQLite.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 0; includeInIndex = 0; lastKnownFileType = archive.ar; path = libSQLite.a; sourceTree = "<group>"; };
 		139105B61AF99BAD00B5F7CC /* RCTSettings.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTSettings.xcodeproj; path = "../node_modules/react-native/Libraries/Settings/RCTSettings.xcodeproj"; sourceTree = "<group>"; };
 		139FDEE61B06529A00C62182 /* RCTWebSocket.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTWebSocket.xcodeproj; path = "../node_modules/react-native/Libraries/WebSocket/RCTWebSocket.xcodeproj"; sourceTree = "<group>"; };
@@ -256,6 +265,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				07B5F7BC1D92959B00E92277 /* libART.a in Frameworks */,
 				071E877B1D81372C000CBF1D /* QBImagePicker.framework in Frameworks */,
 				071E877C1D81372C000CBF1D /* RSKImageCropper.framework in Frameworks */,
 				079B736C1D6EE29000552F2A /* libRNFS.a in Frameworks */,
@@ -364,6 +374,14 @@
 			isa = PBXGroup;
 			children = (
 				079B736A1D6EE26D00552F2A /* libRNFS.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		07B5F7A81D92957E00E92277 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				07B5F7AC1D92957F00E92277 /* libART.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -515,6 +533,7 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				07B5F7A71D92957E00E92277 /* ART.xcodeproj */,
 				079B73591D6EE26D00552F2A /* RNFS.xcodeproj */,
 				146833FF1AC3E56700842450 /* React.xcodeproj */,
 				00C302A71ABCB8CE00DB3ED1 /* RCTActionSheet.xcodeproj */,
@@ -635,6 +654,10 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
+					ProductGroup = 07B5F7A81D92957E00E92277 /* Products */;
+					ProjectRef = 07B5F7A71D92957E00E92277 /* ART.xcodeproj */;
+				},
+				{
 					ProductGroup = 071ED4791D70282400EFD15F /* Products */;
 					ProjectRef = A19750BB00B44BE28071D07D /* imageCropPicker.xcodeproj */;
 				},
@@ -751,6 +774,13 @@
 			fileType = archive.ar;
 			path = libRNFS.a;
 			remoteRef = 079B73691D6EE26D00552F2A /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		07B5F7AC1D92957F00E92277 /* libART.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libART.a;
+			remoteRef = 07B5F7AB1D92957F00E92277 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		07DCA6E61D742E4200B18E31 /* libRNImagePicker.a */ = {

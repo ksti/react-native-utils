@@ -39,7 +39,15 @@ export default class testPopupSelecter extends BaseContainer{
         {text: 'world'},
         {text: 'hello'},
         {text: 'little'},
-      ]
+      ],
+      imageDataSource: [
+        // {
+        //   name: '加号',
+        //   // uri: require('../../../images/App/jiahao.png'),
+        //   uri: 'file:../../images/App/jiahao.png',
+        //   local: require('../../images/App/jiahao.png'),
+        // }
+      ],
     };
   }
 
@@ -92,7 +100,8 @@ export default class testPopupSelecter extends BaseContainer{
     })
     // this.basePopupPage.show(null, 200, 250);
     // this.basePopupPage.show();
-    this[identifier].show(null, Dimensions.get('window').width - 50, (this.state.dataSource.length + 1) * 44);
+    // this[identifier].show(null, Dimensions.get('window').width - 50, (this.state.dataSource.length + 1) * 44);
+    this[identifier].show();
   }
 
   _onClose = (savedData, identifier) => {
@@ -147,15 +156,16 @@ export default class testPopupSelecter extends BaseContainer{
           // animateType={this.state.animateType}
           animateType='popup'
           ref={(PopupFormPageDetail1) => {this.PopupFormPageDetail1 = PopupFormPageDetail1}}
-          // width={200}
-          // height={(this.state.dataSource.length + 1) * 44}
+          width={Dimensions.get('window').width}
+          height={300}
           leftWidth={85}
           headerLeftText='钢筋笼'
           headerRightText='保存'
           onClose={(savedData) => this._onClose(savedData, 'PopupFormPageDetail1')}
-          _onSelect={(rowData, sectionID, rowID) => this._onSelect(rowData, sectionID, rowID, 'PopupFormPageDetail1')}
           inspectionStandard='的嘎嘎国家来看楼兰古国军绿色偶几个垃圾费啦；房间的熟老地方；安抚；啊'
-
+          max={9}
+          hiddenWhenMax={true}
+          imageDataSource={this.state.imageDataSource}
         />
       </View>  
     );

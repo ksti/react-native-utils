@@ -242,9 +242,10 @@ class WorkHome extends BaseContainer {
                             </View>
                         );
                     } else {
-                        var itemData = items[j];
+                        const itemData = items[j];
                         itemView = (
                             <ButtonUpDown
+                                key={`item_${i}_${j}`}
                                 onPress={() => {this.pushToNextPage(itemData)}}
                                 image={itemData.image}
                                 text={itemData.title}
@@ -258,7 +259,7 @@ class WorkHome extends BaseContainer {
                     rowViewes.push(itemView);
                 };
                 itemViewes.push(
-                    <View style={styles.lineBoxContainer}>
+                    <View key={`row_${i}`} style={styles.lineBoxContainer}>
                         {rowViewes}
                     </View>
                 );
