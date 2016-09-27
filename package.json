@@ -33,8 +33,9 @@
     "object-assign": "^1.0.0",
     "react-native-form": "^2.0.6",
     "react-native-fs": "^2.0.1-rc.2",
+    "react-native-photo-browser": "git+https://github.com/ksti/react-native-photo-browser.git",
     "react-native-sqlite-storage": "^3.1.2",
-    "react-native-storage": "^0.1.2"
+    "react-native-storage": "^0.1.2",
   },
   "directories": {
     "doc": "docs"
