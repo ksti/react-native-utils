@@ -140,7 +140,6 @@ export default class PopupSelecter extends Component{
     }
 
     _renderBody = () => {
-      this.props.dataSource && this.state.ds.cloneWithRows()
       return (
         <View 
           style={styles.container}
