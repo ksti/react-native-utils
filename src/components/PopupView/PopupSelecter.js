@@ -147,7 +147,7 @@ export default class PopupSelecter extends Component{
           {this._renderViewHeader()}
           <ListView
             enableEmptySections={true}
-            dataSource={this.state.ds || this.state.ds}
+            dataSource={this.state.ds}
             renderRow={this._renderRow}
           />
         </View>
