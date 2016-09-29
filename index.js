@@ -13,6 +13,7 @@ import PopupSelecter from './src/components/PopupView/PopupSelecter';
 import SeePhotoBrowser from './src/components/PhotoBrowser/SeePhotoBrowser';
 import Loading from "./src/components/LoadingView/LoadingDialog";
 import FlowLayoutImageView from './src/components/customViews/FlowLayoutImageView';
+import HorizonImageScrollView from './src/components/customViews/HorizonImageScrollView';
 
 export {
   httpRequest,
@@ -26,5 +27,6 @@ export {
   PopupSelecter,
   SeePhotoBrowser,
   Loading,
-  FlowLayoutImageView
+  FlowLayoutImageView,
+  HorizonImageScrollView
 };
