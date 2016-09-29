@@ -74,6 +74,14 @@ export default class PopupSelecter extends Component{
       
     }
 
+    componentWillReceiveProps(nextProps) {
+      if (nextProps.dataSource) {
+        this.setState({
+          ds: this.state.ds.cloneWithRows(nextProps.dataSource),
+        })
+      };
+    }
+
     dismiss = (animateConfigs) => {
         this.PopupPage.dismiss(animateConfigs);
     }
@@ -132,6 +140,7 @@ export default class PopupSelecter extends Component{
     }
 
     _renderBody = () => {
+      this.props.dataSource && this.state.ds.cloneWithRows()
       return (
         <View 
           style={styles.container}
@@ -139,7 +148,7 @@ export default class PopupSelecter extends Component{
           {this._renderViewHeader()}
           <ListView
             enableEmptySections={true}
-            dataSource={this.state.ds}
+            dataSource={this.state.ds || this.state.ds}
             renderRow={this._renderRow}
           />
         </View>
