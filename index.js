@@ -14,6 +14,7 @@ import SeePhotoBrowser from './src/components/PhotoBrowser/SeePhotoBrowser';
 import Loading from "./src/components/LoadingView/LoadingDialog";
 import FlowLayoutImageView from './src/components/customViews/FlowLayoutImageView';
 import HorizonImageScrollView from './src/components/customViews/HorizonImageScrollView';
+import RelativeContainer from './src/components/customPopupPage/RelativeContainer';
 
 export {
   httpRequest,
@@ -28,5 +29,6 @@ export {
   SeePhotoBrowser,
   Loading,
   FlowLayoutImageView,
-  HorizonImageScrollView
+  HorizonImageScrollView,
+  RelativeContainer
 };
