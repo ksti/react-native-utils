@@ -73,13 +73,8 @@ const styles = StyleSheet.create({
     [side] : 0,
     top: 0,
   },
-  baseContainer: {
-    position:'absolute', 
+  baseContainer: { 
     zIndex:888, 
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
     backgroundColor:'transparent',
     // backgroundColor:'#fff123',
     justifyContent: 'center',
@@ -146,17 +141,10 @@ export default class BasePopupPage extends Component{
           // backgroundColor:'#fff123',
         };
         this.relativeContainer = {
-          flex: 1, 
+          // flex: 1, // 不要这句
           position: 'relative', 
           zIndex:888, 
-          // width: Dimensions.get('window').width,
-          // height: Dimensions.get('window').height,
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
           backgroundColor:'transparent',
-          // backgroundColor:'#fff123',
         };
         this.state = {
           disablePointerEvents: props.disablePointerEvents || false,
@@ -298,14 +286,14 @@ export default class BasePopupPage extends Component{
         var popupChildren = popupBody && popupBody.children ? popupBody.children : this.props.children;
         return(
           <View
-            pointerEvents={this.state.disablePointerEvents?'none':'auto'}
+            pointerEvents={'auto'}
             style={[
               this.state.containerStyle,
             ]}
           >
             <View
               pointerEvents={this.state.disablePointerEvents?'none':'auto'}
-              style={[styles.baseContainer, baseStyle]}
+              style={[styles.baseContainer, this.state.containerStyle, baseStyle]}
             >
               <TouchableOpacity 
                 onPress={this._onClikBackground} 
