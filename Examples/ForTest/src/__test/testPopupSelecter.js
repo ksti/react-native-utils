@@ -18,7 +18,7 @@ import Orientation from 'react-native-orientation'
 import BaseContainer from '../containers/BaseContainer';
 import {httpRequest} from 'react-native-utils-gjs'
 
-import {PopupSelecter} from 'react-native-utils-gjs'
+import {PopupSelecter, RelativeContainer} from 'react-native-utils-gjs'
 import PopupFormPageDetail1 from '../components/PopupView/PopupFormPageDetail1'
 
 export default class testPopupSelecter extends BaseContainer{
@@ -155,6 +155,21 @@ export default class testPopupSelecter extends BaseContainer{
             dataSource={this.state.dataSource}
           />
         </View>
+        <Text style={[styles.text, {marginTop:2}]} onPress={() => this.popupPage('popup', 'PopupSelecterRelative3')}> 'PopupSelecterRelative drop down' </Text>
+        <RelativeContainer>
+          <PopupSelecter
+            // animateType={this.state.animateType}
+            animateType='dropdown' 
+            ref={(PopupSelecter) => {this.PopupSelecterRelative3 = PopupSelecter}}
+            // width={200}
+            // height={(this.state.dataSource.length + 1) * 44}
+            position='relative'
+            headerLeftText='左边标题'
+            headerRightText='右边按钮'
+            onSelect={(rowData, sectionID, rowID) => this._onSelect(rowData, sectionID, rowID, 'PopupSelecterRelative3')}
+            dataSource={this.state.dataSource}
+          />
+        </RelativeContainer>
         <Text style={[styles.text, {marginTop:2}]} onPress={() => this.popupPage('popup', 'PopupSelecter')}> 'PopupSelector' </Text>
         <Text style={[styles.text, {marginTop:2}]} onPress={() => this.popupPage('popup', 'PopupSelecter2')}> 'PopupSelector2' </Text>
         <Text style={[styles.text, {marginTop:2}]} onPress={() => this.popupPage('popup', 'PopupFormPageDetail1')}> 'PopupFormPageDetail1' </Text>
