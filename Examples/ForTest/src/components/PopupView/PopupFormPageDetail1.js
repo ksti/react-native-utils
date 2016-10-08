@@ -58,7 +58,15 @@ import {
   Platform
 } from 'react-native'
 
-import {Form, FormView, PopupPage, ScrollContainer} from 'react-native-utils-gjs'
+import {
+  Form, 
+  FormView, 
+  PopupPage, 
+  ScrollContainer, 
+  SeePhotoBrowser, 
+  FlowLayoutImageView,
+} from 'react-native-utils-gjs'
+
 import PhotoBrowser from 'react-native-photo-browser';
 import GlobalSize from "../../common/GlobalSize";
 import PublicToast from "../PublicToast";
@@ -91,41 +99,31 @@ var media = [
   },
   // {
   //   name: '加号',
-  //   // uri: require('../../../resource/images/App/jiahao.png'),
-  //   uri: 'file:../../../resource/images/App/jiahao.png',
-  //   local: require('../../../resource/images/App/jiahao.png'),
+  //   // uri: require('../../../../images/App/jiahao.png'),
+  //   uri: 'file:../../../../images/App/jiahao.png',
+  //   local: require('../../../../images/App/jiahao.png'),
   // }
 ];
-
-const plusImage = {
-  photo: require('../../../resource/images/App/jiahao.png'),
-  selected: false,
-  caption: '加号',
-}
-
-let listdata = new Array().concat(media, plusImage);
 
 export default class PopupFormPageDetail1 extends Component{
     constructor(props){
         super(props);
         var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
         var imgDs = new ListView.DataSource({rowHasChanged: (r1, r2) => true});
-        listdata = new Array().concat(props.imageDataSource, {
-          photo: require('../../../resource/images/App/jiahao.png'),
-          selected: false,
-          caption: '加号',
-        });
 
         this.state = {
           ds: props.dataSource ? ds.cloneWithRows(props.dataSource) : ds.cloneWithRows([]),
-          imageDataSource: imgDs.cloneWithRows(listdata),
-          images: listdata,
+          images: props.imageSource,
+          infoData: props.infoData || {
+            headerLeftText: props.headerLeftText,
+            headerRightText: props.headerRightText,
+            inspectionStandard: props.inspectionStandard,
+          },
           width: props.width || Dimensions.get('window').width ,
           height: props.height || 128,
           leftWidth: props.leftWidth || 85,
-          showPhotoBrowser: false,
           configPhotoBrowser: {
-            media: props.imageDataSource || media,
+            media: props.imageSource || media,
             initialIndex: 0,
             displayNavArrows: false,
             displayActionButton: false,
@@ -139,6 +137,21 @@ export default class PopupFormPageDetail1 extends Component{
     componentDidMount(){
       //
       
+    }
+
+    componentWillReceiveProps(nextProps) {
+      if (nextProps.images) {
+        this.setState({
+          images: nextProps.imageSource,
+          infoData: nextProps.infoData || this.state.infoData,
+        })
+      };
+    }
+
+    setInfoData = (infoData) => {
+      this.setState({
+        infoData: infoData || this.state.infoData,
+      })
     }
 
     dismiss = (animateConfigs) => {
@@ -168,7 +181,7 @@ export default class PopupFormPageDetail1 extends Component{
     _renderViewHeader = () => {
       var closeButton = this.props.closeButton || (
         <Text style={[styles.text, {textAlign:'right', marginRight: 4}]}>
-          {this.props.headerRightText}
+          {this.state.infoData.headerRightText}
         </Text>
       );
       return (
@@ -179,7 +192,7 @@ export default class PopupFormPageDetail1 extends Component{
             style={{flexDirection: 'row'/*, justifyContent: 'flex-start'*/, alignItems: 'center', top: 0, left: 0, right: 0, height: 44/*, backgroundColor: 'orange'*/}}
           >
             <Text style={[styles.text, {textAlign:'left'/*, backgroundColor: 'purple'*/, marginLeft: 4}]}>
-                {this.props.headerLeftText}
+                {this.state.infoData.headerLeftText}
             </Text>
             <TouchableOpacity
                onPress={()=>this._onPressButton()}
@@ -286,159 +299,22 @@ export default class PopupFormPageDetail1 extends Component{
                   </Text> 
               
               </Text>
-              <ListView
-                  enableEmptySections={true}
-                  contentContainerStyle={styles.list}
-                  dataSource={this.state.imageDataSource}
-                  renderRow={this._renderImagesRow}
+              <FlowLayoutImageView 
+                width={this.state.width - this.state.leftWidth}
+                // style={{flex: 1}}
+                imageSource={this.state.images}
+                imageOnClick={this.ImageOnClick}
+                addImage={this.addImage}
               />
           </View>
         
       );
     }
 
-    _renderImagesRow = (rowData, sectionID, rowID) => {
-        var showMax = this.props.max || 9;
-        var imageCount = this.state.imageDataSource.getRowCount();
-        var hiddenCondition = this.props.hiddenWhenMax ? (Number(rowID) > showMax - 1) : (Number(rowID) > showMax - 1 && Number(rowID) < imageCount - 1);
-        // if (Number(rowID) > showMax - 1 && Number(rowID) < imageCount - 1) {
-        // if (Number(rowID) > showMax - 1) { // 超过 showMax 隐藏加号
-        if (hiddenCondition) {
-            return null;
-        }
-        // overlay
-        var overlay = null;
-        if ((this.props.showMore || !this.props.hiddenWhenMax) && imageCount > showMax && rowID === String(showMax - 1)) {
-            //
-            overlay = (
-                <View
-                    style={{
-                        position: 'absolute',
-                        justifyContent :'center',
-                        alignItems: 'center',
-                        top: 0,
-                        left: 0,
-                        right: 0,
-                        bottom: 0,
-                        opacity: 0.4,
-                        backgroundColor: 'black',
-                    }}
-                >
-                        <Text
-                            style={{
-                              width: imageWidth,
-                              height: imageHeight,
-                              alignSelf:'center',
-                              justifyContent: 'center',
-                              backgroundColor:'transparent',
-                              color: 'white',
-                            }}
-                        >
-                            更多...
-                        </Text>
-                </View>
-            );
-        }
-
-        // source
-        let source;
-        if (rowData.photo) {
-          // create source objects for http/asset strings
-          // or directly pass uri number for local files
-          source = typeof rowData.photo === 'string' ? { uri: rowData.photo } : rowData.photo;
-        }
-
-        // layout
-        var rowMax = 4;
-        var margin = 4;
-        var imageWidth = (this.state.width - this.state.leftWidth - rowMax * margin * 2 - 8 * 2) / rowMax;
-        var imageHeight = imageWidth + 10;
-        var itemView;
-        if (rowID === String(imageCount - 1)) {
-          itemView = (
-            <TouchableOpacity onPress={()=>{this.addImage(rowID)}} underlayColor='transparent' 
-                style={{
-                    alignSelf: 'center',
-                    justifyContent: 'center',
-                    backgroundColor: 'transparent',
-                }}
-            >
-              <Image
-                  style={{
-                    width: imageWidth,
-                    height: imageHeight,
-                    resizeMode: 'cover', 
-                    alignSelf: 'center',
-                    justifyContent: 'center',
-                    backgroundColor: 'transparent',
-                  }}
-                  // source={require('../../../resource/images/App/jiahao.png')}
-                  source={source}
-              />
-            </TouchableOpacity>
-          )
-        } else {
-            itemView = (
-                <TouchableHighlight
-                    style={{
-                        alignSelf: 'center',
-                        justifyContent: 'center',
-                        backgroundColor: 'transparent',
-                    }}
-                    underlayColor="#ffffff"
-                    onPress={ ()=>{
-                        this.ImageOnClick(rowData, rowID)
-                      }
-                    }
-                >
-                    <View
-                        style={{
-                            justifyContent :'center',
-                            alignItems: 'center',
-                        }}
-                    >
-                            <Image
-                                style={{
-                                  width: imageWidth,
-                                  height: imageHeight,
-                                  resizeMode:'cover', 
-                                  alignSelf:'center',
-                                  justifyContent: 'center',
-                                  backgroundColor:'transparent',
-                                }}
-                                source={source}
-                            />
-                            {overlay}
-                    </View>
-
-                </TouchableHighlight>
-            )
-        }
-
-        return (
-            <View 
-                style={{
-                    width: imageWidth,
-                    height: imageHeight,
-                    // marginTop: 4,
-                    margin: 4,
-                }}
-            >
-                {itemView}
-            </View>
-        );
-    }
-
     ImageOnClick = (dta, rowID)=> {
         PublicToast.showMessage(dta + "");
-        // update state
-        this.setState({
-          showPhotoBrowser: true,
-          configPhotoBrowser: {
-            ...this.state.configPhotoBrowser,
-            initialIndex: Number(rowID),
-          },
-        });
+        let options = {editable: true};
+        this.seePhotoBrowser.show(Number(rowID), this.state.images, options);      
     }
     addImage = (rowID)=> {
         PublicToast.showMessage(rowID+"添加照片");
@@ -450,87 +326,17 @@ export default class PopupFormPageDetail1 extends Component{
         });
         // update state
         this.setState({
-          imageDataSource: this.state.imageDataSource.cloneWithRows(images),
           images: images,
-          configPhotoBrowser: {
-            ...this.state.configPhotoBrowser,
-            media: images.slice(0, images.length - 1),
-          },
         })
     }
 
-    _onSelectionChanged(media, index, selected) {
-      alert(`${media.photo} selection status: ${selected}`);
-    }
-
-    _onActionButton(media, index) {
-      if (Platform.OS === 'ios') {
-        ActionSheetIOS.showShareActionSheetWithOptions({
-          url: media.photo,
-          message: media.caption,
-        },
-        () => {},
-        () => {});
-      } else {
-        alert(`handle sharing on android for ${media.photo}, index: ${index}`);
-      }
-    }
-
-    _renderTopRightView() {
-      return (
-        <View style={{marginTop: 16, marginRight: 8, alignItems: 'center'}}>
-          <Image 
-            style={{width: 24, height: 24}}
-            source={require('../../../resource/images/App/ic_delete_photo.png')} 
-          />
-        </View>
-        
-      );
-    }
-
-    _onTopRight = (currentMedia, currentIndex, gallery, isFullScreen, mediaList) => {
-      console.log('currentMedia:' + currentMedia + 'currentIndex:' + currentIndex);
-      if (!isFullScreen) {
-        let selectedMedia = [];
-        mediaList.map((media, i)=> {
-          if (media.selected) {
-            selectedMedia.push(media);
-          };
-        });
-        if (selectedMedia.length > 0) {
-          // ...
-          console.log('selectedMedia: ' + selectedMedia);
-        };
-        // is not full screen return
-        return;
-      };
-      gallery && gallery.deleteImageRef(currentIndex);
-      let initialIndex = Math.max(0, currentIndex - 1);
-      let images = this.state.images;
-      if (images.length > 1) {
-        images.splice(currentIndex, 1); // 删掉选中的照片
-        // update state
-        this.setState({
-          imageDataSource: this.state.imageDataSource.cloneWithRows(images),
-          images: images,
-          configPhotoBrowser: {
-            ...this.state.configPhotoBrowser,
-            initialIndex: initialIndex,
-            media: images.slice(0, images.length - 1),
-          },
-        })
-      } else {
-        this.setState({
-          imageDataSource: this.state.imageDataSource.cloneWithRows(images),
-          images: images,
-          configPhotoBrowser: {
-            ...this.state.configPhotoBrowser,
-            initialIndex: initialIndex,
-            media: images.slice(0, images.length - 1),
-          },
-        })
-      }
-      
+    _onBack = (newDatas) => {
+      console.log('newDatas: ' + newDatas);
+      let images = newDatas;
+      // update state
+      this.setState({
+        images: images,
+      })
     }
 
     _renderModalPhotoBrowser = () => {
@@ -545,31 +351,16 @@ export default class PopupFormPageDetail1 extends Component{
       } = this.state.configPhotoBrowser;
 
       return (
-        <Modal
-          animationType={"none"}
-          transparent={true}
-          visible={this.state.showPhotoBrowser}>
-          <View
-            style={{position: 'absolute', top: 0, left: 0, right: 0, bottom: 0}}>
-            <PhotoBrowser
-              onBack={() => this.setState({showPhotoBrowser: false})}
-              mediaList={media}
-              initialIndex={initialIndex}
-              displayNavArrows={displayNavArrows}
-              displaySelectionButtons={displaySelectionButtons}
-              displayActionButton={displayActionButton}
-              startOnGrid={startOnGrid}
-              enableGrid={enableGrid}
-              useCircleProgress
-              onSelectionChanged={this._onSelectionChanged}
-              onActionButton={this._onActionButton}
-              onTopRight={this._onTopRight}
-              topRightView={this._renderTopRightView()}
-              topRightStyle={{overflow: 'hidden'}}
-              useGallery={true}
-            />
-          </View>
-        </Modal>
+        <View>
+          <SeePhotoBrowser
+            ref={(ref) => {this.seePhotoBrowser = ref}}
+            modal={true}
+            editable={true}
+            alldata={media}
+            initialIndex={initialIndex}
+            onBack={(newDatas) => this._onBack(newDatas)}
+          />
+        </View>
       );
     }
 
@@ -584,15 +375,17 @@ export default class PopupFormPageDetail1 extends Component{
                 <FormView
                     type='text'
                     name="inspectionStandard"
+                    setStateSelf={true}
                     style={{marginTop: 10}}
                     leftText='验收标准'
                     leftTextStyle={{width: this.state.leftWidth, color: '#3b3b3b'}}
-                    rightText={this.props.inspectionStandard}
+                    rightText={this.state.infoData.inspectionStandard}
                     rightTextStyle={{width: this.state.width - (this.state.leftWidth) - 12}}
                 />
                 <FormView
-                  type='custom'
-                  name="inspectionResult"
+                    type='custom'
+                    name="inspectionResult"
+                    setStateSelf={true}
                 >
                   <View
                       style={{flex: 1, backgroundColor: 'transparent', flexDirection: 'column', alignItems: 'center', marginTop: 4}}
@@ -601,8 +394,9 @@ export default class PopupFormPageDetail1 extends Component{
                   </View>
                 </FormView>
                 <FormView
-                  type='custom'
-                  name="inspectionPhoto"
+                    type='custom'
+                    name="inspectionPhoto"
+                    setStateSelf={true}
                 >
                   <View
                       style={{flex: 1, backgroundColor: '#ffffff', flexDirection: 'column', alignItems: 'center', marginTop: 4}}
@@ -611,19 +405,20 @@ export default class PopupFormPageDetail1 extends Component{
                   </View>
                 </FormView>
                 <FormView
-                  type='input'
-                  name="explanation"
-                  inputProps={{
-                      placeholder:"请说明不合格原因",
-                      multiline:false,
-                      keyboardType:'default',
-                      accessibilityLabel:"I am the accessibility label for text input",
-                      autoCapitalize:"none"
-                  }}
-                  leftText='不合格说明'
-                  redText='*'
-                  leftTextStyle={{width: this.state.leftWidth, color: '#3b3b3b'}}
-                  inputStyle={{width: this.state.width - (this.state.leftWidth) - 12}}
+                    type='input'
+                    name="explanation"
+                    setStateSelf={true}
+                    inputProps={{
+                        placeholder:"请说明不合格原因",
+                        multiline:false,
+                        keyboardType:'default',
+                        accessibilityLabel:"I am the accessibility label for text input",
+                        autoCapitalize:"none"
+                    }}
+                    leftText='不合格说明'
+                    redText='*'
+                    leftTextStyle={{width: this.state.leftWidth, color: '#3b3b3b'}}
+                    inputStyle={{width: this.state.width - (this.state.leftWidth) - 12}}
               />
             </Form>
         </ScrollContainer>

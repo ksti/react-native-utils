@@ -18,16 +18,8 @@ import Orientation from 'react-native-orientation'
 import BaseContainer from '../containers/BaseContainer';
 import {httpRequest} from 'react-native-utils-gjs'
 
-let HTTPRequest = new httpRequest();
-// let strURL = 'https://moa.sinooceanland.com:10086/AnChangReportService/Interface_GetOrgInstitutionCodeService.service?userName=liming'
-let strURL = 'https://moa.sinooceanland.com:10086/AnChangReportService/Interface_SaleSearchInterfaceService.service'
-// let parameter = {};
- parameter = {OrgCode: '', CityCode: '', ProjectCode: '', TimeCategory: 'Year', DateStar: '', DateEnd: ''};
-
-
 import {PopupSelecter} from 'react-native-utils-gjs'
 import PopupFormPageDetail1 from '../components/PopupView/PopupFormPageDetail1'
-
 
 export default class testPopupSelecter extends BaseContainer{
   constructor(props){
@@ -40,7 +32,7 @@ export default class testPopupSelecter extends BaseContainer{
         {text: 'hello'},
         {text: 'little'},
       ],
-      imageDataSource: [
+      imageSource: [
         // {
         //   name: '加号',
         //   // uri: require('../../../images/App/jiahao.png'),
@@ -123,6 +115,46 @@ export default class testPopupSelecter extends BaseContainer{
            // barStyle="light-content"
            barStyle="default"
         />
+        <Text style={[styles.text, {marginTop:2}]} onPress={() => this.popupPage('popup', 'PopupSelecterRelative')}> 'PopupSelecterRelative' </Text>
+        <PopupSelecter
+          // animateType={this.state.animateType}
+          animateType='popup' 
+          ref={(PopupSelecter) => {this.PopupSelecterRelative = PopupSelecter}}
+          // width={200}
+          // height={(this.state.dataSource.length + 1) * 44}
+          position='relative'
+          headerLeftText='左边标题'
+          headerRightText='右边按钮'
+          dataSource={this.state.dataSource}
+        />
+        <Text style={[styles.text, {marginTop:2}]} onPress={() => this.popupPage('popup', 'PopupSelecterRelative2')}> 'PopupSelecterRelative2' </Text>
+        <View 
+          pointerEvents='box-none'
+          // style={{
+          //   flex: 1, 
+          //   position: 'absolute', top: 0, right: 0, left: 0, bottom: 0, 
+          //   zIndex: 888,
+          //   overflow: 'hidden',
+          // }}
+          style={{
+            // flex: 1, 
+            height: 1, 
+            zIndex: 888,
+            overflow: 'visible',
+          }}
+        >
+          <PopupSelecter
+            // animateType={this.state.animateType}
+            animateType='popup' 
+            ref={(PopupSelecter) => {this.PopupSelecterRelative2 = PopupSelecter}}
+            // width={200}
+            // height={(this.state.dataSource.length + 1) * 44}
+            position='relative'
+            headerLeftText='左边标题'
+            headerRightText='右边按钮'
+            dataSource={this.state.dataSource}
+          />
+        </View>
         <Text style={[styles.text, {marginTop:2}]} onPress={() => this.popupPage('popup', 'PopupSelecter')}> 'PopupSelector' </Text>
         <Text style={[styles.text, {marginTop:2}]} onPress={() => this.popupPage('popup', 'PopupSelecter2')}> 'PopupSelector2' </Text>
         <Text style={[styles.text, {marginTop:2}]} onPress={() => this.popupPage('popup', 'PopupFormPageDetail1')}> 'PopupFormPageDetail1' </Text>
@@ -140,7 +172,7 @@ export default class testPopupSelecter extends BaseContainer{
         <PopupSelecter
           // animateType={this.state.animateType}
           animateType='popup' 
-          ref={(PopupSelecter2) => {this.PopupSelecter2 = PopupSelecter2}}
+          ref={(PopupSelecter) => {this.PopupSelecter2 = PopupSelecter}}
           // width={200}
           // height={(this.state.dataSource.length + 1) * 44}
           headerLeftText='左边标题'
@@ -165,8 +197,9 @@ export default class testPopupSelecter extends BaseContainer{
           inspectionStandard='的嘎嘎国家来看楼兰古国军绿色偶几个垃圾费啦；房间的熟老地方；安抚；啊'
           max={9}
           hiddenWhenMax={true}
-          imageDataSource={this.state.imageDataSource}
+          imageSource={this.state.imageSource}
         />
+
       </View>  
     );
   }
