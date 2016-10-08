@@ -92,6 +92,18 @@ function _fetch(fetch_promise, timeout) {
 //         console.log(err);
 //     });
 
+
+/**
+ * @param {String} url
+ * @param {String} username
+ * @param {String} password
+ * @return {String}
+ */
+function strUrlForFtpSite(url, username, password) { 
+  return "ftp://" + username 
+  + ":" + password + "@" + url;
+}
+
 /**
  * 保留引用
  */
@@ -126,7 +138,7 @@ function httpRequest(normal: Boolean) {
   this.cancelled = false;
 
   /**
-   * 取消状态
+   * 请求超时
    */
   this.timeout = null;
 
@@ -229,6 +241,7 @@ httpRequest.prototype.requestWithUrl = function(apiUrl: string, parameter: Objec
       for(var key in parameter){
         requestUrl += (key + '=' + parameter[key] + '&');
       }
+      requestUrl = requestUrl.substring(0,requestUrl.length-1);
     };
     //encodeURIComponent(query)
   } else {
@@ -316,6 +329,7 @@ httpRequest.prototype.requestGetWithUrl = function(apiUrl: string, parameter: Ob
             for(var key in parameter){
               requestUrl += (key + '=' + parameter[key] + '&');
             }
+            requestUrl = requestUrl.substring(0,requestUrl.length-1);
           };
       //encodeURIComponent(query)
     } else {
@@ -395,7 +409,7 @@ httpRequest.prototype.requestGetWithUrl = function(apiUrl: string, parameter: Ob
       }
     })
     .done();
-    
+
 
 },
 
@@ -532,6 +546,7 @@ httpRequest.prototype.download = function(apiUrl: string, parameter: Object, cal
           for(var key in parameter){
             requestUrl += (key + '=' + parameter[key] + '&');
           }
+          requestUrl = requestUrl.substring(0,requestUrl.length-1);
         };
     //encodeURIComponent(query)
   } else {
@@ -842,6 +857,161 @@ httpRequest.prototype.upload = function(apiUrl: string, parameter: Object, callb
   }
 
   _upload();
+},
+
+/**
+ * @param {String} apiUrl
+ * @param {Object} parameter
+ * @param {Function} callback
+ * 暂时不支持 FTP, 要支持FTP需自己用原生代码实现, 导出为组件供 js 调用, Android 和 iOS 各自实现一套
+ * fetch 和 利用 XMLHttpRequest 最终都是调用的原生组件：RCTNetwork
+ * RCTNetwork 目前只支持(canHandleRequest)5种request:
+ * 1.RCTHTTPRequestHandler
+ * 2.RCTFileRequestHandler
+ * 3.RCTDataRequestHandler
+ * 4.RCTImage/RCTImageStoreManager
+ * 5.RCTImage/RCTImageLoader
+ */
+httpRequest.prototype.uploadFTP = function(apiUrl: string, username: string, password: string, parameter: Object, callback: Function) {
+  this._response = null; // 清空response
+
+  var requestUrl = apiUrl;
+
+  console.log('---requestUrl: ' + requestUrl);
+  console.log('---contentType: ' + this.contentType);
+  console.log('---JSON.stringify(parameter): ' + JSON.stringify(parameter));
+
+  var headerParams = this._defualtHeaders;
+  var bodyParams = JSON.stringify(parameter);
+  if (this.contentType == 'form') {
+    headerParams = {
+      'Accept': 'application/json',
+      'Accept-Charset': 'utf-8',
+      'Content-Type': 'application/x-www-form-urlencoded',
+    };
+    bodyParams = toQueryString(parameter);
+  }
+
+  let accessToken = global.accessToken;
+  if (!this.normal) {
+    if (accessToken && accessToken.length > 0) {
+        headerParams.Authorization = 'Bearer '+ accessToken;
+    }
+  };
+
+  this._setDefualtHeader(headerParams);
+  if (this.headers) {
+    this.setRequestHeader(this.headers); // 合并 this.defualtHeaders
+  };
+
+  console.log('post-header', this.headers?this.headers:this._defualtHeaders);
+
+  var xhr = new XMLHttpRequest();
+  var ftpUrl = strUrlForFtpSite(requestUrl, username, password);
+  xhr.open('PUT', ftpUrl, true, username, password);
+
+  var _allHeaders = this.headers?this.headers:this._defualtHeaders;
+  Object.keys(_allHeaders).map((id, index) => {
+      xhr.setRequestHeader(id, _allHeaders[id]);
+  });
+
+  xhr.onload = () => {
+    if (xhr.status !== 200) {
+      alert(
+        'Upload failed',
+        'Expected HTTP 200 OK response, got ' + xhr.status
+      );
+      return;
+    }
+    if (!xhr.responseText) {
+      alert(
+        'Upload failed',
+        'No response payload.'
+      );
+      return;
+    }
+    var index = xhr.responseText.indexOf('http://www.posttestserver.com/');
+    if (index === -1) {
+      alert(
+        'Upload failed',
+        'Invalid response payload.'
+      );
+      return;
+    }
+    // var url = xhr.responseText.slice(index).split('\n')[0];
+    // Linking.openURL(url);
+  };
+
+  var formdata = new FormData();
+  // if (this.state.randomPhoto) {
+  //   formdata.append('image', {...this.state.randomPhoto, name: 'image.jpg'});
+  // }
+
+  Object.keys(parameter).map((id, index) => {
+      formdata.append(id, parameter[id]);
+  });
+
+  if (xhr.upload) {
+    xhr.upload.onprogress = (event) => {
+      console.log('upload onprogress', event);
+      // // if (event.lengthComputable) {
+      // //   this.setState({uploadProgress: event.loaded / event.total});
+      // // }
+      if (event.lengthComputable) {
+        var percentComplete = event.loaded / event.total;
+        // ...
+        if (this.updateProgress) {
+          this.updateProgress(percentComplete, event.currentTarget);
+        };
+      } else {
+        // Unable to compute progress information since the total size is unknown
+      }
+    };
+  }
+
+  xhr.addEventListener("progress", updateProgress.bind(this));
+  xhr.addEventListener("load", transferComplete.bind(this));
+  xhr.addEventListener("error", transferFailed.bind(this));
+  xhr.addEventListener("abort", transferCanceled.bind(this));
+
+  // ...
+
+  // progress on transfers from the server to the client (downloads)
+  function updateProgress (oEvent) {
+    if (oEvent.lengthComputable) {
+      var percentComplete = oEvent.loaded / oEvent.total;
+      // ...
+      if (this.updateProgress) {
+        this.updateProgress(percentComplete, oEvent.currentTarget);
+      };
+    } else {
+      // Unable to compute progress information since the total size is unknown
+    }
+  }
+
+  function transferComplete(evt) {
+    console.log("The transfer is complete.");
+    if (this.transferComplete) {
+      this.transferComplete(evt.currentTarget.responseText, evt.currentTarget);
+    };
+  }
+
+  function transferFailed(evt) {
+    console.log("An error occurred while transferring the file.");
+    if (this.transferFailed) {
+      this.transferFailed(evt.currentTarget.responseText, evt.currentTarget);
+    };
+  }
+
+  function transferCanceled(evt) {
+    console.log("The transfer has been canceled by the user.");
+    if (this.transferCanceled) {
+      this.transferCanceled(evt.currentTarget.responseText, evt.currentTarget);
+    };
+  }
+
+  xhr.send(formdata);
+  this.xhr = xhr;
 }
 
 module.exports = httpRequest;
