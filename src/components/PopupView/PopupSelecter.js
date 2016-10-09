@@ -108,6 +108,9 @@ export default class PopupSelecter extends Component{
     }
 
     _renderViewHeader = () => {
+      if (this.props.noHeader === true) {
+        return null;
+      };
       var closeButton = this.props.closeButton || (
         <Text style={[styles.text, {textAlign:'right', marginRight: 4}]}>
           {this.props.headerRightText}
@@ -162,6 +165,7 @@ export default class PopupSelecter extends Component{
             ref={(PopupPage) => {this.PopupPage = PopupPage}}
             animateType={animType}
             position={position}
+            width={this.props.width}
             height={this.props.height}
           >
             {this._renderBody()}
