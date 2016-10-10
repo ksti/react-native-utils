@@ -208,6 +208,52 @@ export default class FormView extends Component{
         );
     }
 
+    _renderTextType2 = () => {
+        var mergeStyleLeftText = this.props.leftTextStyle;
+        var mergeStyleRightText = this.props.rightTextStyle;
+        var leftWidthStyle = {};
+        var rightWidthStyle = {};
+        if (mergeStyleLeftText) {
+            leftWidthStyle.width = mergeStyleLeftText.width;
+            leftWidthStyle.height = mergeStyleLeftText.height;
+        };
+        if (mergeStyleRightText) {
+            rightWidthStyle.width = mergeStyleRightText.width;
+            rightWidthStyle.height = mergeStyleRightText.height;
+            if (rightWidthStyle.width) {
+                flexInput = flexByWidth(rightWidthStyle.width);
+            };
+        };
+        var leftView = null;
+        var rightView = null;
+        leftView = (function() {
+            return(
+                <View style={[styles.columnContainer]}>
+                    <View style={styles.rowContainer}>
+                        <Text style={[styles.leftText, {alignSelf:'flex-start' && 'center'}, mergeStyleLeftText]}>
+                            {this.state.leftText}
+                            <Text style={{color:'red'}}>
+                                {this.state.redText}
+                            </Text>
+                            {this.props.attributeStrs}
+                        </Text>
+                        {this._renderRightTextButton({flex:flexInput+1})}
+                    </View>
+                </View>
+            );
+        }.bind(this))();
+
+        return(
+            <View style={styles.columnContainer}>
+                <View style={styles.rowContainer}>
+                    {leftView}
+                    {rightView}
+                </View>
+                {this._renderSeparator()}
+            </View>
+        );
+    }
+
     _renderLeftText = () => {
         var mergeStyleLeftText = this.props.leftTextStyle;
         if (this.props.leftText) {
@@ -223,41 +269,56 @@ export default class FormView extends Component{
         };
     }
 
-    _renderRightText = () => {
+    _renderRightText = (flexStyle) => {
         var mergeStyleRightText = this.props.rightTextStyle;
         if (this.props.rightText) {
             return(
-                <Text style={[styles.rightText, mergeStyleRightText]}>
+                <Text style={[styles.rightText, flexStyle, mergeStyleRightText]}>
                     {this.state.rightText}
                 </Text>
             )
         }
     }
 
-    _renderDateInput = (flexStyle) => {
+    _renderRightTextButton = (flexStyle) => {
+        var mergeStyleLeftText = this.props.leftTextStyle;
+        var mergeStyleRightText = this.props.rightTextStyle;
         var mergeStyleInput = this.props.inputStyle;
 
-        // <TouchableOpacity onPress={()=>this._onPressButton()} style={{flexDirection: 'row'}}>
-        //     <TextInput
-        //         {...this.props.inputProps}
-        //         style={[styles.input, flexStyle, {height: 35}, mergeStyleInput]}
-        //         value={this.state.showValue?this.state.showValue:this.state.inputValue}
-        //         editable={false}
-        //     />
-        // </TouchableOpacity>
+        var accessoryView = this.props.accessoryView?this.props.accessoryView:(
+            <View style={{alignSelf:'flex-end'}}>
+                <View style={{width:20,alignItems:'flex-end'}}>
+                    <Image
+                        source={this.props.accessoryImage || require('../../resource/images/ic_right_line.png')}
+                        style={{height:15,width:15,marginRight:0}} />
+                </View>
+            </View>);
+        var rightMargin = Number(flexStyle.marginRight) * 2;
 
         return(
-            <TouchableOpacity style={{flexDirection: 'row'}}>
-                <TextInput
-                    {...this.props.inputProps}
-                    style={[styles.input, flexStyle, {height: 35}, mergeStyleInput]}
-                    value={this.state.showValue?this.state.showValue:this.state.inputValue}
-                    editable={false}
-                />
-                <TouchableOpacity onPress={()=>this._onPressButton()} style={{position: 'absolute', top: 2, left: 2, bottom: 2, right: 2/*, backgroundColor: 'red'*/}}>
-                </TouchableOpacity>
+            <TouchableOpacity
+               onPress={()=>this._onPressButton()}
+               style={[{alignSelf: 'stretch'/*, backgroundColor: 'purple'*/, marginRight: 10}]}
+               disabled={this.props.enableRightTouch?!this.props.enableRightTouch:true}
+            >
+                <View style={[styles.rowContainer/*, {backgroundColor: 'yellow'}*/, mergeStyleInput]}>
+                    <View style={[{flex: 1, flexDirection: 'column'}]}>
+                        <View >
+                            <Text style={[styles.rightText/*, {backgroundColor: 'red'}*/, mergeStyleRightText]}>
+                                {this.state.rightText}
+                                {this.state.rightAttributeStrs}
+                            </Text>
+                        </View>
+                        <View >
+                            {this.props.children}
+                        </View>
+                    </View>
+                    <View style={{/*backgroundColor: 'green'*/}}>
+                        {this.props.enableAccessory?accessoryView:null}
+                    </View>
+                </View>
             </TouchableOpacity>
-        )
+        );
     }
 
     _renderTextInput = (flexStyle) => {
@@ -323,7 +384,7 @@ export default class FormView extends Component{
                                     </Text>
                                     {this.props.attributeStrs}
                                 </Text>
-                                {this._renderTextInput({flex:flexInput+1, marginRight:10})}
+                                {this._renderTextInput({flex:flexInput+1, marginRight:10, marginLeft:4})}
                             </View>
                         </View>
                     );
@@ -364,6 +425,32 @@ export default class FormView extends Component{
         );
     }
 
+    _renderDateInput = (flexStyle) => {
+        var mergeStyleInput = this.props.inputStyle;
+
+        // <TouchableOpacity onPress={()=>this._onPressButton()} style={{flexDirection: 'row'}}>
+        //     <TextInput
+        //         {...this.props.inputProps}
+        //         style={[styles.input, flexStyle, {height: 35}, mergeStyleInput]}
+        //         value={this.state.showValue?this.state.showValue:this.state.inputValue}
+        //         editable={false}
+        //     />
+        // </TouchableOpacity>
+
+        return(
+            <TouchableOpacity style={{flexDirection: 'row'}}>
+                <TextInput
+                    {...this.props.inputProps}
+                    style={[styles.input, flexStyle, {height: 35}, mergeStyleInput]}
+                    value={this.state.showValue?this.state.showValue:this.state.inputValue}
+                    editable={false}
+                />
+                <TouchableOpacity onPress={()=>this._onPressButton()} style={{position: 'absolute', top: 2, left: 2, bottom: 2, right: 2/*, backgroundColor: 'red'*/}}>
+                </TouchableOpacity>
+            </TouchableOpacity>
+        )
+    }
+
     _renderDateType = () => {
         var mergeStyleLeftText = this.props.leftTextStyle;
         var leftWidthStyle = {};
@@ -397,6 +484,111 @@ export default class FormView extends Component{
                 </View>
                 {this._renderSeparator()}
             </View>
+        );
+    }
+
+    _renderDateType2 = () => {
+        var mergeStyleInput = this.props.inputStyle;
+        var mergeStyleLeftText = this.props.leftTextStyle;
+        var leftView = null;
+        var rightView = null;
+        if (this.props.leftText) {
+            // leftTextView = this._renderLeftText();
+            leftView = (function() {
+                return(
+                    <View style={[styles.columnContainer, {flex:flexInput+1}]}>
+                        <View style={styles.rowContainer}>
+                            <Text style={[styles.leftText, {alignSelf:'flex-start' && 'center'}, mergeStyleLeftText]}>
+                                {this.state.leftText}
+                                <Text style={{color:'red'}}>
+                                    {this.state.redText}
+                                </Text>
+                                {this.props.attributeStrs}
+                            </Text>
+                            {this._renderDateInput()}
+                        </View>
+                    </View>
+                );
+            }.bind(this))();
+            //
+            if (!this.props.rightText) {
+                leftView = (function() {
+                    return(
+                        <View style={[styles.columnContainer]}>
+                            <View style={styles.rowContainer}>
+                                <Text style={[styles.leftText, {alignSelf:'flex-start' && 'center'}, mergeStyleLeftText]}>
+                                    {this.state.leftText}
+                                    <Text style={{color:'red'}}>
+                                        {this.state.redText}
+                                    </Text>
+                                    {this.props.attributeStrs}
+                                </Text>
+                                {this._renderDateInput({flex:flexInput+1, alignSelf:'stretch', marginRight:10, marginLeft:4})}
+                            </View>
+                        </View>
+                    );
+                }.bind(this))();
+            };
+        } else {
+            leftView = (function() {
+                return(
+                    <View style={[styles.columnContainer]}>
+                        <View style={styles.rowContainer}>
+                            {this._renderDateInput({marginLeft:10})}
+                        </View>
+                    </View>
+                );
+            }.bind(this))();
+        }
+        if (this.props.rightText) {
+            rightView = (function() {
+                return(
+                    <View style={[styles.columnContainer, {flex:1}]}>
+                        <View style={styles.rowContainer}>
+                            {this._renderRightText()}
+                            {this.props.children}
+                        </View>
+                    </View>
+                );
+            }.bind(this))();
+        }
+
+        return(
+            <View style={styles.columnContainer}>
+                <View style={styles.rowContainer}>
+                    {leftView}
+                    {rightView}
+                </View>
+                {this._renderSeparator()}
+            </View>
+        );
+    }
+
+    _renderSelectInput = (flexStyle) => {
+        var mergeStyleLeftText = this.props.leftTextStyle;
+        var mergeStyleInput = this.props.inputStyle;
+        var leftWidthStyle = {};
+        var rightWidthStyle = {};
+        if (mergeStyleLeftText) {
+            leftWidthStyle.width = mergeStyleLeftText.width;
+            leftWidthStyle.height = mergeStyleLeftText.height;
+        };
+        if (this.props.inputStyle) {
+            rightWidthStyle.width = this.props.inputStyle.width;
+            rightWidthStyle.height = this.props.inputStyle.height;
+            if (rightWidthStyle.width) {
+                flexInput = flexByWidth(rightWidthStyle.width);
+            };
+        };
+        var titleWidth = rightWidthStyle.width?rightWidthStyle.width-24:120;
+        return(
+            <ButtonWithAccessory
+                accessoryImg={this.props.accessoryImg || require('../../resource/images/ic_down_fill.png')}
+                title={this.state.showValue?this.state.showValue:this.state.inputValue}
+                onPress={() => this._onPressButton()}
+                style={[{marginTop: 4, marginLeft:4}, flexStyle, mergeStyleInput]}
+                titleWidth={titleWidth}
+            />
         );
     }
 
@@ -443,6 +635,83 @@ export default class FormView extends Component{
         );
     }
 
+    _renderSelectType2 = () => {
+        var mergeStyleInput = this.props.inputStyle;
+        var mergeStyleLeftText = this.props.leftTextStyle;
+        var leftView = null;
+        var rightView = null;
+        if (this.props.leftText) {
+            // leftTextView = this._renderLeftText();
+            leftView = (function() {
+                return(
+                    <View style={[styles.columnContainer, {flex:flexInput+1}]}>
+                        <View style={styles.rowContainer}>
+                            <Text style={[styles.leftText, {alignSelf:'flex-start' && 'center'}, mergeStyleLeftText]}>
+                                {this.state.leftText}
+                                <Text style={{color:'red'}}>
+                                    {this.state.redText}
+                                </Text>
+                                {this.props.attributeStrs}
+                            </Text>
+                            {this._renderSelectInput()}
+                        </View>
+                    </View>
+                );
+            }.bind(this))();
+            //
+            if (!this.props.rightText) {
+                leftView = (function() {
+                    return(
+                        <View style={[styles.columnContainer]}>
+                            <View style={styles.rowContainer}>
+                                <Text style={[styles.leftText, {alignSelf:'flex-start' && 'center'}, mergeStyleLeftText]}>
+                                    {this.state.leftText}
+                                    <Text style={{color:'red'}}>
+                                        {this.state.redText}
+                                    </Text>
+                                    {this.props.attributeStrs}
+                                </Text>
+                                {this._renderSelectInput({flex:flexInput+1, alignSelf:'stretch', marginRight:10, marginLeft:4})}
+                            </View>
+                        </View>
+                    );
+                }.bind(this))();
+            };
+        } else {
+            leftView = (function() {
+                return(
+                    <View style={[styles.columnContainer]}>
+                        <View style={styles.rowContainer}>
+                            {this._renderSelectInput({marginLeft:10})}
+                        </View>
+                    </View>
+                );
+            }.bind(this))();
+        }
+        if (this.props.rightText) {
+            rightView = (function() {
+                return(
+                    <View style={[styles.columnContainer, {flex:1}]}>
+                        <View style={styles.rowContainer}>
+                            {this._renderRightText()}
+                            {this.props.children}
+                        </View>
+                    </View>
+                );
+            }.bind(this))();
+        }
+
+        return(
+            <View style={styles.columnContainer}>
+                <View style={styles.rowContainer}>
+                    {leftView}
+                    {rightView}
+                </View>
+                {this._renderSeparator()}
+            </View>
+        );
+    }
+
     _renderSubmitType = () => {
         // const goToSubmit = () => this._onSubmit();
         return(
@@ -477,7 +746,7 @@ export default class FormView extends Component{
             case 'text': {
                 return(
                     <View {...this.props}>
-                        {this._renderTextType()}
+                        {this._renderTextType2()}
                     </View>
                 );
             }
@@ -491,14 +760,14 @@ export default class FormView extends Component{
             case 'date': {
                 return(
                     <View {...this.props}>
-                        {this._renderDateType()}
+                        {this._renderDateType2()}
                     </View>
                 );
             }
             case 'select': {
                 return(
                     <View {...this.props}>
-                        {this._renderSelectType()}
+                        {this._renderSelectType2()}
                     </View>
                 );
             }
@@ -583,9 +852,9 @@ class ButtonWithAccessory extends Component{
                onPress={()=>this.props.onPress()}
                style={[{alignSelf: 'flex-start'}, this.props.style]}
             >
-               <View style={styles.btnBorder}>
-                     <Text style={[styles.btnTitle, {width:this.props.titleWidth?this.props.titleWidth:120}]} numberOfLines={1}>{this.props.title}</Text>
-                     <View style={{width:20,alignItems:'flex-end'}}>
+               <View style={[styles.btnBorder, {alignSelf: 'stretch'}]}>
+                     <Text style={[styles.btnTitle, {flex: 1,marginLeft: 4, marginRight: 4}]} numberOfLines={1}>{this.props.title}</Text>
+                     <View style={{width:20,alignItems:'flex-end',marginRight: 4}}>
                         <Image
                             source={this.props.accessoryImg}
                             style={{height:15,width:15,marginRight:5}} />
