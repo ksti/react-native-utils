@@ -115,9 +115,10 @@ export default class PopupFormPageDetail1 extends Component{
           ds: props.dataSource ? ds.cloneWithRows(props.dataSource) : ds.cloneWithRows([]),
           images: props.imageSource,
           infoData: props.infoData || {
-            headerLeftText: props.headerLeftText,
-            headerRightText: props.headerRightText,
-            inspectionStandard: props.inspectionStandard,
+            headerLeftText: props.headerLeftText, // 头部左边标题
+            headerRightText: props.headerRightText, // 头部右边按钮标题
+            inspectionStandard: props.inspectionStandard, // 验收标准
+            statusGDQ: props.statusGDQ || '1', // 合格不合格不涉及 状态 1(合格)2(不合格)3(不涉及)
           },
           width: props.width || Dimensions.get('window').width ,
           height: props.height || 128,
@@ -130,7 +131,7 @@ export default class PopupFormPageDetail1 extends Component{
             displaySelectionButtons: false,
             startOnGrid: false,
             enableGrid: true,
-          }
+          },
         }
     }
 
@@ -164,6 +165,16 @@ export default class PopupFormPageDetail1 extends Component{
           height: height || this.state.height,
         });
         this.PopupPage.show(animateConfigs, this.state.width, this.state.height);
+    }
+
+    _onPressGDQ = (status) => {
+      let infoData = this.state.infoData;
+      if (infoData) {
+        infoData.statusGDQ = status || infoData.statusGDQ;
+        this.setState({
+          infoData: infoData,
+        });
+      };
     }
 
     _onPressButton = () => {
@@ -231,7 +242,7 @@ export default class PopupFormPageDetail1 extends Component{
             }}
           >
             <TouchableOpacity
-               // onPress={()=>this._onPressButton()}
+              onPress={()=>this._onPressGDQ('1')}
               style={[
                 styles.btnBorder,
                 {
@@ -241,15 +252,16 @@ export default class PopupFormPageDetail1 extends Component{
                   width: (this.state.width - this.state.leftWidth - 3 * marginValue * 2) / 3,
                   height: 24,
                   margin: marginValue,
+                  backgroundColor: this.state.infoData.statusGDQ === '1' ? '#ff5001' : 'white',
                 }
               ]}
             >
-              <Text style={[styles.text, {color: 'orange'}]}>
+              <Text style={[styles.text, {color: this.state.infoData.statusGDQ === '1' ? 'white' : '#ff5001'}]}>
                 {'合格'}
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
-               // onPress={()=>this._onPressButton()}
+              onPress={()=>this._onPressGDQ('2')}
               style={[
                 styles.btnBorder,
                 {
@@ -259,15 +271,16 @@ export default class PopupFormPageDetail1 extends Component{
                   width: (this.state.width - this.state.leftWidth - 3 * marginValue * 2) / 3,
                   height: 24,
                   margin: marginValue,
+                  backgroundColor: this.state.infoData.statusGDQ === '2' ? '#ff5001' : 'white',
                 }
               ]}
             >
-              <Text style={[styles.text, {color: 'orange'}]}>
+              <Text style={[styles.text, {color: this.state.infoData.statusGDQ === '2' ? 'white' : '#ff5001'}]}>
                 {'不合格'}
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
-               // onPress={()=>this._onPressButton()}
+              onPress={()=>this._onPressGDQ('3')}
               style={[
                 styles.btnBorder,
                 {
@@ -277,10 +290,11 @@ export default class PopupFormPageDetail1 extends Component{
                   width: (this.state.width - this.state.leftWidth - 3 * marginValue * 2) / 3,
                   height: 24,
                   margin: marginValue,
+                  backgroundColor: this.state.infoData.statusGDQ === '3' ? '#ff5001' : 'white',
                 }
               ]}
             >
-              <Text style={[styles.text, {color: 'orange'}]}>
+              <Text style={[styles.text, {color: this.state.infoData.statusGDQ === '3' ? 'white' : '#ff5001'}]}>
                 {'不涉及'}
               </Text>
             </TouchableOpacity>
@@ -473,7 +487,7 @@ const styles = StyleSheet.create({
   },
   btnBorder: {
       borderWidth: 1,
-      borderColor: 'orange',
+      borderColor: '#ff5001',
       borderRadius: 5,
   },
   viewbg: {
