@@ -67,6 +67,7 @@ export default class RelativeContainer extends Component{
     render(){
       return (
         <View 
+          {...this.props}
           pointerEvents='box-none'
           // style={{
           //   flex: 1, 
@@ -74,13 +75,16 @@ export default class RelativeContainer extends Component{
           //   zIndex: 888,
           //   overflow: 'hidden',
           // }}
-          style={{
-            // flex: 1, 
-            height: 1, 
-            zIndex: 888,
-            overflow: 'visible',
-            backgroundColor: 'transparent',
-          }}
+          style={[
+            {
+              // flex: 1, 
+              height: 1, 
+              zIndex: 888,
+              overflow: 'visible',
+              backgroundColor: 'transparent',
+            },
+            this.props.style,
+          ]}
         >
           {this.props.children}
         </View>
