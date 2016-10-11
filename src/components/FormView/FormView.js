@@ -211,19 +211,6 @@ export default class FormView extends Component{
     _renderTextType2 = () => {
         var mergeStyleLeftText = this.props.leftTextStyle;
         var mergeStyleRightText = this.props.rightTextStyle;
-        var leftWidthStyle = {};
-        var rightWidthStyle = {};
-        if (mergeStyleLeftText) {
-            leftWidthStyle.width = mergeStyleLeftText.width;
-            leftWidthStyle.height = mergeStyleLeftText.height;
-        };
-        if (mergeStyleRightText) {
-            rightWidthStyle.width = mergeStyleRightText.width;
-            rightWidthStyle.height = mergeStyleRightText.height;
-            if (rightWidthStyle.width) {
-                flexInput = flexByWidth(rightWidthStyle.width);
-            };
-        };
         var leftView = null;
         var rightView = null;
         leftView = (function() {
@@ -237,7 +224,7 @@ export default class FormView extends Component{
                             </Text>
                             {this.props.attributeStrs}
                         </Text>
-                        {this._renderRightTextButton({flex:flexInput+1})}
+                        {this._renderRightTextButton({flex:flexInput+1, alignSelf:'stretch', marginRight:10, marginLeft:4})}
                     </View>
                 </View>
             );
@@ -293,18 +280,17 @@ export default class FormView extends Component{
                         style={{height:15,width:15,marginRight:0}} />
                 </View>
             </View>);
-        var rightMargin = Number(flexStyle.marginRight) * 2;
 
         return(
             <TouchableOpacity
                onPress={()=>this._onPressButton()}
-               style={[{alignSelf: 'stretch'/*, backgroundColor: 'purple'*/, marginRight: 10}]}
+               style={[{/*backgroundColor: 'purple',*/ marginRight: 10}, flexStyle, mergeStyleInput]}
                disabled={this.props.enableRightTouch?!this.props.enableRightTouch:true}
             >
-                <View style={[styles.rowContainer/*, {backgroundColor: 'yellow'}*/, mergeStyleInput]}>
+                <View style={[styles.rowContainer, /*{backgroundColor: 'yellow'}*/]}>
                     <View style={[{flex: 1, flexDirection: 'column'}]}>
                         <View >
-                            <Text style={[styles.rightText/*, {backgroundColor: 'red'}*/, mergeStyleRightText]}>
+                            <Text style={[styles.rightText, /*{backgroundColor: 'red'},*/ flexStyle, mergeStyleRightText]}>
                                 {this.state.rightText}
                                 {this.state.rightAttributeStrs}
                             </Text>
@@ -438,16 +424,18 @@ export default class FormView extends Component{
         // </TouchableOpacity>
 
         return(
-            <TouchableOpacity style={{flexDirection: 'row'}}>
-                <TextInput
-                    {...this.props.inputProps}
-                    style={[styles.input, flexStyle, {height: 35}, mergeStyleInput]}
-                    value={this.state.showValue?this.state.showValue:this.state.inputValue}
-                    editable={false}
-                />
-                <TouchableOpacity onPress={()=>this._onPressButton()} style={{position: 'absolute', top: 2, left: 2, bottom: 2, right: 2/*, backgroundColor: 'red'*/}}>
+            <View style={[styles.columnContainer, flexStyle, {/*backgroundColor: 'green'*/}, mergeStyleInput]}>
+                <TouchableOpacity style={[{alignSelf: 'stretch', /*backgroundColor: 'purple',*/ height: 44}, mergeStyleInput]}>
+                    <TextInput
+                        {...this.props.inputProps}
+                        style={[styles.input, flexStyle, {height: 35, marginLeft: 0, marginRight: 0}]}
+                        value={this.state.showValue?this.state.showValue:this.state.inputValue}
+                        editable={false}
+                    />
+                    <TouchableOpacity onPress={()=>this._onPressButton()} style={{position: 'absolute', top: 2, left: 2, bottom: 2, right: 2, /*backgroundColor: 'red'*/}}>
+                    </TouchableOpacity>
                 </TouchableOpacity>
-            </TouchableOpacity>
+            </View>
         )
     }
 
@@ -567,28 +555,15 @@ export default class FormView extends Component{
     _renderSelectInput = (flexStyle) => {
         var mergeStyleLeftText = this.props.leftTextStyle;
         var mergeStyleInput = this.props.inputStyle;
-        var leftWidthStyle = {};
-        var rightWidthStyle = {};
-        if (mergeStyleLeftText) {
-            leftWidthStyle.width = mergeStyleLeftText.width;
-            leftWidthStyle.height = mergeStyleLeftText.height;
-        };
-        if (this.props.inputStyle) {
-            rightWidthStyle.width = this.props.inputStyle.width;
-            rightWidthStyle.height = this.props.inputStyle.height;
-            if (rightWidthStyle.width) {
-                flexInput = flexByWidth(rightWidthStyle.width);
-            };
-        };
-        var titleWidth = rightWidthStyle.width?rightWidthStyle.width-24:120;
         return(
-            <ButtonWithAccessory
-                accessoryImg={this.props.accessoryImg || require('../../resource/images/ic_down_fill.png')}
-                title={this.state.showValue?this.state.showValue:this.state.inputValue}
-                onPress={() => this._onPressButton()}
-                style={[{marginTop: 4, marginLeft:4}, flexStyle, mergeStyleInput]}
-                titleWidth={titleWidth}
-            />
+            <View style={[styles.columnContainer, flexStyle, {/*backgroundColor: 'green'*/}, mergeStyleInput]}>
+                <ButtonWithAccessory
+                    accessoryImg={this.props.accessoryImg || require('../../resource/images/ic_down_fill.png')}
+                    title={this.state.showValue?this.state.showValue:this.state.inputValue}
+                    onPress={() => this._onPressButton()}
+                    style={[{alignSelf: 'stretch', /*backgroundColor: 'purple',*/ marginLeft: 0, marginRight: 0, height: 44}, mergeStyleInput]}
+                />
+            </View>
         );
     }
 
@@ -850,7 +825,7 @@ class ButtonWithAccessory extends Component{
         return(
             <TouchableOpacity
                onPress={()=>this.props.onPress()}
-               style={[{alignSelf: 'flex-start'}, this.props.style]}
+               style={[{alignSelf: 'center'}, this.props.style]}
             >
                <View style={[styles.btnBorder, {alignSelf: 'stretch'}]}>
                      <Text style={[styles.btnTitle, {flex: 1,marginLeft: 4, marginRight: 4}]} numberOfLines={1}>{this.props.title}</Text>
