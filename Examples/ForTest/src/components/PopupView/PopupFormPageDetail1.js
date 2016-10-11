@@ -394,7 +394,7 @@ export default class PopupFormPageDetail1 extends Component{
                     leftText='验收标准'
                     leftTextStyle={{width: this.state.leftWidth, color: '#3b3b3b'}}
                     rightText={this.state.infoData.inspectionStandard}
-                    rightTextStyle={{width: this.state.width - (this.state.leftWidth) - 12}}
+                    inputStyle={{width: this.state.width - (this.state.leftWidth) - 12}}
                 />
                 <FormView
                     type='custom'
