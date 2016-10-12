@@ -112,7 +112,7 @@ export default class PopupSelecter extends Component{
         return null;
       };
       var closeButton = this.props.closeButton || (
-        <Text style={[styles.text, {textAlign:'right', marginRight: 4}]}>
+        <Text style={[styles.text, {textAlign:'right', marginRight: 4}, this.props.headerRightTextStyle]}>
           {this.props.headerRightText}
         </Text>
       );
@@ -124,7 +124,7 @@ export default class PopupSelecter extends Component{
             style={{flexDirection: 'row'/*, justifyContent: 'flex-start'*/, alignItems: 'center', top: 0, left: 0, right: 0, height: 44/*, backgroundColor: 'orange'*/}}
           >
 
-            <Text style={[styles.text, {textAlign:'left'/*, backgroundColor: 'purple'*/,marginLeft: 4},this.props.lefttvStyle]}>
+            <Text style={[styles.text, {textAlign:'left'/*, backgroundColor: 'purple'*/,marginLeft: 4}, this.props.headerLeftTextStyle]}>
 
                 {this.props.headerLeftText}
             </Text>
@@ -136,7 +136,7 @@ export default class PopupSelecter extends Component{
             </TouchableOpacity>
           </View>
 
-          <View style={{width:Dimensions.get('window').width, height:0.7, backgroundColor:'#D0D0D0'}}/>
+          <View style={[{width:Dimensions.get('window').width, height:0.7, backgroundColor:'#D0D0D0'}, this.props.separateStyle]}/>
         </View>
         
       )
@@ -180,11 +180,11 @@ export default class PopupSelecter extends Component{
           onPress={() => this._onSelect(rowData, sectionID, rowID)}
         >
             <View style={[styles.row]}>
-              <Text style={[styles.text, {fontSize:15, color:'#3b3b3b', marginLeft:0, marginTop:13}]}>
+              <Text style={[styles.text, {fontSize:15, color:'#3b3b3b', marginLeft:0, marginTop:13}, rowData.textStyle]}>
                 {rowData.text}
               </Text>
             </View>
-            <View style={{width:Dimensions.get('window').width, height:0.7, backgroundColor:'#D0D0D0'}}/>
+            <View style={[{width:Dimensions.get('window').width, height:0.7, backgroundColor:'#D0D0D0'}, this.props.separateStyle]}/>
         </TouchableOpacity>
       );
     }
