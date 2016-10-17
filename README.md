@@ -29,12 +29,12 @@ the following is a quick walkthrough of these utils
 
 - httpRequest
 ```js
-  import {httpRequest} from 'react-native-utils';
+  import {httpRequest} from 'react-native-utils-gjs';
 ```
 
   
 - FormView
 ```js  
-  import {FormView} from 'react-native-utils';
+  import {FormView} from 'react-native-utils-gjs';
 ```
 
