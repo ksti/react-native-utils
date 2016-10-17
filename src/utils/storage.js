@@ -1,3 +1,30 @@
+/**
+ * @author GJS <1353990812@qq.com>
+ *
+ * GJS reserves all rights not expressly granted.
+ *
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2016 GJS
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NON INFRINGEMENT. IN NO EVENT SHALL
+ * FACEBOOK BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN
+ * AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ */
 
 // https://github.com/sunnylqm/react-native-storage/blob/master/README-CHN.md
 
@@ -5,10 +32,31 @@
 import Storage from 'react-native-storage';
 import { AsyncStorage } from 'react-native';
 
+// sleep time expects milliseconds
+function timeout (time) {
+  return new Promise((resolve) => setTimeout(resolve, time));
+}
+
+// Usage!
+// timeout(500).then(() => {
+//     // Do something after the sleep!
+// });
+
+function sleep(delay)
+{
+    var start = new Date().getTime();
+    while (new Date().getTime() < start + delay);
+}
+  
+//usage
+//wait for 3 seconds
+// sleep(3000);
+
+
 // 封装用于存储app常量的方法
 var storage = new Storage({
   // 最大容量，默认值1000条数据循环存储
-  size: 10000,  
+  size: 10000,
 
   // 数据过期时间，默认一整天（1000 * 3600 * 24秒）
   // defaultExpires: 1000 * 3600 * 24,
@@ -74,17 +122,12 @@ var storageUtil = Object.assign({}, Storage.prototype, {
 
   // 封装用于存储app常量的方法
   storage : storage,
-
-  // 最好在全局范围内创建一个（且只有一个）storage实例，方便直接调用
-
-  // 对于web
-  // window.storage = storage;
-
-  // 对于react native
-  // global.storage = storage;
-
-  // 这样在之后的任意位置即可以直接调用storage
-
+  /*
+       最好在全局范围内创建一个（且只有一个）storage实例，方便直接调用
+       对于web : window.storage = storage;
+       对于react native : global.storage = storage;
+       这样在之后的任意位置即可以直接调用storage
+  */
   initialStorage : function(globalStorage) {
     this.storage = globalStorage;
   },
@@ -111,7 +154,7 @@ var storageUtil = Object.assign({}, Storage.prototype, {
         // console.log(ret.userid);
         // return ret.value;
         // return ret;
-        // if (/* 一切正常 */ret) { 
+        // if (/* 一切正常 */ret) {
         //   resolve(ret);
         // }
 
@@ -123,21 +166,14 @@ var storageUtil = Object.assign({}, Storage.prototype, {
         // console.warn(err);
         // return err;
         reject(err);
-        
       });
-
-      
     });
-
-    
   },
-
   setKeyIdValue : function(strKey, strId, objectValue) {
     // 使用key来保存数据。这些数据一般是全局独有的，常常需要调用的。
     // 除非你手动移除，这些数据会被永久保存，而且默认不会过期。
 
     var _this = this;
-
     return new Promise(function(resolve, reject) {
       // 做一些异步操作的事情，然后……
       // 存储
@@ -145,7 +181,6 @@ var storageUtil = Object.assign({}, Storage.prototype, {
         key: strKey,  // 注意:请不要在key中使用_下划线符号!
         id: strId,   // 注意:请不要在id中使用_下划线符号!
         rawData: objectValue,
-
         // 如果不指定过期时间，则会使用defaultExpires参数
         // 如果设为null，则永不过期
         // expires: 1000 * 3600
@@ -155,7 +190,7 @@ var storageUtil = Object.assign({}, Storage.prototype, {
         // console.log(ret.userid);
         // return ret.value;
         // return ret;
-        // if (/* 一切正常 */ret) { 
+        // if (/* 一切正常 */ret) {
         //   resolve(ret);
         // }
 
@@ -167,23 +202,18 @@ var storageUtil = Object.assign({}, Storage.prototype, {
         // console.warn(err);
         // return err;
         reject(err);
-        
       });
-
-      
     });
-
-    
   },
-
   getValue : function(strKey, strId) {
 
     var _this = this;
 
+    let flag = true;
+    let result = null;
+
     var promise = new Promise(function(resolve, reject) {
-      // 做一些异步操作的事情，然后……
-      // 读取
-      _this.storage.load({
+      let params = strId ? {
         key: strKey,
         id: strId,
 
@@ -194,41 +224,48 @@ var storageUtil = Object.assign({}, Storage.prototype, {
         // 在调用同步方法的同时先返回已经过期的数据。
         // 设置为false的话，则始终强制返回同步方法提供的最新数据(当然会需要更多等待时间)。
         syncInBackground: true
-      }).then(ret => {
+      } : {
+        key: strKey,
+
+        // autoSync(默认为true)意味着在没有找到数据或数据过期时自动调用相应的同步方法
+        autoSync: true,
+
+        // syncInBackground(默认为true)意味着如果数据过期，
+        // 在调用同步方法的同时先返回已经过期的数据。
+        // 设置为false的话，则始终强制返回同步方法提供的最新数据(当然会需要更多等待时间)。
+        syncInBackground: true        
+      }
+
+      // 做一些异步操作的事情，然后……
+      // 读取
+      _this.storage.load(params).then(ret => {
         //如果找到数据，则在then方法中返回
         // console.log(ret.userid);
         // return ret.value;
         // return ret;
-        // if (/* 一切正常 */ret) { 
+        // if (/* 一切正常 */ret) {
         //   resolve(ret);
         // }
-
         resolve(ret);
-
+        flag = false;
+        result = ret;
       }).catch(err => {
         //如果没有找到数据且没有同步方法，
         //或者有其他异常，则在catch中返回
         // console.warn(err);
         // return err;
         reject(err);
-        
+        flag = false;
       });
-
-      
     });
-
-    return promise;
-
-    
+    return promise; // 返回 promise ，异步
   },
-
   /*
   getBatchData 和 getBatchDataWithIds 这两个方法除了参数形式不同，还有个值得注意的差异。
   getBatchData会在数据缺失时挨个调用不同的sync方法(因为key不同)。
   但是getBatchDataWithIds却会把缺失的数据统计起来，将它们的id收集到一个数组中，然后一次传递给对应的sync方法(避免挨个查询导致同时发起大量请求)，
   所以你需要在服务端实现通过数组来查询返回，还要注意对应的sync方法的参数处理（因为id参数可能是一个字符串，也可能是一个数组的字符串）。
   */
-
   getBatchData : function(arr) {
 
     var _this = this;
@@ -247,7 +284,7 @@ var storageUtil = Object.assign({}, Storage.prototype, {
       // ])
       // .then(results => {
       //   results.forEach( result => {
-      //     console.log(result);    
+      //     console.log(result);
       //   })
       // })
 
@@ -256,7 +293,7 @@ var storageUtil = Object.assign({}, Storage.prototype, {
         // console.log(ret.userid);
         // return ret.value;
         // return ret;
-        // if (/* 一切正常 */ret) { 
+        // if (/* 一切正常 */ret) {
         //   resolve(ret);
         // }
 
@@ -268,17 +305,16 @@ var storageUtil = Object.assign({}, Storage.prototype, {
         // console.warn(err);
         // return err;
         reject(err);
-        
+
       });
 
-      
+
     });
 
     return promise;
 
-    
-  },
 
+  },
   getBatchDataWithIds : function(strKey, arr) {
 
     var _this = this;
@@ -289,20 +325,20 @@ var storageUtil = Object.assign({}, Storage.prototype, {
 
       //根据key和一个id数组来读取批量数据
       // storage.getBatchDataWithIds({
-      //   key: 'user', 
+      //   key: 'user',
       //   ids: ['1001', '1002', '1003']
       // })
       // .then( ... )
 
       _this.storage.getBatchDataWithIds({
-        key: strKey, 
+        key: strKey,
         ids: arr
       }).then(ret => {
         //如果找到数据，则在then方法中返回
         // console.log(ret.userid);
         // return ret.value;
         // return ret;
-        // if (/* 一切正常 */ret) { 
+        // if (/* 一切正常 */ret) {
         //   resolve(ret);
         // }
 
@@ -314,17 +350,16 @@ var storageUtil = Object.assign({}, Storage.prototype, {
         // console.warn(err);
         // return err;
         reject(err);
-        
+
       });
 
-      
+
     });
 
     return promise;
 
-    
+
   },
-  
   getIdsForKey : function(strKey) {
     // 获取某个key下的所有id
     var _this = this;
@@ -337,7 +372,7 @@ var storageUtil = Object.assign({}, Storage.prototype, {
         // console.log(ret.userid);
         // return ret.value;
         // return ret;
-        // if (/* 一切正常 */ret) { 
+        // if (/* 一切正常 */ret) {
         //   resolve(ret);
         // }
 
@@ -349,17 +384,16 @@ var storageUtil = Object.assign({}, Storage.prototype, {
         // console.warn(err);
         // return err;
         reject(err);
-        
+
       });
 
-      
+
     });
 
     return promise;
 
-    
+
   },
-  
   getAllDataForKey : function(strKey) {
     // 获取某个key下的所有数据
     var _this = this;
@@ -372,7 +406,7 @@ var storageUtil = Object.assign({}, Storage.prototype, {
         // console.log(ret.userid);
         // return ret.value;
         // return ret;
-        // if (/* 一切正常 */ret) { 
+        // if (/* 一切正常 */ret) {
         //   resolve(ret);
         // }
 
@@ -384,18 +418,18 @@ var storageUtil = Object.assign({}, Storage.prototype, {
         // console.warn(err);
         // return err;
         reject(err);
-        
+
       });
 
-      
+
     });
 
     return promise;
 
-    
+
   },
 
-  // --------------------------------------------------  
+  // --------------------------------------------------
 
   removeKey : function(strKey, strId) {
     // 删除单个数据
@@ -414,12 +448,12 @@ var storageUtil = Object.assign({}, Storage.prototype, {
       }).catch(err => {
 
         reject(err);
-        
+
       });
 
-      
+
     });
-    
+
   },
 
   clearMap : function(strKey) {
@@ -437,7 +471,7 @@ var storageUtil = Object.assign({}, Storage.prototype, {
         }).catch(err => {
 
           reject(err);
-          
+
         });
       } else {
         // !! 清空map，移除所有"key-id"数据（但会保留只有key的数据）
@@ -448,14 +482,12 @@ var storageUtil = Object.assign({}, Storage.prototype, {
         }).catch(err => {
 
           reject(err);
-          
+
         });
       }
-      
 
-      
     });
-    
+
   },
 
 });
@@ -483,7 +515,7 @@ module.exports.storageUtil = storageUtil;
     key: 'user',  // 注意:请不要在key中使用_下划线符号!
     id: '1001',   // 注意:请不要在id中使用_下划线符号!
     rawData: userA,
-    expires: 1000 * 60   
+    expires: 1000 * 60
   });
 
   //load 读取
@@ -514,7 +546,7 @@ storage.getAllDataForKey('user').then(users => {
 // !! 清除某个key下的所有数据
 storage.clearMapForKey('user');
 
-// --------------------------------------------------  
+// --------------------------------------------------
 
 // 删除单个数据
 storage.remove({
@@ -582,13 +614,13 @@ storage.getBatchData([
 ])
 .then(results => {
   results.forEach( result => {
-    console.log(result);    
+    console.log(result);
   })
 })
 
 //根据key和一个id数组来读取批量数据
 storage.getBatchDataWithIds({
-  key: 'user', 
+  key: 'user',
   ids: ['1001', '1002', '1003']
 })
 .then( ... )
@@ -599,4 +631,3 @@ storage.getBatchDataWithIds({
 // ，所以你需要在服务端实现通过数组来查询返回，还要注意对应的sync方法的参数处理（因为id参数可能是一个字符串，也可能是一个数组的字符串）。
 
 */
-
