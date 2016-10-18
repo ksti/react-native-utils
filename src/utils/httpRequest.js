@@ -140,7 +140,7 @@ function httpRequest(normal: Boolean) {
   /**
    * 请求超时
    */
-  this.timeout = null;
+  this.timeout = 30000;
 
   /**
    * 请求内容类型，对应设置不同的请求头和body
@@ -280,7 +280,7 @@ httpRequest.prototype.requestWithUrl = function(apiUrl: string, parameter: Objec
     _fetch(fetch(requestUrl), this.timeout)
     .then((response) => {
       this._response = response;
-      if (this.handleResponse) {
+      if (this.handleResponse === true) {
         return Promise.resolve();
       };
       return response.json();
@@ -338,7 +338,7 @@ httpRequest.prototype.requestGetWithUrl = function(apiUrl: string, parameter: Ob
     console.log('---requestUrl: ' + requestUrl);
     console.log('---JSON.stringify(parameter): ' + JSON.stringify(parameter));
 
-    if (!this.normal) {
+    if (this.normal === false) {
       if (global.accessToken && global.accessToken.length > 0) {
         this._setDefualtHeader({
           'Accept': 'application/json',
@@ -389,7 +389,7 @@ httpRequest.prototype.requestGetWithUrl = function(apiUrl: string, parameter: Ob
     }), this.timeout)
     .then((response) => {
       this._response = response;
-      if (this.handleResponse) {
+      if (this.handleResponse === true) {
         return Promise.resolve();
       };
       return response.json();
@@ -429,7 +429,7 @@ httpRequest.prototype.requestPostWithUrl = function(apiUrl: string, parameter: O
 
   var headerParams = this._defualtHeaders;
   var bodyParams = JSON.stringify(parameter);
-  if (this.contentType == 'form') {
+  if (this.contentType === 'form') {
     headerParams = {
       'Accept': 'application/json',
       'Accept-Charset': 'utf-8',
@@ -439,7 +439,7 @@ httpRequest.prototype.requestPostWithUrl = function(apiUrl: string, parameter: O
   }
 
   let accessToken = global.accessToken;
-  if (!this.normal) {
+  if (this.normal === false) {
     if (accessToken && accessToken.length > 0) {
         headerParams.Authorization = 'Bearer '+ accessToken;
     }
@@ -493,7 +493,7 @@ httpRequest.prototype.requestPostWithUrl = function(apiUrl: string, parameter: O
   }), this.timeout)
   .then((response) => {
     this._response = response;
-    if (this.handleResponse) {
+    if (this.handleResponse === true) {
       return Promise.resolve();
     };
     return response.json();
@@ -560,7 +560,7 @@ httpRequest.prototype.download = function(apiUrl: string, parameter: Object, cal
     'Accept-Charset': 'utf-8',
   });
 
-  if (!this.normal) {
+  if (this.normal === false) {
     if (global.accessToken && global.accessToken.length > 0) {
       this._setDefualtHeader({
         'Accept': 'text/plain, application/json, application/octet-stream',
@@ -600,7 +600,7 @@ httpRequest.prototype.download = function(apiUrl: string, parameter: Object, cal
       };
     } else if (xhr.readyState === xhr.DONE) {
       console.log('DONE!');
-      if (this.cancelled) {
+      if (this.cancelled === true) {
         this.cancelled = false;
         return;
       }
@@ -725,7 +725,7 @@ httpRequest.prototype.upload = function(apiUrl: string, parameter: Object, callb
 
   var headerParams = this._defualtHeaders;
   var bodyParams = JSON.stringify(parameter);
-  if (this.contentType == 'form') {
+  if (this.contentType === 'form') {
     headerParams = {
       'Accept': 'application/json',
       'Accept-Charset': 'utf-8',
@@ -735,7 +735,7 @@ httpRequest.prototype.upload = function(apiUrl: string, parameter: Object, callb
   }
 
   let accessToken = global.accessToken;
-  if (!this.normal) {
+  if (this.normal === false) {
     if (accessToken && accessToken.length > 0) {
         headerParams.Authorization = 'Bearer '+ accessToken;
     }
@@ -772,14 +772,14 @@ httpRequest.prototype.upload = function(apiUrl: string, parameter: Object, callb
         );
         return;
       }
-      var index = xhr.responseText.indexOf('http://www.posttestserver.com/');
-      if (index === -1) {
-        alert(
-          'Upload failed',
-          'Invalid response payload.'
-        );
-        return;
-      }
+      // var index = xhr.responseText.indexOf('http://www.posttestserver.com/');
+      // if (index === -1) {
+      //   alert(
+      //     'Upload failed',
+      //     'Invalid response payload.'
+      //   );
+      //   return;
+      // }
       // var url = xhr.responseText.slice(index).split('\n')[0];
       // Linking.openURL(url);
     };
@@ -795,7 +795,6 @@ httpRequest.prototype.upload = function(apiUrl: string, parameter: Object, callb
 
     if (xhr.upload) {
       xhr.upload.onprogress = (event) => {
-        console.log('upload onprogress', event);
         // // if (event.lengthComputable) {
         // //   this.setState({uploadProgress: event.loaded / event.total});
         // // }
@@ -883,7 +882,7 @@ httpRequest.prototype.uploadFTP = function(apiUrl: string, username: string, pas
 
   var headerParams = this._defualtHeaders;
   var bodyParams = JSON.stringify(parameter);
-  if (this.contentType == 'form') {
+  if (this.contentType === 'form') {
     headerParams = {
       'Accept': 'application/json',
       'Accept-Charset': 'utf-8',
@@ -893,7 +892,7 @@ httpRequest.prototype.uploadFTP = function(apiUrl: string, username: string, pas
   }
 
   let accessToken = global.accessToken;
-  if (!this.normal) {
+  if (this.normal === false) {
     if (accessToken && accessToken.length > 0) {
         headerParams.Authorization = 'Bearer '+ accessToken;
     }
@@ -930,14 +929,14 @@ httpRequest.prototype.uploadFTP = function(apiUrl: string, username: string, pas
       );
       return;
     }
-    var index = xhr.responseText.indexOf('http://www.posttestserver.com/');
-    if (index === -1) {
-      alert(
-        'Upload failed',
-        'Invalid response payload.'
-      );
-      return;
-    }
+    // var index = xhr.responseText.indexOf('http://www.posttestserver.com/');
+    // if (index === -1) {
+    //   alert(
+    //     'Upload failed',
+    //     'Invalid response payload.'
+    //   );
+    //   return;
+    // }
     // var url = xhr.responseText.slice(index).split('\n')[0];
     // Linking.openURL(url);
   };

@@ -3,6 +3,7 @@ import Form from 'react-native-form';
 // utils
 import httpRequest from './src/utils/httpRequest';
 import {storageUtil} from './src/utils/storage'
+import GlobalStorageUtil from './src/utils/GlobalStorageUtil'
 import FileUtil from './src/utils/FileUtil';
 // views
 import PageContainer from './src/components/FormView/PageContainer';
@@ -20,6 +21,7 @@ export {
   httpRequest,
   storageUtil,
   FileUtil,
+  GlobalStorageUtil,
   Form,
   FormView,
   PageContainer,

@@ -434,14 +434,17 @@ var storageUtil = Object.assign({}, Storage.prototype, {
   removeKey : function(strKey, strId) {
     // 删除单个数据
     var _this = this;
+    let params = strId ? {
+      key: strKey,
+      id: strId,
+    } : {
+      key: strKey,     
+    }
 
     return new Promise(function(resolve, reject) {
       // 做一些异步操作的事情，然后……
       // 删除
-      _this.storage.remove({
-          key: strKey,
-          id: strId
-      }).then(ret => {
+      _this.storage.remove(params).then(ret => {
 
         resolve(ret);
 
