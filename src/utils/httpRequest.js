@@ -580,6 +580,7 @@ httpRequest.prototype.download = function(apiUrl: string, parameter: Object, cal
   //
   this.xhr && this.xhr.abort();
 
+  let errorOccured = true;
   var xhr = this.xhr || new XMLHttpRequest();
   var contentSize = 0;
   xhr.onreadystatechange = () => {
@@ -599,17 +600,28 @@ httpRequest.prototype.download = function(apiUrl: string, parameter: Object, cal
         }
       };
     } else if (xhr.readyState === xhr.DONE) {
+      this._response = xhr;
       console.log('DONE!');
       if (this.cancelled === true) {
         this.cancelled = false;
+        if (callback) {
+            callback({message: ('cancelled: ' + xhr.response)}, null, this._response); // (error, responseData, response)
+        };
         return;
       }
       if (xhr.status === 200) {
-        alert('Download complete!');
+        console.log('Download complete!');
+        errorOccured = false;
       } else if (xhr.status !== 0) {
-        alert('Error: Server returned HTTP status of ' + xhr.status + ' ' + xhr.responseText);
+        console.log('Error: Server returned HTTP status of ' + xhr.status + ' ' + xhr.response);
+        if (callback) {
+            callback({message: ('Error: Server returned HTTP status of ' + xhr.status + ' ' + xhr.response)}, null, this._response); // (error, responseData, response)
+        };
       } else {
-        alert('Error: ' + xhr.responseText);
+        console.log('Error: ' + xhr.response);
+        if (callback) {
+            callback({message: ('Error: ' + xhr.response)}, null, this._response); // (error, responseData, response)
+        };
       }
     }
   };
@@ -628,6 +640,9 @@ httpRequest.prototype.download = function(apiUrl: string, parameter: Object, cal
 
   xhr.onload = (oEvent) => {
     this._response = xhr;
+    if (errorOccured) {
+      return;
+    };
     if (xhr.responseType === 'arraybuffer' || xhr.responseType === 'blob') {
       var arrayBuffer = xhr.response; // Note: not oReq.responseText
       // var blob = xhr.response; // arraybuffer 和 blob 都可以
@@ -676,21 +691,21 @@ httpRequest.prototype.download = function(apiUrl: string, parameter: Object, cal
   function transferComplete(evt) {
     console.log("The transfer is complete.");
     if (this.transferComplete) {
-      this.transferComplete(evt.currentTarget.responseText, evt.currentTarget);
+      this.transferComplete(evt.currentTarget.response, evt.currentTarget);
     };
   }
 
   function transferFailed(evt) {
     console.log("An error occurred while transferring the file.");
     if (this.transferFailed) {
-      this.transferFailed(evt.currentTarget.responseText, evt.currentTarget);
+      this.transferFailed(evt.currentTarget.response, evt.currentTarget);
     };
   }
 
   function transferCanceled(evt) {
     console.log("The transfer has been canceled by the user.");
     if (this.transferCanceled) {
-      this.transferCanceled(evt.currentTarget.responseText, evt.currentTarget);
+      this.transferCanceled(evt.currentTarget.response, evt.currentTarget);
     };
   }
 
@@ -702,7 +717,7 @@ httpRequest.prototype.download = function(apiUrl: string, parameter: Object, cal
   // xhr.responseType = "arraybuffer"; // arraybuffer
   // xhr.responseType = "blob"; // blob
   // xhr.responseType = "text"; // text
-  xhr.responseType = this.responseType?this.responseType:'';
+  xhr.responseType = this.responseType?this.responseType:'arraybuffer';
 
   xhr.send();
   this.xhr = xhr;
@@ -758,18 +773,33 @@ httpRequest.prototype.upload = function(apiUrl: string, parameter: Object, callb
     });
 
     xhr.onload = () => {
+      this._response = xhr;
       if (xhr.status !== 200) {
-        alert(
+        console.log(
           'Upload failed',
           'Expected HTTP 200 OK response, got ' + xhr.status
         );
+        if (callback) {
+            callback(
+              {message: ('Upload failed: ' + 'Expected HTTP 200 OK response, got ' + xhr.status)}, 
+              xhr.response, 
+              this._response
+            ); // (error, responseData, response)
+        };
         return;
       }
       if (!xhr.responseText) {
-        alert(
+        console.log(
           'Upload failed',
           'No response payload.'
         );
+        if (callback) {
+            callback(
+              {message: ('Upload failed: ' + 'No response payload.')}, 
+              xhr.response, 
+              this._response
+            ); // (error, responseData, response)
+        };
         return;
       }
       // var index = xhr.responseText.indexOf('http://www.posttestserver.com/');

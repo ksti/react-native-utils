@@ -39,7 +39,7 @@ var _response;
 const fileUtil = {
     RNFS: RNFS,
 
-    isFile: function(path: String) {
+    isFile: function(path: String, callback: Function) {
         return RNFS.exists(path)
                   .then((exist) => {
                     console.log('then exists?', exist);
@@ -48,25 +48,37 @@ const fileUtil = {
                       return Promise.all([RNFS.stat(path), path])
                                 .then((statResult) => {
                                   var isFile = statResult[0].isFile();
+                                  if (callback) {
+                                    callback(null, isFile);
+                                  };
                                   return Promise.resolve(isFile);
                                 })
                                 .catch((err) => {
                                   console.log(err.message, err.code);
+                                  if (callback) {
+                                    callback(err, null);
+                                  };
                                   return Promise.reject(err);
                                 });
                     } else {
                       console.log('file not exist at path:', path);
+                      if (callback) {
+                        callback(null, false);
+                      };
                       return Promise.resolve(false);
                     }
                   })
                   .catch((err) => {
                     console.log('err exists:', err);
+                    if (callback) {
+                      callback(err, null);
+                    };
                     return Promise.reject(err);
                   });
-        
+
     },
 
-    isDirectory: function(path: String) {
+    isDirectory: function(path: String, callback: Function) {
         return RNFS.exists(path)
                   .then((exist) => {
                     console.log('then exists?', exist);
@@ -75,56 +87,100 @@ const fileUtil = {
                       return Promise.all([RNFS.stat(path), path])
                                 .then((statResult) => {
                                   var isDirectory = statResult[0].isDirectory();
+                                  if (callback) {
+                                    callback(null, isDirectory);
+                                  };
                                   return Promise.resolve(isDirectory);
                                 })
                                 .catch((err) => {
                                   console.log(err.message, err.code);
+                                  if (callback) {
+                                    callback(err, null);
+                                  };
                                   return Promise.reject(err);
                                 });
                     } else {
                       console.log('file not exist at path:', path);
+                      if (callback) {
+                        callback(null, false);
+                      };
                       return Promise.resolve(false);
                     }
                   })
                   .catch((err) => {
                     console.log('err exists:', err);
+                    if (callback) {
+                      callback(err, null);
+                    };
                     return Promise.reject(err);
                   });
-        
+
+    },
+
+    /*
+    mkdir(filepath: string, options?: MkdirOptions): Promise<void>
+
+    type MkdirOptions = {
+      NSURLIsExcludedFromBackupKey?: boolean; // iOS only
+    };
+    Create a directory at filepath. Automatically creates parents and does not throw if already exists (works like Linux mkdir -p).
+
+    (IOS only): The NSURLIsExcludedFromBackupKey property can be provided to set this attribute on iOS platforms. Apple will reject apps for storing offline cache data that does not have this attribute.
+    */
+
+    createDir: function(filepath: string, options?: MkdirOptions, callback: Function) {
+      return RNFS.mkdir(filepath, options)
+              .then((result) => {
+                if (callback) {
+                  callback(null, true);
+                };
+                return Promise.resolve(true);
+              })
+              .catch((err) => {
+                console.log(err.message, err.code);
+                if (callback) {
+                  callback(err);
+                };
+                return Promise.reject(err);
+              });
     },
 
     readDir: function(path:String, callback: Function) {
-        RNFS.exists(path)
-            .then((exist) => {
-              console.log('then exists?', exist);
-              if (exist) {
-                console.log('file exists at path:', path);
-                RNFS.readDir(path)
-                  .then((result) => {
-                    console.log('GOT RESULT DocumentDirectoryPath:', result);
-                    if (callback) {
-                      callback(result);
-                    };
-                  })
-                  .catch((err) => {
-                    console.log(err.message, err.code);
-                    if (callback) {
-                      callback(err);
-                    };
-                  });
-              } else {
-                console.log('file not exist at path:', path);
+      return RNFS.exists(path)
+              .then((exist) => {
+                console.log('then exists?', exist);
+                if (exist) {
+                  console.log('file exists at path:', path);
+                  return RNFS.readDir(path)
+                    .then((result) => {
+                      console.log('GOT RESULT DocumentDirectoryPath:', result);
+                      if (callback) {
+                        callback(result);
+                      };
+                      return Promise.resolve(result);
+                    })
+                    .catch((err) => {
+                      console.log(err.message, err.code);
+                      if (callback) {
+                        callback(err);
+                      };
+                      return Promise.reject(err);
+                    });
+                } else {
+                  console.log('file not exist at path:', path);
+                  if (callback) {
+                    callback({message: 'file not exist'});
+                  };
+                  return Promise.reject({message: 'file not exist'});
+                }
+              })
+              .catch((err) => {
+                console.log('err exists:', err);
                 if (callback) {
-                  callback({message: 'file not exist'});
+                  callback(err);
                 };
-              }
-            })
-            .catch((err) => {
-              console.log('err exists:', err);
-              if (callback) {
-                callback(err);
-              };
-            });
+                return Promise.reject(err);
+              });
     },
 
     readFile: function(path: String, encoding?: string = 'utf8', callback: Function) {
@@ -141,10 +197,13 @@ const fileUtil = {
                           return RNFS.readFile(statResult[1], encoding);
                         } else if (statResult[0].isDirectory()) {
                             console.log('this is a directory');
-                            this.readDir(path, callback);
+                            return this.readDir(path, callback);
                         } else {
                             console.log('unknown');
-                            callback({message: 'unknown err'});
+                            if (callback) {
+                              callback({message: 'unknown err'});
+                            };
+                            return Promise.reject({message: 'unknown err'});
                         }
                       })
                       .then((contents) => {
@@ -160,12 +219,14 @@ const fileUtil = {
                         if (callback) {
                           callback(err);
                         };
+                        return Promise.reject(err);
                       });
                   } else {
                     console.log('file not exist at path:', path);
                     if (callback) {
                       callback({message: 'file not exist'});
                     };
+                    return Promise.reject({message: 'file not exist'});
                   }
                 })
                 .catch((err) => {
@@ -173,11 +234,11 @@ const fileUtil = {
                   if (callback) {
                     callback(err);
                   };
+                  return Promise.reject(err);
                 });
-        
     },
 
-    createFile: function(path: String, contents: any, encoding: ?String = 'utf8') {
+    createFile: function(path: String, contents: any, encoding: ?String = 'utf8', options: Object, callback: Function) {
 
         // create a path you want to write to
         // var path = RNFS.DocumentDirectoryPath + '/test.txt';
@@ -186,25 +247,42 @@ const fileUtil = {
                   .then((exist) => {
                     console.log('then exists?', exist);
                     if (!exist) {
-                      // write the file
-                      RNFS.writeFile(path, contents, encoding)
-                        .then(() => {
-                          console.log('FILE WRITTEN!');
-                          return Promise.resolve(true);
-                        })
-                        .catch((err) => {
-                          console.log(err.message);
-                          return Promise.reject(err);
-                        });
-                    };
+                      //
+                    } else {
+                      if (callback) {
+                        callback(null, true);
+                      };
+                      if (options.overwrite === false) {
+                        return Promise.resolve(true);
+                      };
+                    }
+                    // write the file
+                    RNFS.writeFile(path, contents, encoding)
+                      .then(() => {
+                        console.log('FILE WRITTEN!');
+                        if (callback) {
+                          callback(null, true);
+                        };
+                        return Promise.resolve(true);
+                      })
+                      .catch((err) => {
+                        console.log(err.message);
+                        if (callback) {
+                          callback(err, null);
+                        };
+                        return Promise.reject(err);
+                      });
                   })
                   .catch((err) => {
                     console.log('err exists:', err.message);
+                    if (callback) {
+                      callback(err, null);
+                    };
                     return Promise.reject(err);
-                  }); 
+                  });
     },
 
-    deleteFile: function(path: String) {
+    deleteFile: function(path: String, callback: Function) {
 
         // create a path you want to write to
         // var path = RNFS.DocumentDirectoryPath + '/test.txt';
@@ -217,24 +295,36 @@ const fileUtil = {
                       return RNFS.unlink(path)
                             .then(() => {
                               console.log('FILE DELETED');
+                              if (callback) {
+                                callback(null, true);
+                              };
                               return Promise.resolve(true);
                             })
                             // `unlink` will throw an error, if the item to unlink does not exist
                             .catch((err) => {
                               console.log(err.message);
+                              if (callback) {
+                                callback(err, null);
+                              };
                               return Promise.reject(err);
                             });
                     } else {
+                      if (callback) {
+                        callback({message: 'file not exist'});
+                      };
                       return Promise.resolve(false);
                     }
                   })
                   .catch((err) => {
                     console.log('err exists:', err);
+                    if (callback) {
+                      callback(err, null);
+                    };
                     return Promise.reject(err);
                   });
     },
 
-    downloadFile: function (url, downloadDest, background, downloadOptions) {
+    downloadFile: function (url, downloadDest, background, downloadOptions, callback: Function) {
       _response = null; // 清空response
 
       var progress = data => {
@@ -273,7 +363,7 @@ const fileUtil = {
       // return ret.promise.then(res => {
       //   return Promise.resolve().then(() => {
       //     return Promise.resolve(JSON.stringify(res))
-      //       .then((responseData) => { 
+      //       .then((responseData) => {
       //         var response = { jobId: jobId, responseData: responseData, info: { uri: 'file://' + downloadDest } }
       //         return Promise.resolve(response);
       //       }).catch(err => {
@@ -285,20 +375,38 @@ const fileUtil = {
       //     Object.assign(err, { jobId: jobId });
       //     return Promise.reject(err);
       // });
-      
+
       return ret.promise.then(res => {
+          _response = res;
           jobIds[jobId] = null;
-          return Promise.resolve(JSON.stringify(res)).then((responseData) => { 
-            var response = { jobId: jobId, responseData: responseData, info: { uri: 'file://' + downloadDest } }
-            return Promise.resolve(response);
-          }, 
+          if (typeof res !== 'string') {
+            // var response = { jobId: jobId, responseData: responseData, info: { uri: 'file://' + downloadDest } }
+            if (callback) {
+              callback(null, res, _response);
+            };
+            return Promise.resolve(res); // res 就是 JSON 对象
+          };
+
+          return Promise.resolve(JSON.stringify(res)).then((responseData) => {
+            // var response = { jobId: jobId, responseData: responseData, info: { uri: 'file://' + downloadDest } }
+            if (callback) {
+              callback(null, responseData, _response);
+            };
+            return Promise.resolve(responseData);
+          },
           err => {
             Object.assign(err, { jobId: jobId, response: res });
+            if (callback) {
+              callback(err, null, _response);
+            };
             return Promise.reject(err);
           });
         }).catch(err => {
           jobIds[jobId] = null;
           Object.assign(err, { jobId: jobId });
+          if (callback) {
+            callback(err, null, _response);
+          };
           return Promise.reject(err);
         });
     },
@@ -312,7 +420,7 @@ const fileUtil = {
       }
     },
 
-    uploadFiles: function (uploadUrl, files, uploadOptions) {
+    uploadFiles: function (uploadUrl, files, uploadOptions, callback: Function) {
       if (!uploadUrl) {
         return;
       };
@@ -353,12 +461,21 @@ const fileUtil = {
         _response = res;
         return JSON.parse(res.body);
       }).then((responseData) => {
+        if (callback) {
+          callback(null, jobId, responseData, _response);
+        };
         return Promise.resolve({ jobId:jobId, responseData: responseData, response: res });
-      }, 
+      },
         err => {
+          if (callback) {
+            callback(err, jobId, null, _response);
+          };
           return Promise.resolve({ jobId:jobId, responseData: null, response: _response });
       }).catch((err) => {
         Object.assign(err, { jobId:jobId });
+        if (callback) {
+          callback(err, jobId, null, _response);
+        };
         return Promise.reject(err);
       });
 
@@ -375,8 +492,7 @@ const fileUtil = {
 
       // return { jobId: jobId, promise: promise }
     },
-    
+
 }
 
 module.exports = fileUtil;
-
