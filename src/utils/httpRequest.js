@@ -53,6 +53,7 @@ function toQueryString(obj) {
 //     })
 // })
 
+// fetch with time out
 function _fetch(fetch_promise, timeout) {
     if (!timeout) {
       return fetch_promise;
@@ -91,6 +92,24 @@ function _fetch(fetch_promise, timeout) {
 //     }, function(err) {
 //         console.log(err);
 //     });
+
+
+// Promise to execute the func
+function _Promise(func: Function) {
+    if (typeof func === 'function') {
+      return new Promise(function(resolve, reject) {
+        // 做一些异步操作的事情，然后……
+        // 执行 func
+        try {
+          let ret = func();
+          resolve(ret);
+        } catch (err) {
+          reject(err);
+        }
+      });
+    };
+}
+
 
 
 /**
@@ -812,6 +831,43 @@ httpRequest.prototype.upload = function(apiUrl: string, parameter: Object, callb
       // }
       // var url = xhr.responseText.slice(index).split('\n')[0];
       // Linking.openURL(url);
+
+      if (this.handleResponse === true) {
+        if (callback) {
+            callback(
+              null, 
+              xhr.response, 
+              this._response
+            ); // (error, responseData, response)
+        };
+      } else {
+        // try {
+        //   if (callback) {
+        //     console.log('***responseData: ' + JSON.parse(xhr.responseText));
+        //     callback(null, JSON.parse(xhr.responseText), this._response); // (error, responseData, response)
+        //   }
+        // } catch (err) {
+        //   if (callback) {
+        //     callback(err, xhr.responseText, this._response); // (error, responseData, response)
+        //   }
+        // }
+
+        _Promise(() => {
+          return JSON.parse(xhr.responseText);
+        })        
+        .then((responseData) => {
+          if (callback) {
+            console.log('***responseData: ' + responseData);
+            callback(null, responseData, this._response); // (error, responseData, response)
+          }
+        },
+        err => {
+          if (callback) {
+            callback(err, xhr.responseText, this._response); // (error, responseData, response)
+          }
+        });
+      }
+      
     };
 
     var formdata = new FormData();
