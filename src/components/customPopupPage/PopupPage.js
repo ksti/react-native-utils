@@ -313,18 +313,18 @@ export default class PopupPage extends BasePopupPage{
             height: height || this.binding.state.height,
             // heightAnimated: height ? new Animated.Value(height) : new Animated.Value(this.binding.state.height),
             // heightAnimated: height || this.binding.state.height,
+          }, () => {
+            Animated.timing(this.binding.state.fadeInOpacity, {
+              toValue: 0.4, // 目标值
+              duration: 0, // 动画时间
+              easing: Easing.linear // 缓动函数
+            }).start();
+            Animated.timing(this.binding.state.heightAnimated, {
+               toValue: this.binding.state.height, // 目标值
+               duration: 0, // 动画时间
+               easing: Easing.linear // 缓动函数
+            }).start();
           });
-
-          Animated.timing(this.binding.state.fadeInOpacity, {
-            toValue: 0.4, // 目标值
-            duration: 0, // 动画时间
-            easing: Easing.linear // 缓动函数
-          }).start();
-          Animated.timing(this.binding.state.heightAnimated, {
-             toValue: this.binding.state.height, // 目标值
-             duration: 0, // 动画时间
-             easing: Easing.linear // 缓动函数
-          }).start();
         }
       };
     }
@@ -360,19 +360,19 @@ export default class PopupPage extends BasePopupPage{
             // heightAnimated: ratio*100,
             widthAnimated: width ? new Animated.Value(width) : new Animated.Value(this.binding.state.width),
             heightAnimated: height ? new Animated.Value(height) : new Animated.Value(this.binding.state.height),
+          }, () => {
+            Animated.timing(this.binding.state.bounceValueAnimated, {
+              // toValue: this.state.width/100, // 目标值
+              toValue: 1, // 目标值
+              duration: 200, // 动画时间
+              easing: Easing.linear // 缓动函数
+            }).start();
+            Animated.timing(this.binding.state.fadeInOpacity, {
+              toValue: 0.4, // 目标值
+              duration: 200, // 动画时间
+              easing: Easing.linear // 缓动函数
+            }).start();
           });
-
-          Animated.timing(this.binding.state.bounceValueAnimated, {
-            // toValue: this.state.width/100, // 目标值
-            toValue: 1, // 目标值
-            duration: 200, // 动画时间
-            easing: Easing.linear // 缓动函数
-          }).start();
-          Animated.timing(this.binding.state.fadeInOpacity, {
-            toValue: 0.4, // 目标值
-            duration: 200, // 动画时间
-            easing: Easing.linear // 缓动函数
-          }).start();
         }
       };
     }
@@ -384,18 +384,18 @@ export default class PopupPage extends BasePopupPage{
           this.binding.setState({
             width: width || this.binding.state.width,
             height: height || this.binding.state.height,
+          }, () => {
+            Animated.timing(this.binding.state.fadeInOpacity, {
+              toValue: 0.4, // 目标值
+              duration: 200, // 动画时间
+              easing: Easing.linear // 缓动函数
+            }).start();
+            Animated.timing(this.binding.state.heightAnimated, {
+               toValue: this.binding.state.height, // 目标值
+               duration: 200, // 动画时间
+               easing: Easing.linear // 缓动函数
+            }).start();
           });
-
-          Animated.timing(this.binding.state.fadeInOpacity, {
-            toValue: 0.4, // 目标值
-            duration: 200, // 动画时间
-            easing: Easing.linear // 缓动函数
-          }).start();
-          Animated.timing(this.binding.state.heightAnimated, {
-             toValue: this.binding.state.height, // 目标值
-             duration: 200, // 动画时间
-             easing: Easing.linear // 缓动函数
-          }).start();
         }
       };
     }
@@ -409,18 +409,18 @@ export default class PopupPage extends BasePopupPage{
             height: height || this.binding.state.height,
             // widthAnimated: new Animated.Value(0),
             // heightAnimated: height ? new Animated.Value(height) : new Animated.Value(this.binding.state.height),
-          });
-
-          Animated.timing(this.binding.state.fadeInOpacity, {
-            toValue: 0.4, // 目标值
-            duration: 200, // 动画时间
-            easing: Easing.linear // 缓动函数
-          }).start();
-          Animated.timing(this.binding.state.widthAnimated, {
-             toValue: this.binding.state.width, // 目标值
-             duration: 200, // 动画时间
-             easing: Easing.linear // 缓动函数
-          }).start();
+          }, () => {
+            Animated.timing(this.binding.state.fadeInOpacity, {
+              toValue: 0.4, // 目标值
+              duration: 200, // 动画时间
+              easing: Easing.linear // 缓动函数
+            }).start();
+            Animated.timing(this.binding.state.widthAnimated, {
+               toValue: this.binding.state.width, // 目标值
+               duration: 200, // 动画时间
+               easing: Easing.linear // 缓动函数
+            }).start();
+          }); 
         }
       };
     }
@@ -432,18 +432,18 @@ export default class PopupPage extends BasePopupPage{
           this.binding.setState({
             width: width || this.binding.state.width,
             height: height || this.binding.state.height,
+          }, () => {
+            Animated.timing(this.binding.state.fadeInOpacity, {
+              toValue: 0.4, // 目标值
+              duration: 200, // 动画时间
+              easing: Easing.linear // 缓动函数
+            }).start();
+            Animated.timing(this.binding.state.heightAnimated, {
+               toValue: this.binding.state.height, // 目标值
+               duration: 200, // 动画时间
+               easing: Easing.linear // 缓动函数
+            }).start();
           });
-
-          Animated.timing(this.binding.state.fadeInOpacity, {
-            toValue: 0.4, // 目标值
-            duration: 200, // 动画时间
-            easing: Easing.linear // 缓动函数
-          }).start();
-          Animated.timing(this.binding.state.heightAnimated, {
-             toValue: this.binding.state.height, // 目标值
-             duration: 200, // 动画时间
-             easing: Easing.linear // 缓动函数
-          }).start();
         }
       };
     }
