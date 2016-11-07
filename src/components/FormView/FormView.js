@@ -34,15 +34,19 @@
         1.type-表单类型(text, input, date, select, submit, custom)
         2.noSeparator 是否加分割线
         3.separatorColor 分割线颜色
-        5.separatorTop 分割线距离上个组件间隙
-        6.separatorHeight 分割线高度
-        7.leftText 左边文字
+        4.separatorTop 分割线距离上个组件间隙
+        5.separatorHeight 分割线高度
+        6.leftText 左边文字
+        7.leftTextStyle 左边文字样式
         8.rightText 右边文字
-        9.defaultInputVale 默认输入值
-        10.rightAttributeStrs 自定义右边文本
-        11.enableRightTouch 是否启用右侧文本点击
-        12.enableAccessory 是否启用右侧文本显示附加视图（比如右箭头>）
-        13.accessoryView 自定义右侧文本附加视图
+        9.rightTextStyle 右边文字样式
+        10.inputStyle 右边布局样式（最初是为'input'类型设计,现在通用）
+        11.inputProps 'input'类型的表单textInput组件属性定制
+        12.defaultInputVale 默认输入值
+        13.rightAttributeStrs 自定义右边文本
+        14.enableRightTouch 是否启用右侧文本点击
+        15.enableAccessory 是否启用右侧文本显示附加视图（比如右箭头>）
+        16.accessoryView 自定义右侧文本附加视图
 */
 
 import React,{Component} from 'react'
@@ -315,6 +319,7 @@ export default class FormView extends Component{
         };
         return(
             <TextInput
+                underlineColorAndroid='transparent'
                 {...this.props.inputProps}
                 onChange={(event) => {
                     var textHeight = 35;
@@ -427,6 +432,7 @@ export default class FormView extends Component{
             <View style={[styles.columnContainer, flexStyle, {/*backgroundColor: 'green'*/}, mergeStyleInput]}>
                 <TouchableOpacity style={[{alignSelf: 'stretch', /*backgroundColor: 'purple',*/ height: 44}, mergeStyleInput]}>
                     <TextInput
+                        underlineColorAndroid='transparent'
                         {...this.props.inputProps}
                         style={[styles.input, flexStyle, {height: 35, marginLeft: 0, marginRight: 0}]}
                         value={this.state.showValue?this.state.showValue:this.state.inputValue}
