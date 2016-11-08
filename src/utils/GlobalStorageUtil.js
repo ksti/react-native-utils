@@ -78,7 +78,7 @@ const GlobalStorageUtil = {
     setKeyIdValue : function(strKey, strId, objectValue, callback) {
         //保存信息
         if (global.storageUtil) {
-          global.storageUtil.setKeyValue(strKey, strId, objectValue).then((result) => {
+          global.storageUtil.setKeyIdValue(strKey, strId, objectValue).then((result) => {
               console.log('result: ' + result);
               if (callback) {
                 callback(null, true);
@@ -100,6 +100,27 @@ const GlobalStorageUtil = {
       //保存信息
       if (global.storageUtil) {
         global.storageUtil.removeKey(strKey, strId).then((result) => {
+            console.log('result: ' + result);
+            if (callback) {
+              callback(null, true);
+            };
+        }).catch(error => {
+            console.log('error: ' + error);
+            if (callback) {
+              callback(error, null);
+            };
+        });
+      } else {
+        if (callback) {
+          callback({message: 'global.storageUtil is null'}, null);
+        };
+      }
+    },
+
+    clearMap : function(strKey, callback) {
+      //保存信息
+      if (global.storageUtil) {
+        global.storageUtil.clearMap(strKey).then((result) => {
             console.log('result: ' + result);
             if (callback) {
               callback(null, true);
