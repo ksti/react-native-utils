@@ -106,7 +106,7 @@ const GlobalStorageUtil = {
         global.storageUtil.getIdsForKey(strKey).then((result) => {
             console.log('result: ' + result);
             if (callback) {
-              callback(null, true);
+              callback(null, result);
             };
         }).catch(error => {
             console.log('error: ' + error);
@@ -128,7 +128,7 @@ const GlobalStorageUtil = {
         global.storageUtil.getAllDataForKey(strKey).then((result) => {
             console.log('result: ' + result);
             if (callback) {
-              callback(null, true);
+              callback(null, result);
             };
         }).catch(error => {
             console.log('error: ' + error);
@@ -178,7 +178,7 @@ const GlobalStorageUtil = {
         global.storageUtil.getBatchData(arr).then((result) => {
             console.log('result: ' + result);
             if (callback) {
-              callback(null, true);
+              callback(null, result);
             };
         }).catch(error => {
             console.log('error: ' + error);
@@ -198,7 +198,7 @@ const GlobalStorageUtil = {
         global.storageUtil.getBatchDataWithIds(strKey, arr).then((result) => {
             console.log('result: ' + result);
             if (callback) {
-              callback(null, true);
+              callback(null, result);
             };
         }).catch(error => {
             console.log('error: ' + error);
