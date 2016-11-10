@@ -179,7 +179,7 @@ export default class PopupSelecter extends Component{
           style={{flex: 1}}
           onPress={() => this._onSelect(rowData, sectionID, rowID)}
         >
-            <View style={[styles.row]}>
+            <View style={[styles.row, rowData.rowStyle]}>
               <Text style={[styles.text, {fontSize:15, color:'#3b3b3b', marginLeft:0, marginTop:13}, rowData.textStyle]}>
                 {rowData.text}
               </Text>

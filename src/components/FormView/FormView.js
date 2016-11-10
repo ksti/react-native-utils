@@ -141,7 +141,7 @@ export default class FormView extends Component{
         var mergeStyleBottomLine = {
             backgroundColor: this.props.separatorColor ? this.props.separatorColor : '#eaeaea',
             marginTop: this.props.separatorTop ? this.props.separatorTop : 4,
-            height: this.props.separatorHeight ? this.props.separatorHeight : 1,
+            height: this.props.separatorHeight !== undefined ? this.props.separatorHeight : 1,
         }
         if (!this.props.noSeparator) {
             // return (
