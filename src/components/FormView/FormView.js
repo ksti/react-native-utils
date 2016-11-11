@@ -78,7 +78,7 @@ export default class FormView extends Component{
     constructor(props){
         super(props);
         this.state = {
-            inputValue: this.props.defaultInputValue,
+            inputValue: this.props.defaultInputValue || this.props.inputValue,
             showValue: this.props.showValue,
             inputHeight: 35,
             leftText: this.props.leftText,
@@ -98,7 +98,7 @@ export default class FormView extends Component{
             this.setState({
                 leftText: nextProps.leftText || this.state.leftText,
                 rightText: nextProps.rightText || this.state.rightText,
-                inputValue: nextProps.inputValue || this.state.inputValue,
+                inputValue: nextProps.defaultInputValue || nextProps.inputValue || this.state.inputValue,
                 showValue: nextProps.showValue || this.state.showValue,
             })
         };
