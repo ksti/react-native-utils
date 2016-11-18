@@ -54,9 +54,13 @@ import {
   Platform
 } from 'react-native'
 
-export default class HorizonImageScrollView extends Component{
+let plusImage = require('../../resource/images/ic_plus_soild.png')
+
+export default class HorizonImageScrollView extends Component {
     constructor(props){
         super(props);
+
+        plusImage = props.plusImage || plusImage;
 
         this.state = {
           imageslist: props.imageslist || [],
@@ -96,7 +100,8 @@ export default class HorizonImageScrollView extends Component{
 
     _renderImageView = (images) => {
         let lineArr = [];
-        for (let i = 0; i < images.length + 1; i++) {
+        let imageLength = this.props.disabled === true ? images.length : images.length + 1;
+        for (let i = 0; i < imageLength; i++) {
             let index  = Math.max(0, i - 1);
             let dta = images[index];
             let source;
@@ -105,14 +110,14 @@ export default class HorizonImageScrollView extends Component{
                 // or directly pass uri number for local files
                 source = typeof dta.photo === 'string' ? { uri: dta.photo } : dta.photo;
             }
-            if (images.length === 0 || i === 0) {
+            if ( this.props.disabled !== true && (images.length === 0 || i === 0) ) {
                 lineArr.push(
                   <TouchableOpacity onPress={() => this.addImage() } underlayColor='transparent' key={i}
                     style={styles.imageContainer}
                   >
                     <Image
                         style={styles.image}
-                        source={require('../../resource/images/ic_plus_soild.png') }
+                        source={plusImage}
                     />
                   </TouchableOpacity>
                 );
@@ -170,7 +175,7 @@ const styles = StyleSheet.create({
   },
   scrollContainer: {
     justifyContent: 'center',
-    backgroundColor: '#ffffff',
+    backgroundColor: 'white',
     alignItems: 'center',
   },
   imageContainer: {
@@ -191,8 +196,7 @@ const styles = StyleSheet.create({
   text: {
     textAlign: 'center',
     flex: 1,
-    // fontSize: 15,
-    color: '#3b3b3b',
+    color: 'black',
   },
 });
 

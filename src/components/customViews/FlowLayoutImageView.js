@@ -54,7 +54,6 @@ import {
   Platform
 } from 'react-native'
 
-
 let media = [
   {
     photo: 'http://www.iyi8.com/uploadfile/2016/0424/20160424115032400.jpg',
@@ -86,7 +85,7 @@ let media = [
     selected: false,
     caption: '图片6',
   },
-]
+];
 
 let plusImage = {
   photo: require('../../resource/images/ic_plus_soild.png'),
@@ -96,7 +95,7 @@ let plusImage = {
 
 let listdata = new Array().concat(media, plusImage);
 
-export default class FlowLayoutImageView extends Component{
+export default class FlowLayoutImageView extends Component {
     constructor(props){
         super(props);
         var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
@@ -164,7 +163,7 @@ export default class FlowLayoutImageView extends Component{
 
         // overlay
         var overlay = null;
-        if ((this.props.showMore || !this.props.hiddenWhenMax) && imageCount > showMax && rowID === String(showMax - 1)) {
+        if ((this.props.showMore === true || this.props.hiddenWhenMax === false) && imageCount > showMax && rowID === String(showMax - 1)) {
             //
             overlay = (
                 <View
@@ -180,25 +179,35 @@ export default class FlowLayoutImageView extends Component{
                         backgroundColor: 'black',
                     }}
                 >
-                        <Text
-                            style={{
-                              width: imageWidth,
-                              height: imageHeight,
-                              alignSelf:'center',
-                              justifyContent: 'center',
-                              backgroundColor:'transparent',
-                              color: 'white',
-                            }}
+                        <View 
+                          style={{
+                            width: imageWidth,
+                            height: imageHeight,
+                            alignSelf:'center',
+                            justifyContent: 'center',
+                            backgroundColor:'transparent',
+                          }}
                         >
-                            更多...
-                        </Text>
+                          <Text
+                              style={{
+                                // width: imageWidth,
+                                // height: imageHeight,
+                                alignSelf:'center',
+                                justifyContent: 'center',
+                                backgroundColor:'transparent',
+                                color: 'white',
+                              }}
+                          >
+                              更多...
+                          </Text>
+                        </View>
                 </View>
             );
         }
 
         //
         var itemView;
-        if (rowID === String(imageCount - 1)) {
+        if (rowID === String(imageCount - 1)) { // 加号
           itemView = (
             <TouchableOpacity onPress={()=>{this.addImage(rowID)}} underlayColor='transparent' 
                 style={{
@@ -221,6 +230,9 @@ export default class FlowLayoutImageView extends Component{
               />
             </TouchableOpacity>
           )
+          if (this.props.disabled === true) {
+            itemView = null; // 去掉加号
+          };
         } else {
             itemView = (
                 <TouchableHighlight
@@ -306,7 +318,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     flex: 1,
     // fontSize: 15,
-    color: '#3b3b3b',
+    color: '#3b3b3b', // 标题黑色
   },
   list: {
     // justifyContent: 'space-around',
@@ -326,7 +338,7 @@ const styles = StyleSheet.create({
       justifyContent: 'center',
       alignItems: 'center',
       paddingRight: 10,
-      borderTopColor: '#dedede',
+      borderTopColor: '#eaeaea', // 边框分割线
       borderTopWidth: 0.5,
       overflow: 'hidden'
   },

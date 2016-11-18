@@ -63,7 +63,7 @@ export default  class SeePhotoBrowser extends Component {
             renderPlaceholderOnly: true,
             alldata: props.alldata || [],//图片地址数组
             initialIndex: props.initialIndex || 0,//当前点击的位置   如果只有1张照片   不传或者传0
-            editable: props.editable || true,
+            editable: props.editable,
             showPhotoBrowser: false,
             // PhotoBrowser configs
             configPhotoBrowser: {
@@ -233,10 +233,6 @@ export default  class SeePhotoBrowser extends Component {
         );
     }
 
-    getLoading() {
-        return this.refs['loading'];
-    }
-
     render() {
         if (this.state.renderPlaceholderOnly) {
             return this._renderPlaceholderView();
@@ -246,7 +242,6 @@ export default  class SeePhotoBrowser extends Component {
               <View style={{flex:1,backgroundColor:'#ffffff'}}>
                   {this._renderModalPhotoBrowser()}
                   <MyDialog isOverlayClickClose={true} ref={ (MyDialog) => { this.MyDialog = MyDialog } }/>
-                  <Loading ref={'loading'} text={'正在加载...'}/>
               </View>
           ); 
         } else {
@@ -254,7 +249,6 @@ export default  class SeePhotoBrowser extends Component {
               <View style={{flex:1,backgroundColor:'#ffffff'}}>
                   {this.renderImage()}
                   <MyDialog isOverlayClickClose={true} ref={ (MyDialog) => { this.MyDialog = MyDialog } }/>
-                  <Loading ref={'loading'} text={'正在加载...'}/>
               </View>
           ); 
         }        
