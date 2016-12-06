@@ -103,6 +103,9 @@ export default class HorizonImageScrollView extends Component {
         let imageLength = this.props.disabled === true ? images.length : images.length + 1;
         for (let i = 0; i < imageLength; i++) {
             let index  = Math.max(0, i - 1);
+            if (this.props.disabled === true) {
+              index  = i;
+            };
             let dta = images[index];
             let source;
             if (dta && dta.photo) {

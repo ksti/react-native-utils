@@ -83,6 +83,7 @@ export default class FlowLayoutItemView extends Component {
 
     constructor(props) {
         super(props);
+        this.dataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
     }
 
     _renderFlowLayoutList = () => {
@@ -93,7 +94,7 @@ export default class FlowLayoutItemView extends Component {
           <ListView
               enableEmptySections={true}
               contentContainerStyle={styles.list}
-              dataSource={this.props.dataSource}
+              dataSource={this.dataSource.cloneWithRows(this.props.dataSource || [])}
               renderRow={this._renderRow}
           />
         </View>
@@ -141,7 +142,7 @@ export default class FlowLayoutItemView extends Component {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1
+        // flex: 1
     },
     list: {
         flexDirection: 'row',

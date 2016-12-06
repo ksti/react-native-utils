@@ -95,7 +95,7 @@ class GJSProgressHUD extends React.Component {
     }
 
     show(text, pointerEvents) {
-        if (!this.isShown) {
+        // if (!this.isShown) {
             if (typeof(text) == 'boolean') {
                 pointerEvents = text;
                 text = '';
@@ -117,7 +117,8 @@ class GJSProgressHUD extends React.Component {
                 }, this.timeout);
             }
             this.isShown = true;
-        }
+            
+        // }
     }
 
     dismiss() {
@@ -152,6 +153,10 @@ class GJSProgressHUD extends React.Component {
     }
 
     _renderLoading(props) {
+        let bodyWidth = Dimensions.get('window').width;
+        if (props.loadingStyle && props.loadingStyle.width) {
+            bodyWidth = props.loadingStyle.width;
+        };
         return(
             <View pointerEvents={!!props && props.pointerEvents ? 'none' : 'auto'}
                 style={
@@ -160,40 +165,44 @@ class GJSProgressHUD extends React.Component {
                     ]
                 }
             >
-                <View pointerEvents={!!props && props.pointerEvents ? 'none' : 'auto'}
-                    style={
-                        [
-                            styles.absolute,
-                        ]
-                    }
-                />
                 <View 
                     style={
                         [
                             styles.container,
-                            props.loadingStyle,
                         ]
                     }
                 >
-                    <ActivityIndicator
-                        animating={true}
-                        size='small'
+                    <View 
                         style={
                             [
-                                styles.indicator,
-                            ]
-                        }
-                    />
-                    <Text 
-                        style={
-                            [
-                                styles.loadingText,
-                                props.textStyle,
+                                styles.body,
+                                props.loadingStyle,
                             ]
                         }
                     >
-                        {props.text}
-                    </Text>
+                        <ActivityIndicator
+                            {...this.props.indicatorProps}
+                            animating={true}
+                            size='small'
+                            style={
+                                [
+                                    styles.indicator,
+                                    props.indicatorStyle,
+                                ]
+                            }
+                        />
+                        <Text 
+                            style={
+                                [
+                                    styles.loadingText,
+                                    {maxWidth: bodyWidth - 40, },
+                                    props.textStyle,
+                                ]
+                            }
+                        >
+                            {props.text}
+                        </Text>
+                    </View>
                 </View>
             </View>
           );
@@ -217,11 +226,21 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         flex: 1,
     },
+    body: {
+        zIndex:888, 
+        backgroundColor:'transparent',
+        justifyContent: 'center',
+        flexDirection: 'row',
+        alignItems: 'center',
+        // flex: 1,
+        padding: 4,
+    },
     loadingText: {
         color: '#a7a7a7',
         backgroundColor: 'transparent',
         fontSize: 20,
         // fontWeight:'bold',
+        flex: 1,
     },
     indicator: {
         alignItems: 'center',

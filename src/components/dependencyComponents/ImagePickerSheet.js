@@ -65,7 +65,11 @@ export default class ImagePickerSheet extends Component {
         /*
          * 标题
          */
-        title: PropTypes.string,        
+        title: PropTypes.string,   
+        /*
+         * 图片裁剪可选项
+         */
+        pickerOptions: PropTypes.object,      
         /*
          * 回调图片
          */
@@ -106,7 +110,8 @@ export default class ImagePickerSheet extends Component {
         width: 300,
         height: 400,
         cropping: true,
-        includeBase64: true
+        includeBase64: true,
+        ...this.props.pickerOptions,
       }).then(image => {
         // You can display the image using either data...
         /* base64 and byteArray
@@ -141,8 +146,10 @@ export default class ImagePickerSheet extends Component {
     /* 多选照片 */
     showMutiplePicker = () => {
       ImagePickerCrop.openPicker({
+        // multiple: true,
+        includeBase64: true,
+        ...this.props.pickerOptions,
         multiple: true,
-        includeBase64: true
       }).then(images => {
         let imagesData = [];
         images.forEach(function(image, index) {
@@ -185,7 +192,8 @@ export default class ImagePickerSheet extends Component {
         width: 300,
         height: 400,
         cropping: true,
-        includeBase64: true
+        includeBase64: true,
+        ...this.props.pickerOptions,
       }).then(image => {
         // You can display the image using either data...
         /* base64 and byteArray
