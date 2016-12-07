@@ -98,6 +98,9 @@ export default class ImagePickerSheet extends Component {
 
     constructor(props) {
         super(props);
+        this.state = {
+          pickerOptions: props.pickerOptions,
+        }
     }
 
     /*
@@ -111,7 +114,7 @@ export default class ImagePickerSheet extends Component {
         height: 400,
         cropping: true,
         includeBase64: true,
-        ...this.props.pickerOptions,
+        ...this.state.pickerOptions,
       }).then(image => {
         // You can display the image using either data...
         /* base64 and byteArray
@@ -148,7 +151,7 @@ export default class ImagePickerSheet extends Component {
       ImagePickerCrop.openPicker({
         // multiple: true,
         includeBase64: true,
-        ...this.props.pickerOptions,
+        ...this.state.pickerOptions,
         multiple: true,
       }).then(images => {
         let imagesData = [];
@@ -193,7 +196,7 @@ export default class ImagePickerSheet extends Component {
         height: 400,
         cropping: true,
         includeBase64: true,
-        ...this.props.pickerOptions,
+        ...this.state.pickerOptions,
       }).then(image => {
         // You can display the image using either data...
         /* base64 and byteArray
@@ -225,9 +228,13 @@ export default class ImagePickerSheet extends Component {
       });
     }
 
-    show = (identifierParams) => {
+    show = (identifierParams, pickerOptions) => {
         this.identifierParams = identifierParams;
-        this.ActionSheet.show();
+        this.setState({
+          pickerOptions: pickerOptions,
+        }, () => {
+          this.ActionSheet.show();
+        })        
     }
 
     _handlePress = (index) => {
