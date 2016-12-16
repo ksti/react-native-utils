@@ -35,6 +35,7 @@ import React,{
     Component
 } from 'react'
 import {
+    PanResponder,
     View,
     Modal,
     StyleSheet,
@@ -55,12 +56,31 @@ import {
 } from 'react-native'
 
 let plusImage = require('../../resource/images/ic_plus_soild.png')
+let unknownImage = require('../../resource/images/unknown.png');
 
 export default class HorizonImageScrollView extends Component {
     constructor(props){
         super(props);
 
         plusImage = props.plusImage || plusImage;
+
+        this.supportedMimeType = [
+          {
+            mimeType: 'image/jpeg',
+            ext: [
+              'jpe',
+              'jpeg',
+              'jpg',
+            ],
+          },
+          {
+            mimeType: 'image/png',
+            ext: [
+              'png',
+              'x-png',
+            ],
+          },
+        ]
 
         this.state = {
           imageslist: props.imageslist || [],
@@ -80,14 +100,45 @@ export default class HorizonImageScrollView extends Component {
       };
     }
 
+    isSupported(mimeTypeOrExt) {
+      if (typeof mimeTypeOrExt !== 'string') return false;
+      let supported = false;
+      this.supportedMimeType.map((mimeTypeObject, index) => {
+          if (supported) {
+            return true;
+          };
+          if (mimeTypeOrExt === mimeTypeObject.mimeType) {
+              supported = true;
+              return supported;
+          } else {
+            let supportedExt = mimeTypeObject.ext;
+            supportedExt.map((ext, extIndex) => {
+                if (mimeTypeOrExt === ext) {
+                  supported = true;
+                  return supported;
+                };
+            });
+          }
+      });
+      return supported;
+    }
+
+    _handleOnscroll = (e) => {
+      if (this.props.onScroll) {
+        this.props.onScroll(e);
+      };
+    }
+
     _renderImageSrollView = () => {
       return (
           <View >
               <ScrollView
+                  {...this.props}
                   style={[{ overflow: 'hidden' }]}
                   contentContainerStyle={styles.scrollContainer}
                   horizontal={true} 
                   showsHorizontalScrollIndicator={false}
+                  onScroll={(e) => this._handleOnscroll(e)}
               >
                   <View style={styles.rowContainer}>
                       {this._renderImageView(this.state.imageslist) }
@@ -108,11 +159,23 @@ export default class HorizonImageScrollView extends Component {
             };
             let dta = images[index];
             let source;
-            if (dta && dta.photo) {
-                // create source objects for http/asset strings
-                // or directly pass uri number for local files
-                source = typeof dta.photo === 'string' ? { uri: dta.photo } : dta.photo;
+            let isSupported = true;
+            if (dta && dta.mimeTypeOrExt) {
+              isSupported = this.isSupported(dta.mimeTypeOrExt);
+              if (!isSupported) {
+                source = this.props.unknownImage || unknownImage;
+              }
             }
+            if (isSupported) {
+              if (dta && dta.photo) {
+                  // create source objects for http/asset strings
+                  // or directly pass uri number for local files
+                  source = typeof dta.photo === 'string' ? { uri: dta.photo } : dta.photo;
+              }
+            } else {
+              source = this.props.unknownImage || unknownImage;
+            }
+
             if ( this.props.disabled !== true && (images.length === 0 || i === 0) ) {
                 lineArr.push(
                   <TouchableOpacity onPress={() => this.addImage() } underlayColor='transparent' key={i}
@@ -125,7 +188,6 @@ export default class HorizonImageScrollView extends Component {
                   </TouchableOpacity>
                 );
             } else {
-                let source = typeof dta.photo === 'string' ? { uri: dta.photo } : dta.photo;
                 lineArr.push(
                   <TouchableOpacity 
                     onPress={ () => this.imageOnClick(dta, index) } 
@@ -161,7 +223,6 @@ export default class HorizonImageScrollView extends Component {
           <View {...this.props}>
             {this._renderImageSrollView()}
           </View>
-          
         );
     }
 

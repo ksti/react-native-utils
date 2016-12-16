@@ -93,6 +93,8 @@ let plusImage = {
   caption: '加号',
 }
 
+let unknownImage = require('../../resource/images/unknown.png');
+
 let listdata = new Array().concat(media, plusImage);
 
 export default class FlowLayoutImageView extends Component {
@@ -102,6 +104,24 @@ export default class FlowLayoutImageView extends Component {
         var imgDs = new ListView.DataSource({rowHasChanged: (r1, r2) => true});
         plusImage = props.plusImage || plusImage;
         listdata = new Array().concat(props.imageSource, plusImage);
+
+        this.supportedMimeType = [
+          {
+            mimeType: 'image/jpeg',
+            ext: [
+              'jpe',
+              'jpeg',
+              'jpg',
+            ],
+          },
+          {
+            mimeType: 'image/png',
+            ext: [
+              'png',
+              'x-png',
+            ],
+          },
+        ]
 
         this.state = {
           width: props.width || Dimensions.get('window').width,
@@ -122,6 +142,29 @@ export default class FlowLayoutImageView extends Component {
           imageDataSource: this.state.imageDataSource.cloneWithRows(listdata),
         })
       };
+    }
+
+    isSupported(mimeTypeOrExt) {
+      if (typeof mimeTypeOrExt !== 'string') return false;
+      let supported = false;
+      this.supportedMimeType.map((mimeTypeObject, index) => {
+          if (supported) {
+            return true;
+          };
+          if (mimeTypeOrExt === mimeTypeObject.mimeType) {
+              supported = true;
+              return supported;
+          } else {
+            let supportedExt = mimeTypeObject.ext;
+            supportedExt.map((ext, extIndex) => {
+                if (mimeTypeOrExt === ext) {
+                  supported = true;
+                  return supported;
+                };
+            });
+          }
+      });
+      return supported;
     }
 
     _renderImageListView = () => {
@@ -150,13 +193,25 @@ export default class FlowLayoutImageView extends Component {
 
         // source
         let source;
-        if (rowData.photo) {
-          // create source objects for http/asset strings
-          // or directly pass uri number for local files
-          source = typeof rowData.photo === 'string' ? { uri: rowData.photo } : rowData.photo;
+        let isSupported = true;
+        if (rowData && rowData.mimeTypeOrExt) {
+          isSupported = this.isSupported(rowData.mimeTypeOrExt);
+          if (!isSupported) {
+            source = this.props.unknownImage || unknownImage;
+          }
         }
+        if (isSupported) {
+          if (rowData && rowData.photo) {
+            // create source objects for http/asset strings
+            // or directly pass uri number for local files
+            source = typeof rowData.photo === 'string' ? { uri: rowData.photo } : rowData.photo;
+          }
+        } else {
+          source = this.props.unknownImage || unknownImage;
+        }
+        
         // layout
-        var rowMax = 4;
+        var rowMax = this.props.rowItemCount || 4;
         var margin = 4;
         var imageWidth = (this.state.width - rowMax * margin * 2 - 8 * 2) / rowMax;
         var imageHeight = imageWidth + 10;
