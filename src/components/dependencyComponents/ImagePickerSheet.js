@@ -47,7 +47,7 @@ import {
 } from "react-native";
 
 import ActionSheet from 'react-native-actionsheet';
-import ImagePickerCrop from 'react-native-image-crop-picker';
+import ImagePickerAdapter from './ImagePickerAdapter';
 
 const base64 = require('base64-js');
 
@@ -65,7 +65,11 @@ export default class ImagePickerSheet extends Component {
         /*
          * 标题
          */
-        title: PropTypes.string,   
+        title: PropTypes.string,
+        /*
+         * 图片选择组件
+         */
+        pickerComponent: PropTypes.string,
         /*
          * 图片裁剪可选项
          */
@@ -94,6 +98,8 @@ export default class ImagePickerSheet extends Component {
 
     static defaultProps = {
     	title: '选择照片',
+      pickerComponent: 'react-native-image-crop-picker',
+      // pickerComponent: 'react-native-yuanxincamera',
     };
 
     constructor(props) {
@@ -109,122 +115,28 @@ export default class ImagePickerSheet extends Component {
 
     /* 单选照片 */
     showSinglePicker = () => {
-      ImagePickerCrop.openPicker({
-        width: 300,
-        height: 400,
-        cropping: true,
-        includeBase64: true,
-        ...this.state.pickerOptions,
-      }).then(image => {
-        // You can display the image using either data...
-        /* base64 and byteArray
-        const source = {uri: 'data:image/jpeg;base64,' + image.data, isStatic: true};
-        const imageDataBase64 = 'data:image/jpeg;base64,' + image.data;
-        const imageDataByteArray = base64.toByteArray(image.data);
-        */
-        // or a reference to the platform specific asset location
-        let fileUri;
-        let fileName;
-        if (Platform.OS === 'ios') {
-          const source = {uri: image.path.replace('file://', ''), isStatic: true};      
-          fileUri = image.path.replace('file://', '');
-          fileName = fileUri.split('/').pop();
-        } else {
-          const source = {uri: image.path, isStatic: true};
-          fileUri = image.path;
-          fileName = fileUri.split('/').pop();
-        }
-        // 回调选择的图片
-        this.props.handleImage && this.props.handleImage(image, fileUri, fileName, this.identifierParams);
-      }).catch(error => {
-        console.log('showSinglePicker error:' + error.message);
-        if (error.code === 'picker_cancel') {
-          console.log('已取消操作')
-        };
-        // 回调出错信息
-        this.props.handleImageError && this.props.handleImageError(error, this.identifierParams);
+      ImagePickerAdapter.showSinglePicker(this.props.pickerComponent, {
+        ...this.props,
+        pickerOptions: this.state.pickerOptions,
+        identifierParams: this.identifierParams,
       });
     }
 
     /* 多选照片 */
     showMutiplePicker = () => {
-      ImagePickerCrop.openPicker({
-        // multiple: true,
-        includeBase64: true,
-        ...this.state.pickerOptions,
-        multiple: true,
-      }).then(images => {
-        let imagesData = [];
-        images.forEach(function(image, index) {
-            // You can display the image using either data...
-            /* base64 and byteArray
-            const source = {uri: 'data:image/jpeg;base64,' + image.data, isStatic: true};
-            const imageDataBase64 = 'data:image/jpeg;base64,' + image.data;
-            const imageDataByteArray = base64.toByteArray(image.data);
-            */
-            // or a reference to the platform specific asset location
-            let fileUri;
-            let fileName;
-            if (Platform.OS === 'ios') {
-              const source = {uri: image.path.replace('file://', ''), isStatic: true};      
-              fileUri = image.path.replace('file://', '');
-              fileName = fileUri.split('/').pop();
-            } else {
-              const source = {uri: image.path, isStatic: true};
-              fileUri = image.path;
-              fileName = fileUri.split('/').pop();
-            }
-            // 回调选择的图片
-            imagesData.push({image, fileUri, fileName});
-        });
-        // 回调选择的图片
-        this.props.handleImages && this.props.handleImages(images, imagesData, this.identifierParams);
-      }).catch(error => {
-        console.log('showMutiplePicker error:' + error.message);
-        if (error.code === 'picker_cancel') {
-          console.log('已取消操作')
-        };
-        // 回调出错信息
-        this.props.handleImagesError && this.props.handleImagesError(error, this.identifierParams);
+      ImagePickerAdapter.showMutiplePicker(this.props.pickerComponent, {
+        ...this.props,
+        pickerOptions: this.state.pickerOptions,
+        identifierParams: this.identifierParams,
       });
     }
 
     /* 拍照 */
     selectFromCamera = () => {
-      ImagePickerCrop.openCamera({
-        width: 300,
-        height: 400,
-        cropping: true,
-        includeBase64: true,
-        ...this.state.pickerOptions,
-      }).then(image => {
-        // You can display the image using either data...
-        /* base64 and byteArray
-        const source = {uri: 'data:image/jpeg;base64,' + image.data, isStatic: true};
-        const imageDataBase64 = 'data:image/jpeg;base64,' + image.data;
-        const imageDataByteArray = base64.toByteArray(image.data);
-        */
-        // or a reference to the platform specific asset location
-        let fileUri;
-        let fileName;
-        if (Platform.OS === 'ios') {
-          const source = {uri: image.path.replace('file://', ''), isStatic: true};      
-          fileUri = image.path.replace('file://', '');
-          fileName = fileUri.split('/').pop();
-        } else {
-          const source = {uri: image.path, isStatic: true};
-          fileUri = image.path;
-          fileName = fileUri.split('/').pop();
-        }
-        // 回调选择的图片
-        this.props.handleImage && this.props.handleImage(image, fileUri, fileName, this.identifierParams);
-      }).catch(error => {
-        console.log('selectFromCamera error:' + error.message);
-        if (error.code === 'picker_cancel') {
-          console.log('已取消操作')
-        };
-        // 回调出错信息
-        this.props.handleImageError && this.props.handleImageError(error, this.identifierParams);
+      ImagePickerAdapter.selectFromCamera(this.props.pickerComponent, {
+        ...this.props,
+        pickerOptions: this.state.pickerOptions,
+        identifierParams: this.identifierParams,
       });
     }
 
