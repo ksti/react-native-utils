@@ -62,6 +62,7 @@ export default  class SeePhotoBrowser extends Component {
         this.state = {
             renderPlaceholderOnly: true,
             alldata: props.alldata || [],//图片地址数组
+            deletedData: [],
             initialIndex: props.initialIndex || 0,//当前点击的位置   如果只有1张照片   不传或者传0
             editable: props.editable,
             showPhotoBrowser: false,
@@ -74,6 +75,7 @@ export default  class SeePhotoBrowser extends Component {
                 displaySelectionButtons: false,
                 startOnGrid: false,
                 enableGrid: props.enableGrid || false,
+                forceLoadPhoto: false,
             }
         }
     }
@@ -108,7 +110,7 @@ export default  class SeePhotoBrowser extends Component {
 
     _onBack = () => {
       if (this.props.onBack) {
-        this.props.onBack(this.state.alldata);
+        this.props.onBack(this.state.alldata, this.state.deletedData);
       };
       if (this.props.modal === true) {
         this.dismiss();
@@ -142,7 +144,7 @@ export default  class SeePhotoBrowser extends Component {
         <View style={{marginTop: 16, marginRight: 8, alignItems: 'center'}}>
           <Image 
             style={{width: 24, height: 24}}
-            source={require('../../resource/images/ic_delete_photo.png')} 
+            source={require('../../resource/images/ic_delete_photo.png')}
           />
         </View>
         
@@ -161,22 +163,34 @@ export default  class SeePhotoBrowser extends Component {
         if (selectedMedia.length > 0) {
           // ...
           console.log('selectedMedia: ' + selectedMedia);
+          if (this.props.onTopRight) {
+            this.props.onTopRight(selectedMedia, isFullScreen);
+          };
         };
         // is not full screen return
         return;
       };
+
+      if (this.props.onTopRight) {
+        this.props.onTopRight(currentMedia, isFullScreen);
+      };
       gallery && gallery.deleteImageRef(currentIndex);
       let initialIndex = Math.max(0, currentIndex - 1);
       let images = this.state.alldata;
+      let deletedImages = this.state.deletedData;
       if (images.length > 0) {
-        images.splice(currentIndex, 1); // 删掉选中的照片
+        let deletedImage = images.splice(currentIndex, 1); // 删掉选中的照片
+        deletedImages.push(deletedImage[0]); // push deletedImage
+        
         // update state
         this.setState({
           alldata: images,
+          deletedData: deletedImages,
           configPhotoBrowser: {
             ...this.state.configPhotoBrowser,
             initialIndex: initialIndex,
             media: images,
+            forceLoadPhoto: true,
           },
         })
       }
@@ -192,6 +206,7 @@ export default  class SeePhotoBrowser extends Component {
         displaySelectionButtons,
         startOnGrid,
         enableGrid,
+        forceLoadPhoto,
       } = this.state.configPhotoBrowser;
 
       return (
@@ -217,6 +232,8 @@ export default  class SeePhotoBrowser extends Component {
               topRightView={this._renderTopRightView()}
               topRightStyle={{overflow: 'hidden'}}
               useGallery={true}
+              forceLoadPhoto={forceLoadPhoto}
+              notSupportedError={'移动端不支持查阅此文件，请到PC端查阅'}
             />
           </View>
         </Modal>
@@ -225,7 +242,7 @@ export default  class SeePhotoBrowser extends Component {
 
     _renderPlaceholderView() {
         return (
-            <View style={{flex:1,backgroundColor:'#ffffff'}}>
+            <View style={{flex:1,backgroundColor:'white'}}>
                 <View style={{flex:1,justifyContent:'center',alignItems:'center'}}>
                     <LoadingView text="正在加载..."/>
                 </View>
@@ -239,14 +256,14 @@ export default  class SeePhotoBrowser extends Component {
         }
         if (this.props.modal === true) {
           return (
-              <View style={{flex:1,backgroundColor:'#ffffff'}}>
+              <View style={{flex:1,backgroundColor:'white'}}>
                   {this._renderModalPhotoBrowser()}
                   <MyDialog isOverlayClickClose={true} ref={ (MyDialog) => { this.MyDialog = MyDialog } }/>
               </View>
           ); 
         } else {
           return (
-              <View style={{flex:1,backgroundColor:'#ffffff'}}>
+              <View style={{flex:1,backgroundColor:'white'}}>
                   {this.renderImage()}
                   <MyDialog isOverlayClickClose={true} ref={ (MyDialog) => { this.MyDialog = MyDialog } }/>
               </View>
@@ -263,6 +280,7 @@ export default  class SeePhotoBrowser extends Component {
             displaySelectionButtons,
             startOnGrid,
             enableGrid,
+            forceLoadPhoto,
         } = this.state.configPhotoBrowser;
 
         return (
@@ -283,6 +301,8 @@ export default  class SeePhotoBrowser extends Component {
                     topRightView={this._renderTopRightView()}
                     topRightStyle={{overflow: 'hidden'}}
                     useGallery={true}
+                    forceLoadPhoto={forceLoadPhoto}
+                    notSupportedError={'移动端不支持查阅此文件，请到PC端查阅'}
                 />
             </View>
         )
