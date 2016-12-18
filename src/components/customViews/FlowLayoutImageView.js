@@ -31,9 +31,7 @@
 
 'use strict';
 
-import React,{
-    Component
-} from 'react'
+import React, { PropTypes, Component } from "react";
 import {
     View,
     Modal,
@@ -95,15 +93,66 @@ let plusImage = {
 
 let unknownImage = require('../../resource/images/unknown.png');
 
-let listdata = new Array().concat(media, plusImage);
+// let listdata = new Array().concat(media, plusImage);
 
 export default class FlowLayoutImageView extends Component {
+
+    static propTypes = {
+        style: View.propTypes.style,
+
+        /*
+         * 宽度
+         */
+        width: PropTypes.number,
+
+        /*
+         * 数据源
+         */
+        imageSource: PropTypes.array,
+
+        /*
+         * 每行数量
+         */
+        rowItemCount: PropTypes.number,
+
+        /*
+         * 最大显示数量
+         */
+        max: PropTypes.number,        
+
+        /*
+         * 达到最大限制时是否隐藏
+         */
+        hiddenWhenMax: PropTypes.bool,
+
+        /*
+         * 达到最大限制时是否显示更多
+         */
+        showMore: PropTypes.bool,
+
+        /*
+         * 是否禁止编辑操作
+         */
+        disabled: PropTypes.bool,
+    };
+
+    static defaultProps = {
+        width: Dimensions.get('window').width,
+        imageSource: [],
+        rowItemCount: 4,
+        max: 9,
+        hiddenWhenMax: true,
+        showMore: false,
+        disabled: false,
+    };
+
     constructor(props){
         super(props);
-        var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-        var imgDs = new ListView.DataSource({rowHasChanged: (r1, r2) => true});
+
+        let ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+        let imgDs = new ListView.DataSource({rowHasChanged: (r1, r2) => true});
         plusImage = props.plusImage || plusImage;
-        listdata = new Array().concat(props.imageSource, plusImage);
+        let listdata = new Array().concat(props.imageSource, plusImage);
 
         this.supportedMimeType = [
           {
@@ -123,6 +172,7 @@ export default class FlowLayoutImageView extends Component {
           },
         ]
 
+        // state
         this.state = {
           width: props.width || Dimensions.get('window').width,
           imageDataSource: imgDs.cloneWithRows(listdata),
@@ -130,21 +180,20 @@ export default class FlowLayoutImageView extends Component {
         }
     }
 
-    componentDidMount(){
+    componentWillMount() {
+      //
+    }
+
+    componentDidMount() {
       //
       
     }
 
-    componentWillReceiveProps(nextProps) {
-      if (nextProps.imageSource) {
-        listdata = new Array().concat(nextProps.imageSource, plusImage);
-        this.setState({
-          imageDataSource: this.state.imageDataSource.cloneWithRows(listdata),
-        })
-      };
+    componentWillReceiveProps = (nextProps) => {
+      this._handleNextProps(nextProps);
     }
 
-    isSupported(mimeTypeOrExt) {
+    isSupported = (mimeTypeOrExt) => {
       if (typeof mimeTypeOrExt !== 'string') return false;
       let supported = false;
       this.supportedMimeType.map((mimeTypeObject, index) => {
@@ -167,29 +216,46 @@ export default class FlowLayoutImageView extends Component {
       return supported;
     }
 
+    _handleNextProps = (nextProps) => {
+      if (nextProps.imageSource) {
+        let listdata = new Array().concat(nextProps.imageSource, plusImage);
+        this.setState({
+          imageDataSource: this.state.imageDataSource.cloneWithRows(listdata),
+          images: listdata,
+        })
+      };
+    }
+
     _renderImageListView = () => {
       return (
           <View >
               <ListView
                   enableEmptySections={true}
                   contentContainerStyle={styles.list}
+                  initialListSize={this.props.max + 1}
                   dataSource={this.state.imageDataSource}
-                  renderRow={this._renderImagesRow}
+                  renderRow={this._renderImagesRow.bind(this)}
               />
           </View>
-        
       );
     }
 
     _renderImagesRow = (rowData, sectionID, rowID) => {
-        var showMax = this.props.max || 9;
-        var imageCount = this.state.imageDataSource.getRowCount();
-        var hiddenCondition = this.props.hiddenWhenMax ? (Number(rowID) > showMax - 1) : (Number(rowID) > showMax - 1 && Number(rowID) < imageCount - 1);
+        let showMax = this.props.max;
+        // let imageCount = this.state.imageDataSource.getRowCount();
+        let imageCount = this.state.images.length;
+        let hiddenCondition = this.props.hiddenWhenMax ? (Number(rowID) > showMax - 1) : (Number(rowID) > showMax - 1 && Number(rowID) < imageCount - 1);
         // if (Number(rowID) > showMax - 1 && Number(rowID) < imageCount - 1) {
         // if (Number(rowID) > showMax - 1) { // 超过 showMax 隐藏加号
         if (hiddenCondition) {
             return null;
         }
+
+        if (this.props.disabled === true) {
+          if (rowID === String(imageCount - 1)) { // 加号
+            return null; // disabled 加号直接去掉
+          }
+        };
 
         // source
         let source;
@@ -209,16 +275,16 @@ export default class FlowLayoutImageView extends Component {
         } else {
           source = this.props.unknownImage || unknownImage;
         }
-        
+
         // layout
-        var rowMax = this.props.rowItemCount || 4;
-        var margin = 4;
-        var imageWidth = (this.state.width - rowMax * margin * 2 - 8 * 2) / rowMax;
-        var imageHeight = imageWidth + 10;
+        let rowMax = this.props.rowItemCount;
+        let margin = 4;
+        let imageWidth = (this.state.width - rowMax * margin * 2 - 8 * 2) / rowMax;
+        let imageHeight = imageWidth + 10;
 
         // overlay
-        var overlay = null;
-        if ((this.props.showMore === true || this.props.hiddenWhenMax === false) && imageCount > showMax && rowID === String(showMax - 1)) {
+        let overlay = null;
+        if ((this.props.showMore === true || this.props.hiddenWhenMax === false) && (imageCount > showMax) && (rowID === String(showMax - 1))) {
             //
             overlay = (
                 <View
@@ -261,7 +327,7 @@ export default class FlowLayoutImageView extends Component {
         }
 
         //
-        var itemView;
+        let itemView;
         if (rowID === String(imageCount - 1)) { // 加号
           itemView = (
             <TouchableOpacity onPress={()=>{this.addImage(rowID)}} underlayColor='transparent' 
@@ -285,9 +351,6 @@ export default class FlowLayoutImageView extends Component {
               />
             </TouchableOpacity>
           )
-          if (this.props.disabled === true) {
-            itemView = null; // 去掉加号
-          };
         } else {
             itemView = (
                 <TouchableHighlight
@@ -328,6 +391,7 @@ export default class FlowLayoutImageView extends Component {
 
         return (
             <View 
+                key={`FlowLayoutImageView_${rowID}`}
                 style={{
                     width: imageWidth,
                     height: imageHeight,
@@ -351,7 +415,7 @@ export default class FlowLayoutImageView extends Component {
       };
     }
 
-    render(){
+    render() {
         return (
           <View {...this.props}>
             {this._renderImageListView()}
