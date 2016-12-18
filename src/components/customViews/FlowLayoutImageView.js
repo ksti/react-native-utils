@@ -134,6 +134,11 @@ export default class FlowLayoutImageView extends Component {
          * 是否禁止编辑操作
          */
         disabled: PropTypes.bool,
+
+        /*
+         * 图片样式
+         */
+        imageStyle: PropTypes.object,
     };
 
     static defaultProps = {
@@ -144,6 +149,9 @@ export default class FlowLayoutImageView extends Component {
         hiddenWhenMax: true,
         showMore: false,
         disabled: false,
+        imageStyle: {
+          backgroundColor: '#eaeaea',
+        }
     };
 
     constructor(props){
@@ -345,6 +353,7 @@ export default class FlowLayoutImageView extends Component {
                     alignSelf: 'center',
                     justifyContent: 'center',
                     backgroundColor: 'transparent',
+                    ...this.props.imageStyle,
                   }}
                   // source={require('../../../../images/App/jiahao.png')}
                   source={source}
@@ -371,18 +380,19 @@ export default class FlowLayoutImageView extends Component {
                             alignItems: 'center',
                         }}
                     >
-                            <Image
-                                style={{
-                                  width: imageWidth,
-                                  height: imageHeight,
-                                  resizeMode:'cover', 
-                                  alignSelf:'center',
-                                  justifyContent: 'center',
-                                  backgroundColor:'transparent',
-                                }}
-                                source={source}
-                            />
-                            {overlay}
+                        <Image
+                            style={{
+                              width: imageWidth,
+                              height: imageHeight,
+                              resizeMode:'cover', 
+                              alignSelf:'center',
+                              justifyContent: 'center',
+                              backgroundColor:'transparent',
+                              ...this.props.imageStyle,
+                            }}
+                            source={source}
+                        />
+                        {overlay}
                     </View>
 
                 </TouchableHighlight>

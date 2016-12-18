@@ -59,6 +59,28 @@ let plusImage = require('../../resource/images/ic_plus_soild.png')
 let unknownImage = require('../../resource/images/unknown.png');
 
 export default class HorizonImageScrollView extends Component {
+
+    static propTypes = {
+        style: View.propTypes.style,
+
+        /*
+         * 是否禁止编辑操作
+         */
+        disabled: PropTypes.bool,
+
+        /*
+         * 图片样式
+         */
+        imageStyle: PropTypes.object,
+    };
+
+    static defaultProps = {
+        imageStyle: {
+          resizeMode: 'cover',
+          backgroundColor: '#eaeaea',
+        }
+    };
+    
     constructor(props){
         super(props);
 
@@ -182,7 +204,7 @@ export default class HorizonImageScrollView extends Component {
                     style={styles.imageContainer}
                   >
                     <Image
-                        style={styles.image}
+                        style={[styles.image, {...this.props.imageStyle}]}
                         source={plusImage}
                     />
                   </TouchableOpacity>
@@ -195,7 +217,7 @@ export default class HorizonImageScrollView extends Component {
                     key={i}
                     style={styles.imageContainer}>
                     <Image
-                        style={styles.image}
+                        style={[styles.image, {...this.props.imageStyle}]}
                         source={source}
                     />
                   </TouchableOpacity>
