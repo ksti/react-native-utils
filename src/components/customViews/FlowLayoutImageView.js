@@ -352,8 +352,8 @@ export default class FlowLayoutImageView extends Component {
                     resizeMode: 'cover', 
                     alignSelf: 'center',
                     justifyContent: 'center',
-                    backgroundColor: 'transparent',
                     ...this.props.imageStyle,
+                    backgroundColor: 'transparent',
                   }}
                   // source={require('../../../../images/App/jiahao.png')}
                   source={source}

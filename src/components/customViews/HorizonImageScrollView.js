@@ -204,7 +204,7 @@ export default class HorizonImageScrollView extends Component {
                     style={styles.imageContainer}
                   >
                     <Image
-                        style={[styles.image, {...this.props.imageStyle}]}
+                        style={[styles.image, {...this.props.imageStyle}, {backgroundColor: 'transparent'}]}
                         source={plusImage}
                     />
                   </TouchableOpacity>
