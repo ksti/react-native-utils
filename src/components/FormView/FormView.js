@@ -96,10 +96,10 @@ export default class FormView extends Component{
     componentWillReceiveProps(nextProps) {
         if (nextProps.setStateSelf === true) {
             this.setState({
-                leftText: nextProps.leftText || this.state.leftText,
-                rightText: nextProps.rightText || this.state.rightText,
-                inputValue: nextProps.defaultInputValue || nextProps.inputValue || this.state.inputValue,
-                showValue: nextProps.showValue || this.state.showValue,
+                leftText: nextProps.leftText,
+                rightText: nextProps.rightText,
+                inputValue: nextProps.defaultInputValue || nextProps.inputValue,
+                showValue: nextProps.showValue,
             })
         };
     }
