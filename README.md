@@ -6,6 +6,7 @@ some utils for react-native
 
 - [httpRequest](docs/httpRequest.md)
 - [FormView](docs/FormView.md)
+- [FlowLayoutItemView](docs/FlowLayoutItemView.md)
 
 
 ## Features
