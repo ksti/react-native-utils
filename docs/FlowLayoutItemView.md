@@ -12,6 +12,10 @@
     	- itemTextHeight 文本高度
     	- minImageWidth 图片最小宽度
     	- textStyle 文本样式
+        - cornerMarkContainerStyle 角标容器包装样式
+        - cornerMarkStyle 角标(位置)样式
+        - cornerMarkViewStyle 角标视图样式
+        - cornerMarkTextStyle 角标文本样式
 
 	- 界面示例：
 	
@@ -24,17 +28,16 @@
                 color: GlobalSize.colorBlackText, //标题黑色
                 fontSize: GlobalSize.fontSizeTitle,
             }}
-            CornerMarkContainerStyle={{
-                // padding: 0,
+            cornerMarkContainerStyle={{ // 角标容器包装样式
                 paddingTop: 5,
             }}
-            cornerMarkStyle={{
+            cornerMarkStyle={{ // 角标(位置)样式
                 right: 20,
             }}
-            cornerMarkViewStyle={{
+            cornerMarkViewStyle={{ // 角标视图样式
                 // backgroundColor: 'green',
             }}
-            cornerMarkTextStyle={{
+            cornerMarkTextStyle={{ // 角标文本样式
                 // color: 'yellow',
             }}
             rowItemNumber={4}

@@ -75,10 +75,29 @@ export default class FlowLayoutItemView extends Component {
          * 文本样式
          */
         textStyle: PropTypes.object,
+        /*
+         * 角标容器包装样式
+         */
+        cornerMarkContainerStyle: View.propTypes.style,
+        /*
+         * 角标(位置)样式
+         */
+        cornerMarkStyle: View.propTypes.style,
+        /*
+         * 角标视图样式
+         */
+        cornerMarkViewStyle: View.propTypes.style,
+        /*
+         * 角标文本样式
+         */
+        cornerMarkTextStyle: View.propTypes.style,
     };
 
     static defaultProps = {
         width: Dimensions.get('window').width,
+        cornerMarkContainerStyle: {
+            paddingTop: 10,
+        }
     };
 
     constructor(props) {
@@ -89,7 +108,7 @@ export default class FlowLayoutItemView extends Component {
     // 渲染角标容器
     _renderCornerMarkContainer = (children, cornerMark) => {
         return (
-            <View style={[{padding: 10}, this.props.CornerMarkContainerStyle]}>
+            <View style={[{padding: /*10*/0}, this.props.cornerMarkContainerStyle]}>
                 {children}
                 {this._renderCornerMark(cornerMark, this.props.onPressCornerMark)}
             </View>
