@@ -1,6 +1,6 @@
 {
   "name": "react-native-utils-gjs",
-  "version": "0.1.40",
+  "version": "0.1.41",
   "description": "Some utils for react-native, like httpRequest",
   "main": "index.js",
   "scripts": {
