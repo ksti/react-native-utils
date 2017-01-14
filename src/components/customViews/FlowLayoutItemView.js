@@ -74,7 +74,7 @@ export default class FlowLayoutItemView extends Component {
         /*
          * 文本样式
          */
-        textStyle: PropTypes.object,
+        textStyle: Text.propTypes.style,
         /*
          * 角标容器包装样式
          */
@@ -90,7 +90,7 @@ export default class FlowLayoutItemView extends Component {
         /*
          * 角标文本样式
          */
-        cornerMarkTextStyle: View.propTypes.style,
+        cornerMarkTextStyle: Text.propTypes.style,
     };
 
     static defaultProps = {
