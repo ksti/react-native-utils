@@ -309,8 +309,10 @@ export default class PopupPage extends BasePopupPage{
         binding: this,
         animate: function(width, height) {
           this.binding.setState({
-            width: width || this.binding.state.width,
-            height: height || this.binding.state.height,
+            // width: width || this.binding.state.width, // 0 会当做 false 处理。。
+            // height: height || this.binding.state.height, // 0 会当做 false 处理。。
+            width: width >= 0 ? width : this.binding.state.width,
+            height: height >= 0 ? height : this.binding.state.height,
             // heightAnimated: height ? new Animated.Value(height) : new Animated.Value(this.binding.state.height),
             // heightAnimated: height || this.binding.state.height,
           }, () => {
@@ -354,8 +356,10 @@ export default class PopupPage extends BasePopupPage{
 
           var ratio = this.binding.state.height / this.binding.state.width;
           this.binding.setState({
-            width: width || this.binding.state.width,
-            height: height || this.binding.state.height,
+            // width: width || this.binding.state.width, // 0 会当做 false 处理。。
+            // height: height || this.binding.state.height, // 0 会当做 false 处理。。
+            width: width >= 0 ? width : this.binding.state.width,
+            height: height >= 0 ? height : this.binding.state.height,
             // widthAnimated: 1*100,
             // heightAnimated: ratio*100,
             widthAnimated: width ? new Animated.Value(width) : new Animated.Value(this.binding.state.width),
@@ -382,8 +386,10 @@ export default class PopupPage extends BasePopupPage{
         binding: this,
         animate: function(width, height) {
           this.binding.setState({
-            width: width || this.binding.state.width,
-            height: height || this.binding.state.height,
+            // width: width || this.binding.state.width, // 0 会当做 false 处理。。
+            // height: height || this.binding.state.height, // 0 会当做 false 处理。。
+            width: width >= 0 ? width : this.binding.state.width,
+            height: height >= 0 ? height : this.binding.state.height,
           }, () => {
             Animated.timing(this.binding.state.fadeInOpacity, {
               toValue: 0.4, // 目标值
@@ -405,8 +411,10 @@ export default class PopupPage extends BasePopupPage{
         binding: this,
         animate: function(width, height) {
           this.binding.setState({
-            width: width || this.binding.state.width,
-            height: height || this.binding.state.height,
+            // width: width || this.binding.state.width, // 0 会当做 false 处理。。
+            // height: height || this.binding.state.height, // 0 会当做 false 处理。。
+            width: width >= 0 ? width : this.binding.state.width,
+            height: height >= 0 ? height : this.binding.state.height,
             // widthAnimated: new Animated.Value(0),
             // heightAnimated: height ? new Animated.Value(height) : new Animated.Value(this.binding.state.height),
           }, () => {
@@ -430,8 +438,10 @@ export default class PopupPage extends BasePopupPage{
         binding: this,
         animate: function(width, height) {
           this.binding.setState({
-            width: width || this.binding.state.width,
-            height: height || this.binding.state.height,
+            // width: width || this.binding.state.width, // 0 会当做 false 处理。。
+            // height: height || this.binding.state.height, // 0 会当做 false 处理。。
+            width: width >= 0 ? width : this.binding.state.width,
+            height: height >= 0 ? height : this.binding.state.height,
           }, () => {
             Animated.timing(this.binding.state.fadeInOpacity, {
               toValue: 0.4, // 目标值

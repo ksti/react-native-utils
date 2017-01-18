@@ -30,9 +30,9 @@
  */
 
 /*
-控件功能：弹出框，基于 PopupPage 的示例，弹出一个 ListView，支持常用动画包括没有动画
-相关界面：选择合格率
-*/
+ * 控件功能：弹出框，基于 PopupPage 的示例，弹出一个 ListView，支持常用动画包括没有动画
+ * 相关界面：选择合格率
+ */
 
 'use strict';
 
@@ -59,13 +59,81 @@ import {
 import PopupPage from '../customPopupPage/PopupPage'
 
 export default class PopupSelecter extends Component{
+    static propTypes = {
+        /*
+         * 宽度
+         */
+        width: React.PropTypes.number,
+        /*
+         * 高度
+         */
+        height: React.PropTypes.number,
+        /*
+         * 动画类型
+         */
+        animateType: React.PropTypes.string,
+        /*
+         * 绝对布局或相对布局
+         */
+        position: React.PropTypes.string,
+        /*
+         * 是否去掉头视图
+         */
+        noHeader: React.PropTypes.bool,
+        /*
+         * 自定义头视图
+         */
+        customHeader: React.PropTypes.element,
+        /*
+         * 关闭按钮
+         */
+        closeButton: React.PropTypes.element,
+        /*
+         * 自定义渲染行
+         */
+        renderRow: React.PropTypes.func,
+        /*
+         * 头视图右边文本样式
+         */
+        headerRightTextStyle: Text.propTypes.style,
+        /*
+         * 头视图右边文本
+         */
+        headerRightText: React.PropTypes.string,
+        /*
+         * 头视图左边文本样式
+         */
+        headerLeftTextStyle: Text.propTypes.style,
+        /*
+         * 头视图左边文本
+         */
+        headerLeftText: React.PropTypes.string,
+        /*
+         * 分割线样式
+         */
+        separateStyle: View.propTypes.style,
+        /*
+         * 关闭时触发的回调函数
+         */
+        onClose: React.PropTypes.func,
+        /*
+         * 关闭时触发的回调函数
+         */
+        onSelect: React.PropTypes.func,
+    };
+
+    static defaultProps = {
+    };
+
     constructor(props){
         super(props);
         var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
         this.state = {
           ds: props.dataSource ? ds.cloneWithRows(props.dataSource) : ds.cloneWithRows([]),
-          width: props.width || Dimensions.get('window').width * 2 / 3,
-          height: props.height || 128,
+          // width: props.width || Dimensions.get('window').width * 2 / 3, // 0 会当做 false 处理。。
+          // height: props.height || 128,
+          width: props.width >= 0 ? props.width : Dimensions.get('window').width * 2 / 3,
+          height: props.height >= 0 ? props.height : 128,
         }
     }
 
@@ -88,8 +156,10 @@ export default class PopupSelecter extends Component{
 
     show = (animateConfigs, width, height) => {
         this.setState({
-          width: width || this.state.width,
-          height: height || this.state.height,
+          // width: width || this.state.width, // 0 会当做 false 处理。。
+          // height: height || this.state.height, // 0 会当做 false 处理。。
+          width: width >= 0 ? width : this.state.width,
+          height: height >= 0 ? height : this.state.height,
         }, () => {
           this.PopupPage.show(animateConfigs, this.state.width, this.state.height);
         });        
@@ -110,6 +180,9 @@ export default class PopupSelecter extends Component{
     _renderViewHeader = () => {
       if (this.props.noHeader === true) {
         return null;
+      };
+      if (this.props.customHeader) {
+        return this.props.customHeader;
       };
       var closeButton = this.props.closeButton || (
         <Text style={[styles.text, {textAlign:'right', marginRight: 4}, this.props.headerRightTextStyle]}>
@@ -143,6 +216,7 @@ export default class PopupSelecter extends Component{
     }
 
     _renderBody = () => {
+      const renderRow = this.props.renderRow || this._renderRow;
       return (
         <View 
           style={styles.container}
@@ -151,7 +225,7 @@ export default class PopupSelecter extends Component{
           <ListView
             enableEmptySections={true}
             dataSource={this.state.ds}
-            renderRow={this._renderRow}
+            renderRow={renderRow}
           />
         </View>
       );
