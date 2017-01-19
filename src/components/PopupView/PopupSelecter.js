@@ -127,7 +127,7 @@ export default class PopupSelecter extends Component{
 
     constructor(props){
         super(props);
-        var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+        var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => true});
         this.state = {
           ds: props.dataSource ? ds.cloneWithRows(props.dataSource) : ds.cloneWithRows([]),
           // width: props.width || Dimensions.get('window').width * 2 / 3, // 0 会当做 false 处理。。
