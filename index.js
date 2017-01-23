@@ -18,6 +18,7 @@ import FlowLayoutImageView from './src/components/customViews/FlowLayoutImageVie
 import FlowLayoutItemView from './src/components/customViews/FlowLayoutItemView';
 import HorizonImageScrollView from './src/components/customViews/HorizonImageScrollView';
 import RelativeContainer from './src/components/customPopupPage/RelativeContainer';
+import ScrollableText from './src/components/customViews/ScrollableText';
 
 export {
   // --- utils
@@ -38,4 +39,5 @@ export {
   FlowLayoutImageView,
   HorizonImageScrollView,
   RelativeContainer,
+  ScrollableText,
 };
