@@ -148,10 +148,6 @@ class GJSProgressHUD extends React.Component {
         this.onLoadingTimeout = undefined;
     }
 
-    isShown() {
-        return this.isShown;
-    }
-
     _renderLoading(props) {
         let bodyWidth = Dimensions.get('window').width;
         if (props.loadingStyle && props.loadingStyle.width) {
@@ -181,9 +177,9 @@ class GJSProgressHUD extends React.Component {
                         }
                     >
                         <ActivityIndicator
-                            {...this.props.indicatorProps}
                             animating={true}
                             size='small'
+                            {...this.props.indicatorProps}
                             style={
                                 [
                                     styles.indicator,
@@ -240,7 +236,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'transparent',
         fontSize: 20,
         // fontWeight:'bold',
-        flex: 1,
+        // flex: 1, // 不应该加 flex, 让 Text 自动撑开
     },
     indicator: {
         alignItems: 'center',
