@@ -124,6 +124,11 @@ export default class BasePopupPage extends Component{
     constructor(props) {
         super(props);
         this.defaultStyle = {
+          flex: 0, // 神奇，竟然就解决了下面这个问题（rn0.32.1 的时候ios还不报下面的错误）
+          /*
+          Invalid layout for (500)<RCTView: 0x7fa4d2533ee0; reactTag: 500; frame = (207 368; 0 0); transform = [0, 0, 0, 0, 0, 0]; clipsToBounds = YES; layer = <CALayer: 0x6080002370e0>>. position: {207, nan}. bounds: {{0, 0}, {276, nan}}
+          Invalid layout for (537)<RCTView: 0x7fa4cff504e0; reactTag: 537; frame = (0 201; 414 0); clipsToBounds = YES; layer = <CALayer: 0x60000043a4a0>>. position: {207, nan}. bounds: {{0, 0}, {414, nan}}
+          */
           height: 0,
           overflow: 'hidden',
         };
