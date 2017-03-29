@@ -26,7 +26,6 @@
  *
  * @providesModule ScrollableText
  * @flow
- * 
  */
 
 /*
@@ -75,10 +74,15 @@ export default class ScrollableText extends Component {
          * 文本样式
          */
         textStyle: Text.propTypes.style,
+        /*
+         * 文本输入框高度修正值
+         */
+        heightRevise: PropTypes.number,
     };
 
     static defaultProps = {
         type: 'text',
+        heightRevise: 0,
     };
 
     constructor(props) {
@@ -111,9 +115,11 @@ export default class ScrollableText extends Component {
         const {x, y, width, height} = e.nativeEvent.layout;
         // PublicToast.showMessage('x==' + x + '----y==' + y + '----width==' + width + '----height==' + height);
         // PublicToast.showMessage('windowHeight==' + Dimensions.get('window').height);
+        let textHeight = height > textMinHeight ? height : textMinHeight;
+        let revisedTextHeight = textHeight + this.props.heightRevise;
         this.setState({
             switchToTextInput: true,
-            textHeight: height > textMinHeight ? height : textMinHeight,
+            textHeight: revisedTextHeight,
         });
     }
 
@@ -140,6 +146,13 @@ export default class ScrollableText extends Component {
                 <View pointerEvents={'auto'} style={[{flex: 1, backgroundColor: 'transparent'}, this.props.containerStyle]}>
                     <TextInput 
                         {...this.props}
+                        onChange={(event) => {
+                            let textHeight = Math.max(textMinHeight, event.nativeEvent.contentSize.height);
+                            this.setState({
+                                textHeight: textHeight
+                            });
+                            this.props.onChange && this.props.onChange(event);
+                        }}
                         style={[styles.text, propsTextStyle, {height: textHeight}]}
                     />
                 </View>
