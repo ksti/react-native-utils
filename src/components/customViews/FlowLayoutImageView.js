@@ -6,7 +6,7 @@
  *
  * The MIT License (MIT)
  *
- * Copyright (c) 2016 GJS
+ * Copyright (c) 2018 GJS
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -118,7 +118,7 @@ export default class FlowLayoutImageView extends Component {
         /*
          * 最大显示数量
          */
-        max: PropTypes.number,        
+        max: PropTypes.number,
 
         /*
          * 达到最大限制时是否隐藏
@@ -139,18 +139,49 @@ export default class FlowLayoutImageView extends Component {
          * 图片样式
          */
         imageStyle: PropTypes.object,
+
+        /*
+         * 添加图片
+         */
+        addImage: PropTypes.func,
+
+        /*
+         * '删除'图标, 一般为<Image>
+         */
+        deletIcon: PropTypes.element,
+
+        /*
+         * '删除'图标样式, 给默认的deletIcon用
+         */
+        deletIconStyle: View.propTypes.style,
+
+        /*
+         * '删除'图标样式, 给默认的deletIcon用
+         */
+        showDelete: PropTypes.bool,
+
+        /*
+         * 图片被点击时
+         */
+        imageOnClick: PropTypes.func,
+
+        /*
+         * 图片被删除时
+         */
+        imageOnDelete: PropTypes.func,
     };
 
     static defaultProps = {
         width: Dimensions.get('window').width,
         imageSource: [],
         rowItemCount: 4,
+        imageRatio: 1,
         max: 9,
         hiddenWhenMax: true,
         showMore: false,
         disabled: false,
         imageStyle: {
-          backgroundColor: '#eaeaea',
+            backgroundColor: '#eaeaea',
         }
     };
 
@@ -163,89 +194,124 @@ export default class FlowLayoutImageView extends Component {
         let listdata = new Array().concat(props.imageSource, plusImage);
 
         this.supportedMimeType = [
-          {
-            mimeType: 'image/jpeg',
-            ext: [
-              'jpe',
-              'jpeg',
-              'jpg',
-            ],
-          },
-          {
-            mimeType: 'image/png',
-            ext: [
-              'png',
-              'x-png',
-            ],
-          },
+            {
+                mimeType: 'image/jpeg',
+                ext: [
+                    'jpe',
+                    'jpeg',
+                    'jpg',
+                ],
+            },
+            {
+                mimeType: 'image/png',
+                ext: [
+                    'png',
+                    'x-png',
+                ],
+            },
         ]
 
         // state
         this.state = {
-          width: props.width || Dimensions.get('window').width,
-          imageDataSource: imgDs.cloneWithRows(listdata),
-          images: listdata,
+            width: props.width || Dimensions.get('window').width,
+            imageDataSource: imgDs.cloneWithRows(listdata),
+            images: listdata,
         }
     }
-
-    componentWillMount() {
-      //
-    }
-
-    componentDidMount() {
-      //
-      
-    }
-
     componentWillReceiveProps = (nextProps) => {
-      this._handleNextProps(nextProps);
+        this._handleNextProps(nextProps);
     }
 
     isSupported = (mimeTypeOrExt) => {
-      if (typeof mimeTypeOrExt !== 'string') return false;
-      let supported = false;
-      this.supportedMimeType.map((mimeTypeObject, index) => {
-          if (supported) {
-            return true;
-          };
-          if (mimeTypeOrExt === mimeTypeObject.mimeType) {
-              supported = true;
-              return supported;
-          } else {
-            let supportedExt = mimeTypeObject.ext;
-            supportedExt.map((ext, extIndex) => {
-                if (mimeTypeOrExt === ext) {
-                  supported = true;
-                  return supported;
-                };
-            });
-          }
-      });
-      return supported;
+        if (!mimeTypeOrExt) return true; // 默认支持
+        if (typeof mimeTypeOrExt !== 'string') return false;
+        let lowercaseMimeTypeOrExt = mimeTypeOrExt.toLowerCase();
+        let supported = false;
+        this.supportedMimeType.map((mimeTypeObject, index) => {
+            if (supported) {
+                return true;
+            };
+            if (lowercaseMimeTypeOrExt === mimeTypeObject.mimeType) {
+                supported = true;
+                return supported;
+            } else {
+                let supportedExt = mimeTypeObject.ext;
+                supportedExt.map((ext, extIndex) => {
+                    if (lowercaseMimeTypeOrExt === ext) {
+                        supported = true;
+                        return supported;
+                    };
+                });
+            }
+        });
+        return supported;
     }
 
     _handleNextProps = (nextProps) => {
-      if (nextProps.imageSource) {
-        let listdata = new Array().concat(nextProps.imageSource, plusImage);
-        this.setState({
-          imageDataSource: this.state.imageDataSource.cloneWithRows(listdata),
-          images: listdata,
-        })
-      };
+        if (nextProps.imageSource) {
+            let listdata = new Array().concat(nextProps.imageSource, plusImage);
+            this.setState({
+                imageDataSource: this.state.imageDataSource.cloneWithRows(listdata),
+                images: listdata,
+            })
+        };
+    }
+
+    _renderDeleteOverlay = (rowData, sectionID, rowID) => {
+        if (!this.props.showDelete || this.props.disabled) {
+            return null;
+        }
+        // deleteOverlay
+        let deletIcon = this.props.deletIcon || <Image source={require('../../resource/images/ic_sub.png')} style={[{ width: 30, height: 30 }, this.props.deletIconStyle]} />;
+        let deleteOverlay = (
+            <View
+                style={{
+                    position: 'absolute',
+                    justifyContent :'center',
+                    alignItems: 'center',
+                    top: 0,
+                    right: 0,
+                }}
+            >
+                <View
+                    style={{
+                        width: 40,
+                        height: 40,
+                        alignSelf:'center',
+                        justifyContent: 'center',
+                        backgroundColor:'transparent',
+                    }}
+                >
+                    <TouchableOpacity
+                        onPress={() => this.imageOnDelete(rowData, rowID)}
+                        style={{
+                            width: 40,
+                            height: 40,
+                            alignSelf:'center',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                        }}
+                    >
+                        {deletIcon}
+                    </TouchableOpacity>
+                </View>
+            </View>
+        );
+        return deleteOverlay;
     }
 
     _renderImageListView = () => {
-      return (
-          <View >
-              <ListView
-                  enableEmptySections={true}
-                  contentContainerStyle={styles.list}
-                  initialListSize={this.props.max + 1}
-                  dataSource={this.state.imageDataSource}
-                  renderRow={this._renderImagesRow.bind(this)}
-              />
-          </View>
-      );
+        return (
+            <View >
+                <ListView
+                    enableEmptySections={true}
+                    contentContainerStyle={styles.list}
+                    initialListSize={this.props.max + 1}
+                    dataSource={this.state.imageDataSource}
+                    renderRow={this._renderImagesRow.bind(this)}
+                />
+            </View>
+        );
     }
 
     _renderImagesRow = (rowData, sectionID, rowID) => {
@@ -260,35 +326,37 @@ export default class FlowLayoutImageView extends Component {
         }
 
         if (this.props.disabled === true) {
-          if (rowID === String(imageCount - 1)) { // 加号
-            return null; // disabled 加号直接去掉
-          }
+            if (rowID === String(imageCount - 1)) { // 加号
+                return null; // disabled 加号直接去掉
+            }
         };
 
         // source
         let source;
         let isSupported = true;
         if (rowData && rowData.mimeTypeOrExt) {
-          isSupported = this.isSupported(rowData.mimeTypeOrExt);
-          if (!isSupported) {
-            source = this.props.unknownImage || unknownImage;
-          }
+            isSupported = this.isSupported(rowData.mimeTypeOrExt);
+            if (!isSupported) {
+                source = this.props.unknownImage || unknownImage;
+            }
         }
         if (isSupported) {
-          if (rowData && rowData.photo) {
-            // create source objects for http/asset strings
-            // or directly pass uri number for local files
-            source = typeof rowData.photo === 'string' ? { uri: rowData.photo } : rowData.photo;
-          }
+            if (rowData && rowData.photo) {
+                // create source objects for http/asset strings
+                // or directly pass uri number for local files
+                source = typeof rowData.photo === 'string' ? { uri: rowData.photo } : rowData.photo;
+            }
         } else {
-          source = this.props.unknownImage || unknownImage;
+            source = this.props.unknownImage || unknownImage;
         }
 
         // layout
         let rowMax = this.props.rowItemCount;
         let margin = 4;
+        let ratio = this.props.imageRatio;
+        ratio = ratio > 0 ? ratio : 1;
         let imageWidth = (this.state.width - rowMax * margin * 2 - 8 * 2) / rowMax;
-        let imageHeight = imageWidth + 10;
+        let imageHeight = imageWidth * ratio + 10;
 
         // overlay
         let overlay = null;
@@ -308,28 +376,28 @@ export default class FlowLayoutImageView extends Component {
                         backgroundColor: 'black',
                     }}
                 >
-                        <View 
-                          style={{
+                    <View
+                        style={{
                             width: imageWidth,
                             height: imageHeight,
                             alignSelf:'center',
                             justifyContent: 'center',
                             backgroundColor:'transparent',
-                          }}
-                        >
-                          <Text
-                              style={{
+                        }}
+                    >
+                        <Text
+                            style={{
                                 // width: imageWidth,
                                 // height: imageHeight,
                                 alignSelf:'center',
                                 justifyContent: 'center',
                                 backgroundColor:'transparent',
                                 color: 'white',
-                              }}
-                          >
-                              更多...
-                          </Text>
-                        </View>
+                            }}
+                        >
+                            更多...
+                        </Text>
+                    </View>
                 </View>
             );
         }
@@ -337,29 +405,30 @@ export default class FlowLayoutImageView extends Component {
         //
         let itemView;
         if (rowID === String(imageCount - 1)) { // 加号
-          itemView = (
-            <TouchableOpacity onPress={()=>{this.addImage(rowID)}} underlayColor='transparent' 
-                style={{
-                    alignSelf: 'center',
-                    justifyContent: 'center',
-                    backgroundColor: 'transparent',
-                }}
-            >
-              <Image
-                  style={{
-                    width: imageWidth,
-                    height: imageHeight,
-                    resizeMode: 'cover', 
-                    alignSelf: 'center',
-                    justifyContent: 'center',
-                    ...this.props.imageStyle,
-                    backgroundColor: 'transparent',
-                  }}
-                  // source={require('../../../../images/App/jiahao.png')}
-                  source={source}
-              />
-            </TouchableOpacity>
-          )
+            itemView = (
+                <TouchableOpacity onPress={()=>{this.addImage(rowID)}} underlayColor='transparent'
+                                  style={{
+                                      alignSelf: 'center',
+                                      justifyContent: 'center',
+                                      backgroundColor: 'transparent',
+                                  }}
+                >
+                    <Image
+                        style={{
+                            width: imageWidth,
+                            height: imageHeight,
+                            resizeMode: 'cover',
+                            alignSelf: 'center',
+                            justifyContent: 'center',
+                            backgroundColor: 'transparent',
+                            ...this.props.imageStyle,
+                            ...rowData.imageStyle,
+                        }}
+                        // source={require('../../../../images/App/jiahao.png')}
+                        source={source}
+                    />
+                </TouchableOpacity>
+            )
         } else {
             itemView = (
                 <TouchableHighlight
@@ -371,7 +440,7 @@ export default class FlowLayoutImageView extends Component {
                     underlayColor="#ffffff"
                     onPress={ ()=>{
                         this.imageOnClick(rowData, rowID)
-                      }
+                    }
                     }
                 >
                     <View
@@ -382,17 +451,19 @@ export default class FlowLayoutImageView extends Component {
                     >
                         <Image
                             style={{
-                              width: imageWidth,
-                              height: imageHeight,
-                              resizeMode:'cover', 
-                              alignSelf:'center',
-                              justifyContent: 'center',
-                              backgroundColor:'transparent',
-                              ...this.props.imageStyle,
+                                width: imageWidth,
+                                height: imageHeight,
+                                resizeMode:'cover',
+                                alignSelf:'center',
+                                justifyContent: 'center',
+                                backgroundColor:'transparent',
+                                ...this.props.imageStyle,
+                                ...rowData.imageStyle,
                             }}
                             source={source}
                         />
                         {overlay}
+                        {this._renderDeleteOverlay(rowData, sectionID, rowID)}
                     </View>
 
                 </TouchableHighlight>
@@ -400,7 +471,7 @@ export default class FlowLayoutImageView extends Component {
         }
 
         return (
-            <View 
+            <View
                 key={`FlowLayoutImageView_${rowID}`}
                 style={{
                     width: imageWidth,
@@ -415,22 +486,27 @@ export default class FlowLayoutImageView extends Component {
     }
 
     imageOnClick = (dta, rowID) => {
-      if (this.props.imageOnClick) {
-        this.props.imageOnClick(dta, rowID);
-      };     
+        if (this.props.imageOnClick) {
+            this.props.imageOnClick(dta, rowID);
+        };
+    }
+    imageOnDelete = (dta, rowID) => {
+        if (this.props.imageOnDelete) {
+            this.props.imageOnDelete(dta, rowID);
+        };
     }
     addImage = (rowID) => {
-      if (this.props.addImage) {
-        this.props.addImage(rowID);
-      };
+        if (this.props.addImage) {
+            this.props.addImage(rowID);
+        };
     }
 
     render() {
         return (
-          <View {...this.props}>
-            {this._renderImageListView()}
-          </View>
-          
+            <View {...this.props}>
+                {this._renderImageListView()}
+            </View>
+
         );
     }
 
@@ -439,38 +515,38 @@ export default class FlowLayoutImageView extends Component {
 
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    // flexDirection: 'column',
-  },
-  text: {
-    textAlign: 'center',
-    flex: 1,
-    // fontSize: 15,
-    color: '#3b3b3b', // 标题黑色
-  },
-  list: {
-    // justifyContent: 'space-around',
-    justifyContent: 'flex-start',
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-  },
-  row: {
-    flex: 1,
-    height: 44,
-    flexDirection: 'row',
-    overflow: 'hidden',
-  },
-  viewbg: {
-      minHeight: 45,
-      flexDirection: 'row',
-      justifyContent: 'center',
-      alignItems: 'center',
-      paddingRight: 10,
-      borderTopColor: '#eaeaea', // 边框分割线
-      borderTopWidth: 0.5,
-      overflow: 'hidden'
-  },
+    container: {
+        flex: 1,
+        // flexDirection: 'column',
+    },
+    text: {
+        textAlign: 'center',
+        flex: 1,
+        // fontSize: 15,
+        color: '#3b3b3b', // 标题黑色
+    },
+    list: {
+        // justifyContent: 'space-around',
+        justifyContent: 'flex-start',
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+    },
+    row: {
+        flex: 1,
+        height: 44,
+        flexDirection: 'row',
+        overflow: 'hidden',
+    },
+    viewbg: {
+        minHeight: 45,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingRight: 10,
+        borderTopColor: '#eaeaea', // 边框分割线
+        borderTopWidth: 0.5,
+        overflow: 'hidden'
+    },
 });
 
 
