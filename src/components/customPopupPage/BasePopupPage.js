@@ -359,6 +359,7 @@ export default class BasePopupPage extends Component{
                       
                     },
                     popupStyle,
+                    this.props.style,
                   ]
                 } 
               >
